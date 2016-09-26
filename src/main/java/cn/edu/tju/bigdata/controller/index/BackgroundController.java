@@ -84,22 +84,22 @@ public class BackgroundController extends BaseController {
 			// 用户输入的账号和密码,,存到UsernamePasswordToken对象中..然后由shiro内部认证对比,
 			// 认证执行者交由ShiroDbRealm中doGetAuthenticationInfo处理
 			// 当以上认证成功后会向下执行,认证失败会抛出异常
-			UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-			try {
-				user.login(token);
-			} catch (LockedAccountException lae) {
-				token.clear();
-				request.setAttribute("error", "用户已经被锁定不能登录，请与管理员联系！");
-				return "/login";
-			} catch (ExcessiveAttemptsException e) {
-				token.clear();
-				request.setAttribute("error", "账号：" + username + " 登录失败次数过多,锁定10分钟!");
-				return "/login";
-			} catch (AuthenticationException e) {
-				token.clear();
-				request.setAttribute("error", "用户或密码不正确！");
-				return "/login";
-			}
+            UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+            try {
+                user.login(token);
+            } catch (LockedAccountException lae) {
+                token.clear();
+                request.setAttribute("error", "用户已经被锁定不能登录，请与管理员联系！");
+                return "/login";
+            } catch (ExcessiveAttemptsException e) {
+                token.clear();
+                request.setAttribute("error", "账号：" + username + " 登录失败次数过多,锁定10分钟!");
+                return "/login";
+            } catch (AuthenticationException e) {
+                token.clear();
+                request.setAttribute("error", "用户或密码不正确！");
+                return "/login";
+            }
 			UserLoginFormMap userLogin = new UserLoginFormMap();
 			Session session = SecurityUtils.getSubject().getSession();
 			userLogin.put("userId", session.getAttribute("userSessionId"));

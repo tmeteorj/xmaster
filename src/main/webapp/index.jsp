@@ -169,7 +169,10 @@
 					<ul class="dropdown-menu animated fadeInRight">
 						<span class="arrow top"></span>
 						<%--<li><a href="index.shtml#">Settings</a></li>--%>
-						<li><a href="#" onclick="javascript:updatePasswordLayer();">密码修改</a></li>
+						<c:if test="${userFormMap.accountName!='visitor'}">
+							<li><a href="#" onclick="javascript:updatePasswordLayer();">密码修改</a></li>
+						</c:if>
+
 						<%--<li><a href="index.html#"> <span--%>
 								<%--class="badge bg-danger pull-right">3</span> Notifications--%>
 						<%--</a></li>--%>

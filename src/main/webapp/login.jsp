@@ -79,7 +79,7 @@
 		};
         function visitorLogin(){
             document.getElementById("username").value="visitor";
-            document.getElementById("password").value="123456789";
+            document.getElementById("password").value="123456";
             document.loginform.submit();
         }
 		function checkUserForm() {

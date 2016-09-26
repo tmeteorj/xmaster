@@ -44,7 +44,7 @@
 					<div class="main_input_box">
 						<span class="add-on bg_ly" style="background: #28b779"><img
 							src="${pageContext.servletContext.contextPath }/admin_files/account_1.png"
-							alt="请输入账号.."></span><input type="text" placeholder="username" name="username" value="admin"
+							alt="请输入账号.."></span><input type="text" id="username" placeholder="username" name="username" value=""
 							style="height: 32px; margin-bottom: 0px;"/>
 					</div>
 				</div>
@@ -54,7 +54,7 @@
 					<div class="main_input_box">
 						<span class="add-on bg_ly"><img
 							src="${pageContext.servletContext.contextPath }/admin_files/lock_1.png"
-							alt="请输入密码.."></span><input type="password" placeholder="password" name="password" value="123456"
+							alt="请输入密码.."></span><input type="password" id="password" placeholder="password" name="password" value=""
 							style="height: 32px; margin-bottom: 0px;"/>
 					</div>
 				</div>
@@ -62,8 +62,11 @@
 			<div class="form-actions">
 				<span class="pull-left" style="width: 33%"><a href="#"
 					class="flip-link btn btn-info" id="to-recover">忘记密码？</a></span>
-					<span class="pull-left" style="width: 33%"><a href="install.shtml"
-					class="flip-link btn btn-danger" id="to-recover">一键初始化系统</a></span>
+					<%--<span class="pull-left" style="width: 33%"><a href="install.shtml"--%>
+					<%--class="flip-link btn btn-danger" id="to-recover">一键初始化系统</a></span>--%>
+				    <span class="pull-left" style="width: 33%">
+                        <a type="submit"
+                           href="javascript:visitorLogin()" class="flip-link btn btn-danger">匿名访问</a></span>
 					 <span
 					class="pull-right"><a type="submit"
 					href="javascript:checkUserForm()" class="btn btn-success">登&nbsp;&nbsp;录</a></span>
@@ -74,6 +77,11 @@
 		if ("${error}" != "") {
 			alert("${error}");
 		};
+        function visitorLogin(){
+            document.getElementById("username").value="visitor";
+            document.getElementById("password").value="123456789";
+            document.loginform.submit();
+        }
 		function checkUserForm() {
 			document.loginform.submit();
 		}

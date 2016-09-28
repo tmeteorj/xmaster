@@ -1,0 +1,9 @@
+# ignore IDEA related files
+.idea/
+*.iml
+
+# ignore files in folder 'target'
+/target
+
+# ingore all kinds of logs
+*.log

@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : localhost_3306
 Source Server Version : 50520
 Source Host           : localhost:3306
-Source Database       : lanyuan_v_3
+Source Database       : xmaster
 
 Target Server Type    : MYSQL
 Target Server Version : 50520
 File Encoding         : 65001
 
-Date: 2016-09-26 22:35:57
+Date: 2016-09-28 15:01:09
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -102,12 +102,12 @@ INSERT INTO `ly_resources` VALUES ('32', '系统监控管理', '0', 'monitor', '
 INSERT INTO `ly_resources` VALUES ('33', '实时监控', '32', 'sysmonitor', '1', '/monitor/monitor.shtml', '17', null, '0', '实时监控');
 INSERT INTO `ly_resources` VALUES ('34', '分配权限', '2', 'permissions', '2', '/resources/permissions.shtml', '6', null, '0', '&lt;button&nbsp;type=&quot;button&quot;&nbsp;id=&quot;permissions&quot;&nbsp;class=&quot;btn&nbsp;btn&nbsp;btn-grey&nbsp;marR10&quot;&gt;分配权限&lt;/button&gt;');
 INSERT INTO `ly_resources` VALUES ('35', '告警列表', '32', 'monitor_warn', '1', '/monitor/list.shtml', null, null, '0', '告警列表');
-INSERT INTO `ly_resources` VALUES ('37', '资源上传', '0', 'resource_upload', '0', 'resource_upload', null, 'fa-glass', '0', '资源上传');
-INSERT INTO `ly_resources` VALUES ('38', '数据集上传', '37', 'dataset_upload', '1', 'dataset_upload', null, null, '0', '数据集上传');
-INSERT INTO `ly_resources` VALUES ('39', '数据集审核', '37', 'dataset_audit', '1', 'dataset_audit', null, null, '0', '数据集审核');
-INSERT INTO `ly_resources` VALUES ('40', '资源管理', '0', 'resource_manage', '0', 'resource_manage', null, 'fa-inbox', '0', '资源管理');
-INSERT INTO `ly_resources` VALUES ('41', '数据集管理', '40', 'dataset_manage', '1', 'dataset_manage', null, null, '0', '数据集管理');
-INSERT INTO `ly_resources` VALUES ('42', '元数据管理', '40', 'metadata_manage', '1', 'metadata_manage', null, null, '0', '元数据管理');
+INSERT INTO `ly_resources` VALUES ('37', '资源上传', '0', 'resource_upload', '0', 'resourceupload', null, 'fa-glass', '0', '资源上传');
+INSERT INTO `ly_resources` VALUES ('38', '数据集上传', '37', 'dataset_upload', '1', '/resourceupload/datasetupload.shtml', null, null, '0', '数据集上传');
+INSERT INTO `ly_resources` VALUES ('39', '数据集审核', '37', 'dataset_audit', '1', '/resourceupload/datasetaudit.shtml', null, null, '0', '数据集审核');
+INSERT INTO `ly_resources` VALUES ('40', '资源管理', '0', 'resource_manage', '0', 'resourcemanage', null, 'fa-inbox', '0', '资源管理');
+INSERT INTO `ly_resources` VALUES ('41', '数据集管理', '40', 'dataset_manage', '1', '/resourcemanage/datasetmanage.shtml', null, null, '0', '数据集管理');
+INSERT INTO `ly_resources` VALUES ('42', '元数据管理', '40', 'metadata_manage', '1', '/resourcemanage/metadatamanage.shtml', null, null, '0', '元数据管理');
 INSERT INTO `ly_resources` VALUES ('43', '匿名搜索', '0', 'search', '0', 'search', null, 'fa-search-minus', '0', '匿名搜索');
 INSERT INTO `ly_resources` VALUES ('44', '感知搜索', '43', 'perceptual_search', '1', 'perceptual_search', null, null, '0', '感知搜索');
 INSERT INTO `ly_resources` VALUES ('45', '数据集搜索 ', '43', 'dataset_search', '1', 'dataset_search', null, null, '0', '数据集搜索 ');
@@ -329,7 +329,7 @@ CREATE TABLE `ly_userlogin` (
   `loginIP` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ly_user_loginlist` (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=174 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ly_userlogin
@@ -365,6 +365,18 @@ INSERT INTO `ly_userlogin` VALUES ('170', '5', 'lx1', '2016-09-26 22:28:56', '12
 INSERT INTO `ly_userlogin` VALUES ('171', '5', 'lx1', '2016-09-26 22:28:56', '127.0.0.1');
 INSERT INTO `ly_userlogin` VALUES ('172', '5', 'lx1', '2016-09-26 22:28:56', '127.0.0.1');
 INSERT INTO `ly_userlogin` VALUES ('173', '8', 'visitor', '2016-09-26 22:32:32', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('174', '8', 'visitor', '2016-09-26 22:38:21', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('175', '5', 'lx1', '2016-09-26 22:38:26', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('176', '5', 'lx1', '2016-09-28 10:51:18', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('177', '5', 'lx1', '2016-09-28 11:10:49', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('178', '5', 'lx1', '2016-09-28 11:16:12', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('179', '5', 'lx1', '2016-09-28 11:18:50', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('180', '5', 'lx1', '2016-09-28 11:23:12', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('181', '5', 'lx1', '2016-09-28 11:43:11', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('182', '5', 'lx1', '2016-09-28 11:48:52', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('183', '5', 'lx1', '2016-09-28 11:53:05', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('184', '5', 'lx1', '2016-09-28 11:56:31', '127.0.0.1');
+INSERT INTO `ly_userlogin` VALUES ('185', '5', 'lx1', '2016-09-28 12:13:29', '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for ly_user_role

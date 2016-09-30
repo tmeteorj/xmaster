@@ -37,7 +37,7 @@ public  class LogAopAction {
     @Pointcut("@annotation(cn.edu.tju.bigdata.annotation.SystemLog)")
      public  void controllerAspect() {
     }
-    
+
     /**
      * 操作异常记录
      *@descript
@@ -47,8 +47,8 @@ public  class LogAopAction {
      *@date 2015年5月5日
      *@version 1.0
      */
-    @AfterThrowing(pointcut = "controllerAspect()", throwing = "e")  
-    public  void doAfterThrowing(JoinPoint point, Throwable e) {  
+    @AfterThrowing(pointcut = "controllerAspect()", throwing = "e")
+    public  void doAfterThrowing(JoinPoint point, Throwable e) {
     	LogFormMap logForm = new LogFormMap();
 		 Map<String, Object> map = null;
 		String user = null;
@@ -68,7 +68,7 @@ public  class LogAopAction {
 		} catch (Exception ee) {
 			user = "无法获取登录用户信息！";
 		}
-		
+
     	logForm.put("accountName",user);
 		logForm.put("module",map.get("module"));
 		logForm.put("methods","<font color=\"red\">执行方法异常:-->"+map.get("methods")+"</font>");

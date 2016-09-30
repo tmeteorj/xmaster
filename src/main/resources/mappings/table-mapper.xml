@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.tju.bigdata.mapper.TableMapper">
+
+    <select id="selectTableByName" resultType="cn.edu.tju.bigdata.entity.Table">
+      SELECT
+        table_name as tableName,
+        column_name as columnName,
+        data_type as dataType,
+        column_comment as columnComment,
+        column_key as columnKey
+      FROM information_schema.columns
+      WHERE table_name = #{tableName} and table_schema = #{databaseName}
+      ORDER BY ordinal_position ASC
+    </select>
+
+    <select id="selectDataFromTable" resultType="java.util.HashMap">
+        <![CDATA[
+        SELECT ${columns}
+        FROM ${databaseName}.${tableName}
+        WHERE ${where}
+        ]]>
+    </select>
+
+    <select id="selectCountFromTable" resultType="java.lang.Long">
+        <![CDATA[
+        SELECT count(1)
+        FROM ${databaseName}.${tableName}
+        WHERE ${where}
+        ]]>
+    </select>
+
+    <select id="selectDataById" resultType="cn.edu.tju.bigdata.util.FormMap">
+        <![CDATA[
+        SELECT *
+        FROM ${databaseName}.${tableName}
+        WHERE id = #{id}
+        ]]>
+    </select>
+    
+    <insert id="insertEntity" parameterType="java.util.HashMap" useGeneratedKeys="true">
+         <![CDATA[
+        INSERT INTO
+          ${databaseName}.${tableName}
+          (${columns})
+        VALUES
+          (${values})
+        ]]>
+    </insert>
+    
+    <update id="updateEntryById" parameterType="java.util.HashMap">
+        <![CDATA[
+        UPDATE
+          ${databaseName}.${tableName}
+        SET
+          ${set}
+        WHERE id = #{id}
+        ]]>
+    </update>
+
+</mapper>

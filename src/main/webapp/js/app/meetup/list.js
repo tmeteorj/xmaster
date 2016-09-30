@@ -59,6 +59,9 @@ $(function () {
     $("#delFun").click("click", function () {
         delFun();
     });
+    $("#auditFun").click("click", function () {
+        auditFun();
+    });
 });
 
 function editFun() {
@@ -67,7 +70,6 @@ function editFun() {
         layer.msg("只能选中一个");
         return;
     }
-    alert(cbox);
     pageii = layer.open({
         title: "编辑",
         type: 2,
@@ -98,5 +100,26 @@ function delFun() {
         } else {
             layer.msg('删除失败');
         }
+    });
+}
+
+function auditFun() {
+    var cbox = grid.getSelectedCheckbox();
+    if (cbox.length > 1 || cbox == "") {
+        layer.msg("只能选中一个");
+        return;
+    }
+    var url = rootPath + '/meetup/' + cbox + '/check.shtml';
+    var s = CommnUtil.ajax(url, {}, "json");
+    if (!s) {
+        layer.msg('已审核过，无需再审！');
+        grid.loadData();
+        return;
+    }
+    pageii = layer.open({
+        title: "审核",
+        type: 2,
+        area: ["600px", "20%"],
+        content: rootPath + '/meetup/' + cbox + '/audit.shtml'
     });
 }

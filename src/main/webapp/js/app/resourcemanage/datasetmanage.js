@@ -68,6 +68,9 @@ $(function () {
     $("#auditFun").click("click", function () {
         auditFun();
     });
+    $("#linkFun").click("click", function () {
+        linkFun();
+    });
 });
 
 function editFun() {
@@ -128,4 +131,19 @@ function auditFun() {
         area: ["600px", "20%"],
         content: rootPath + '/dataset/' + cbox + '/audit.shtml'
     });
+}
+
+function linkFun(){
+    var cbox = grid.getSelectedCheckbox();
+    if (cbox.length > 1 || cbox == "") {
+        layer.msg("只能选中一个");
+        return;
+    }
+    var url = rootPath + '/dataset/' + cbox + '/link.shtml';
+    var s = CommnUtil.ajax(url, {}, "json");
+    if (s == "success") {
+        layer.msg('链接成功');
+    } else {
+        layer.msg('链接失败');
+    }
 }

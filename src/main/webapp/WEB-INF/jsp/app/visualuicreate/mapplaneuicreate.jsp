@@ -41,6 +41,8 @@
             generateChart(data.planeid);
         }
         function generateChart(id) {
+            var t=id+'-'+showattr.chs;
+            console.info("gen "+id);
             $.ajax({
                 type : "GET",
                 url : "/visualuicreate/"+id+"/"+showattr.eng+"/search-by-pa.shtml",
@@ -48,38 +50,27 @@
                 success : function(response) {
                     document.getElementById('main')
                     response=JSON.parse(response);
+                    console.info(response);
                     if(response.code!=0){
                         document.getElementById('main').innerHTML="没有该地块的数据";
                     }else{
                         var data=response.data;
                         var myChart = echarts.init(document.getElementById('main'));
                         option = {
-                            tooltip: {
-                                trigger: 'axis',
-                                axisPointer: {
-                                    animation: false
-                                }
-                            },
                             xAxis: {
-                                type: 'time',
-                                splitLine: {
-                                    show: false
-                                }
+                                type: 'category',
+                                boundaryGap: false,
+                                data: data.time
                             },
                             yAxis: {
-                                type: 'value',
-                                boundaryGap: [0, '100%'],
-                                splitLine: {
-                                    show: false
-                                }
+                                type: 'value'
                             },
                             series: [{
-                                name: showattr.chs,
-                                type: 'line',
-                                showSymbol: false,
-                                hoverAnimation: false,
-                                data: data
-                            }]
+                                    name: t,
+                                    type: 'line',
+                                    stack: '总量',
+                                    data: data.value
+                                }]
                         };
                         myChart.setOption(option);
                     }

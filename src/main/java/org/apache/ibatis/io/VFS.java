@@ -45,7 +45,7 @@ public abstract class VFS {
   private static VFS instance;
 
   /**
-   * Get the singleton {@link VFS} instance. If no {@link VFS} implementation can be found for the
+   * Get the singleton {@link VFS} instance. If no {@link VFS} biz can be found for the
    * current environment, then this method returns null.
    */
   @SuppressWarnings("unchecked")
@@ -58,14 +58,14 @@ public abstract class VFS {
     impls.addAll(USER_IMPLEMENTATIONS);
     impls.addAll(Arrays.asList((Class<? extends VFS>[]) IMPLEMENTATIONS));
 
-    // Try each implementation class until a valid one is found
+    // Try each biz class until a valid one is found
     VFS vfs = null;
     for (int i = 0; vfs == null || !vfs.isValid(); i++) {
       Class<? extends VFS> impl = impls.get(i);
       try {
         vfs = impl.newInstance();
         if (vfs == null || !vfs.isValid()) {
-          log.debug("VFS implementation " + impl.getName() +
+          log.debug("VFS biz " + impl.getName() +
               " is not valid in this environment.");
         }
       } catch (InstantiationException e) {
@@ -85,7 +85,7 @@ public abstract class VFS {
    * Adds the specified class to the list of {@link VFS} implementations. Classes added in this
    * manner are tried in the order they are added and before any of the built-in implementations.
    * 
-   * @param clazz The {@link VFS} implementation class to add.
+   * @param clazz The {@link VFS} biz class to add.
    */
   public static void addImplClass(Class<? extends VFS> clazz) {
     if (clazz != null)
@@ -164,7 +164,7 @@ public abstract class VFS {
     return Collections.list(Thread.currentThread().getContextClassLoader().getResources(path));
   }
 
-  /** Return true if the {@link VFS} implementation is valid for the current environment. */
+  /** Return true if the {@link VFS} biz is valid for the current environment. */
   public abstract boolean isValid();
 
   /**

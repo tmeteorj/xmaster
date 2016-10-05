@@ -67,9 +67,9 @@
 				    <span class="pull-left" style="width: 33%">
                         <a type="submit"
                            href="javascript:visitorLogin()" class="flip-link btn btn-danger">匿名访问</a></span>
-					 <span
-					class="pull-right"><a type="submit"
-					href="javascript:checkUserForm()" class="btn btn-success">登&nbsp;&nbsp;录</a></span>
+					<span class="pull-right">
+						<a type="submit"
+							href="javascript:checkUserForm()" class="btn btn-success">登&nbsp;&nbsp;录</a></span>
 			</div>
 		</form>
 	</div>
@@ -77,6 +77,7 @@
 		if ("${error}" != "") {
 			alert("${error}");
 		};
+
         function visitorLogin(){
             document.getElementById("username").value="visitor";
             document.getElementById("password").value="123456";

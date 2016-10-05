@@ -255,7 +255,7 @@ class PooledConnection implements
 	}
 
 	/*
-	 * Required for InvocationHandler implementation.
+	 * Required for InvocationHandler biz.
 	 * 
 	 * @param proxy - not used
 	 * 

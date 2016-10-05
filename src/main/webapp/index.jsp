@@ -226,7 +226,12 @@
 													</c:if><c:if test="${s.index==6}">
 														<i class="fa fa-th-list icon"> <b class="bg-success"></b>
 														</i>
-													</c:if> <span class="pull-right"> <i
+													</c:if><c:if test="${s.index==7}">
+														<i class="fa fa fa-bar-chart"> <b class="bg-success"></b>
+													</i>
+											</c:if>
+
+												<span class="pull-right"> <i
 														class="fa fa-angle-down text"></i> <i
 														class="fa fa-angle-up text-active"></i>
 												</span> <span>${key.name}</span>

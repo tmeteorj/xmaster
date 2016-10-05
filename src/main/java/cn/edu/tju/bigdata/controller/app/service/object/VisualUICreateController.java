@@ -1,4 +1,4 @@
-package cn.edu.tju.bigdata.controller.app.service.subject;
+package cn.edu.tju.bigdata.controller.app.service.object;
 
 import cn.edu.tju.bigdata.annotation.SystemLog;
 import cn.edu.tju.bigdata.controller.index.BaseController;

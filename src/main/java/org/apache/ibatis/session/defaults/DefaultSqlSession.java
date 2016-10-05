@@ -151,6 +151,7 @@ public class DefaultSqlSession implements SqlSession {
       MappedStatement ms = configuration.getMappedStatement(statement);
       return executor.update(ms, wrapCollection(parameter));
     } catch (Exception e) {
+      e.printStackTrace();
       throw ExceptionFactory.wrapException("Error updating database.  Cause: " + e, e);
     } finally {
       ErrorContext.instance().reset();

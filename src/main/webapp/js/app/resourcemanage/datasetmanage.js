@@ -1,3 +1,6 @@
+/**
+ * Created by NING on 2016/10/4.
+ */
 var pageii = null;
 var grid = null;
 $(function () {
@@ -9,37 +12,40 @@ $(function () {
             width: "50px",
             hide: true
         }, {
-            colkey: "name",
-            name: "名称"
+            colkey: "title",
+            name: "数据表名"
         }, {
-            colkey: "num_member",
-            name: "成员人数"
+            colkey: "info",
+            name: "数据表描述"
         }, {
-            colkey: "num_past_meetups",
-            name: "活动数"
+            colkey: "dataset_url",
+            name: "数据库连接"
         }, {
-            colkey: "time_founded",
-            name: "成立时间",
-            renderData: function (rowindex, data, rowdata, column) {
-                return new Date(data).format("yyyy-MM-dd");
-            }
+            colkey: "dataset_type",
+            name: "数据库类型"
+        },{
+            colkey: "username",
+            name: "用户名"
         }, {
-            colkey: "place_name",
-            name: "地址"
+            colkey: "psw",
+            name: "密码"
         }, {
-            colkey: "country",
-            name: "国家"
-        }, {
-            colkey: "region",
-            name: "地区"
-        }, {
+            colkey: "src",
+            name: "数据表来源机构"
+        },{
+            colkey: "publisher",
+            name: "数据表发布者"
+        },{
+            colkey: "size",
+            name: "数据表大小"
+        },{
             colkey: "meta_created",
             name: "创建时间",
             renderData: function (rowindex, data, rowdata, column) {
                 return new Date(data).format("yyyy-MM-dd hh:mm:ss");
             }
         }],
-        jsonUrl: rootPath + '/meetup/findByPage.shtml',
+        jsonUrl: rootPath + '/dataset/findByPage.shtml',
         checkbox: true
     });
 
@@ -74,7 +80,7 @@ function editFun() {
         title: "编辑",
         type: 2,
         area: ["600px", "80%"],
-        content: rootPath + '/meetup/' + cbox + '/edit.shtml'
+        content: rootPath + '/dataset/' + cbox + '/edit.shtml'
     });
 }
 function addFun() {
@@ -82,7 +88,7 @@ function addFun() {
         title: "新增",
         type: 2,
         area: ["600px", "80%"],
-        content: rootPath + '/meetup/add.shtml'
+        content: rootPath + '/dataset/add.shtml'
     });
 }
 function delFun() {
@@ -92,7 +98,7 @@ function delFun() {
         return;
     }
     layer.confirm('是否删除？', function (index) {
-        var url = rootPath + '/meetup/' + cbox + '/delete.shtml';
+        var url = rootPath + '/dataset/' + cbox + '/delete.shtml';
         var s = CommnUtil.ajax(url, {}, "json");
         if (s == "success") {
             layer.msg('删除成功');
@@ -109,7 +115,7 @@ function auditFun() {
         layer.msg("只能选中一个");
         return;
     }
-    var url = rootPath + '/meetup/' + cbox + '/check.shtml';
+    var url = rootPath + '/dataset/' + cbox + '/check.shtml';
     var s = CommnUtil.ajax(url, {}, "json");
     if (!s) {
         layer.msg('已审核过，无需再审！');
@@ -120,6 +126,6 @@ function auditFun() {
         title: "审核",
         type: 2,
         area: ["600px", "20%"],
-        content: rootPath + '/meetup/' + cbox + '/audit.shtml'
+        content: rootPath + '/dataset/' + cbox + '/audit.shtml'
     });
 }

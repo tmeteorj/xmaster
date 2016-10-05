@@ -16,6 +16,16 @@
 	default-lazy-init="true">
 	<context:component-scan base-package="cn.edu.tju.bigdata.controller" />
 	<context:component-scan base-package="cn.edu.tju.bigdata.logAop" />
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" >
+		<property name ="locations">
+			<list>
+				<value>classpath:metadata.properties</value>
+			</list>
+		</property>
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+	</bean>
+
 	<!-- 启动对@AspectJ注解的支持 -->
 	<!--通知spring使用cglib而不是jdk的来生成代理方法 AOP可以拦截到Controller-->
 <!-- <aop:aspectj-autoproxy proxy-target-class="true"/> -->

@@ -24,12 +24,17 @@ user-scalable - 用户是否可以手动缩放
 <link rel="stylesheet" href="${ctx}/notebook/notebook_files/font.css" type="text/css">
 <link rel="stylesheet" href="${ctx}/notebook/notebook_files/app.v1.css" type="text/css">
 <link rel="stylesheet" href="${ctx}/css/lanyuan.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/css/datetimepicker/bootstrap-datetimepicker.css" type="text/css">
+<link rel="stylesheet" href="${ctx}/css/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css">
 	<!-- base start 重要部分不可删改-->
 <script type="text/javascript" src="${ctx}/notebook/notebook_files/app.v1.js"></script>
 <script type="text/javascript" src="${ctx}/notebook/notebook_files/app.plugin.js"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/jquery.form.js"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/jquery-validation/jquery.validate.min.js"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/jquery-validation/messages_cn.js"></script>
+<script type="text/javascript" src="${ctx}/js/datetimepicker/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="${ctx}/js/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="${ctx}/js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script type="text/javascript" src="${ctx}/js/layer-v1.9.2/layer/layer.js"></script>
 <script type="text/javascript" src="${ctx}/common/common.js"></script>
 <script type="text/javascript" src="${ctx}/js/jquery/underscore.js"></script>

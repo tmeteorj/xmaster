@@ -40,14 +40,19 @@ public class PlaneBiz {
     }
 
     public static JSONObject searchByPA(List<PlaneFormMap> list, String attr) {
-        JSONArray data=new JSONArray();
+        JSONArray timearr=new JSONArray();
+        JSONArray valuearr=new JSONArray();
         for(PlaneFormMap pfm:list){
             String x=pfm.get("year")+"-"+pfm.get("month");
             JSONObject attrjs=JSONObject.parseObject(pfm.get("attr").toString());
             double y=attrjs.getDouble(attr);
-            data.add(new JSONArray(Arrays.asList(new Object[]{x, y})));
+            timearr.add(x);
+            valuearr.add(y);
         }
         JSONObject result = new JSONObject();
+        JSONObject data = new JSONObject();
+        data.put("time",timearr);
+        data.put("value",valuearr);
         result.put("data", data);
         result.put("msg", "success");
         result.put("code", 0);

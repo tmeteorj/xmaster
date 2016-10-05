@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.tju.bigdata.mapper.PlaneMapper">
+	<!--mybatis ehcache缓存配置 -->
+	<!-- 以下两个<cache>标签二选一,第一个可以输出日志,第二个不输出日志 <cache type="org.mybatis.caches.ehcache.LoggingEhcache" 
+		/> -->
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+	<!-- 以下与实体类的中字段一致 -->
+	<sql id="selectId">
+		id,
+		plane_id,
+		year,
+		month,
+		lng,
+		lat,
+		polygon,
+		attr
+	</sql>
+	<select id="selectYMA" parameterType="Integer" resultType="cn.edu.tju.bigdata.entity.PlaneFormMap">
+		  select * from bd_plane where year=#{year} and month=#{month}
+	</select>
+	<select id="selectPA" parameterType="Integer" resultType="cn.edu.tju.bigdata.entity.PlaneFormMap">
+		select * from bd_plane where plane_id=#{plane_id} order by year,month
+	</select>
+</mapper>

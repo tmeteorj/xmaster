@@ -91,7 +91,7 @@
   // Collection Functions
   // --------------------
 
-  // The cornerstone, an `each` implementation, aka `forEach`.
+  // The cornerstone, an `each` biz, aka `forEach`.
   // Handles raw objects in addition to array-likes. Treats all
   // sparse array-likes as if they were dense.
   _.each = _.forEach = function(obj, iteratee, context) {
@@ -466,7 +466,7 @@
     return _.filter(array, _.identity);
   };
 
-  // Internal implementation of a recursive `flatten` function.
+  // Internal biz of a recursive `flatten` function.
   var flatten = function(input, shallow, strict, output) {
     if (shallow && _.every(input, _.isArray)) {
       return concat.apply(output, input);
@@ -1283,7 +1283,7 @@
     return '\\' + escapes[match];
   };
 
-  // JavaScript micro-templating, similar to John Resig's implementation.
+  // JavaScript micro-templating, similar to John Resig's biz.
   // Underscore templating handles arbitrary delimiters, preserves whitespace,
   // and correctly escapes quotes within interpolated code.
   // NB: `oldSettings` only exists for backwards compatibility.

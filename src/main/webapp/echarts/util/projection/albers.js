@@ -6,7 +6,7 @@
  *
  */
 define(function() {
-    // Derived from Tom Carden's Albers implementation for Protovis.
+    // Derived from Tom Carden's Albers biz for Protovis.
     // http://gist.github.com/476238
     // http://mathworld.wolfram.com/AlbersEqual-AreaConicProjection.html
     function _albers() {

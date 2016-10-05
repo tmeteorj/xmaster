@@ -171,7 +171,7 @@ public class CacheBuilder {
     try {
       return cacheConstructor.newInstance(id);
     } catch (Exception e) {
-      throw new CacheException("Could not instantiate cache implementation (" + cacheClass + "). Cause: " + e, e);
+      throw new CacheException("Could not instantiate cache biz (" + cacheClass + "). Cause: " + e, e);
     }
   }
 
@@ -179,7 +179,7 @@ public class CacheBuilder {
     try {
       return cacheClass.getConstructor(String.class);
     } catch (Exception e) {
-      throw new CacheException("Invalid base cache implementation (" + cacheClass + ").  " +
+      throw new CacheException("Invalid base cache biz (" + cacheClass + ").  " +
           "Base cache implementations must have a constructor that takes a String id as a parameter.  Cause: " + e, e);
     }
   }

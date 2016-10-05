@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -85,6 +88,47 @@ public class DatasetController extends BaseController {
         if (datasetFormMap != null && datasetFormMap.getInt("deleted_mark") == EmDeletedMark.TO_BE_AUDITED.getCode())
             return Boolean.TRUE;
         return Boolean.FALSE;
+    }
+
+    @ResponseBody
+    @RequestMapping("/{id}/link")
+    public String link(@PathVariable Long id) throws Exception {
+
+        DatasetFormMap datasetFormMap = datasetMapper.findbyFrist("id", id.toString(), DatasetFormMap.class);
+        try {
+            String type = datasetFormMap.getStr("dataset_type");
+            String url = datasetFormMap.getStr("dataset_url");
+            String name = datasetFormMap.getStr("title");
+            String username = datasetFormMap.getStr("username");
+            String psw = datasetFormMap.getStr("psw");
+            if(type.indexOf("mysql")!=-1){
+                Connection conn = null;
+                try{
+                    Class.forName("com.mysql.jdbc.Driver");
+                    conn = DriverManager.getConnection(url, username, psw);
+                    if(!conn.isClosed()){
+                        return "success";
+                    }
+                    else{
+                        return "failed";
+                    }
+                } catch (ClassNotFoundException e) {
+                    return "failed";
+                } catch(SQLException e) {
+                    return "failed";
+                } catch(Exception e) {
+                    return "failed";
+                }
+                finally {
+                    conn.close();
+                }
+            }
+            return "failed";
+
+        }
+        catch (Exception e){
+            return "failed";
+        }
     }
 
     @ResponseBody

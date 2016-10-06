@@ -102,6 +102,17 @@
 
       <div class="line line-dashed line-lg pull-in"></div>
       <div class="form-group">
+        <label class="col-sm-3 control-label">编码格式</label>
+
+        <div class="col-sm-9">
+          <input type="text" class="form-control"
+                 placeholder="请输入编码格式" value="${dataset.coded_format}"
+                 name="datasetFormMap.coded_format" id="coded_format">
+        </div>
+      </div>
+
+      <div class="line line-dashed line-lg pull-in"></div>
+      <div class="form-group">
         <label class="col-sm-3 control-label">数据表来源机构</label>
 
         <div class="col-sm-9">

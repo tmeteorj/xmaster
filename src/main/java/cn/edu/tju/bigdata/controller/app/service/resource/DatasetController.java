@@ -3,8 +3,10 @@ package cn.edu.tju.bigdata.controller.app.service.resource;
 import cn.edu.tju.bigdata.annotation.SystemLog;
 import cn.edu.tju.bigdata.controller.index.BaseController;
 import cn.edu.tju.bigdata.entity.DatasetFormMap;
+import cn.edu.tju.bigdata.entity.MetadataFormMap;
 import cn.edu.tju.bigdata.enums.EmDeletedMark;
 import cn.edu.tju.bigdata.mapper.DatasetMapper;
+import cn.edu.tju.bigdata.mapper.MetadataMapper;
 import cn.edu.tju.bigdata.plugin.PageView;
 import cn.edu.tju.bigdata.util.Common;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by NING on 2016/9/28.
@@ -30,6 +32,9 @@ public class DatasetController extends BaseController {
 
     @Autowired
     DatasetMapper datasetMapper;
+
+    @Autowired
+    MetadataMapper metadataMapper;
     @RequestMapping("/list")
     public String manage(Model model) throws Exception {
         model.addAttribute("res", findByRes());
@@ -93,7 +98,6 @@ public class DatasetController extends BaseController {
     @ResponseBody
     @RequestMapping("/{id}/link")
     public String link(@PathVariable Long id) throws Exception {
-
         DatasetFormMap datasetFormMap = datasetMapper.findbyFrist("id", id.toString(), DatasetFormMap.class);
         try {
             String type = datasetFormMap.getStr("dataset_type");
@@ -101,11 +105,12 @@ public class DatasetController extends BaseController {
             String name = datasetFormMap.getStr("title");
             String username = datasetFormMap.getStr("username");
             String psw = datasetFormMap.getStr("psw");
+            String coded_format = datasetFormMap.getStr("coded_format");
             if(type.indexOf("mysql")!=-1){
                 Connection conn = null;
                 try{
                     Class.forName("com.mysql.jdbc.Driver");
-                    conn = DriverManager.getConnection(url, username, psw);
+                    conn = DriverManager.getConnection(url+"?useUnicode=true&characterEncoding="+coded_format, username, psw);
                     if(!conn.isClosed()){
                         return "success";
                     }
@@ -150,4 +155,134 @@ public class DatasetController extends BaseController {
         }
         return "success";
     }
+
+    @ResponseBody
+    @RequestMapping("/{id}/createmetadata")
+    @Transactional(readOnly = false)
+    @SystemLog(module = "资源管理", methods = "新增/修改元数据")
+    public String addmetadata(@PathVariable Long id) throws Exception {
+        DatasetFormMap datasetFormMap = datasetMapper.findbyFrist("id", id.toString(), DatasetFormMap.class);
+        try {
+            String type = datasetFormMap.getStr("dataset_type");
+            String url = datasetFormMap.getStr("dataset_url");
+            String name = datasetFormMap.getStr("title");
+            String username = datasetFormMap.getStr("username");
+            String psw = datasetFormMap.getStr("psw");
+            String coded_format = datasetFormMap.getStr("coded_format");
+            if(type.indexOf("mysql")!=-1){
+                Connection conn = null;
+                try{
+                    Class.forName("com.mysql.jdbc.Driver");
+                    conn = DriverManager.getConnection(url+"?useUnicode=true&characterEncoding="+coded_format, username, psw);
+                    if(!conn.isClosed()){
+                        Statement stmt = conn.createStatement();
+                        String sql = "DESCRIBE "+name;
+                        ResultSet result = stmt.executeQuery(sql);
+                        List<MetadataFormMap> metadataFormMaps = new ArrayList<>();
+                        while (result.next()) {
+                            Date now = new Date();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                            MetadataFormMap metadataFormMap = new MetadataFormMap();
+                            metadataFormMap.put("datasetid", id.toString());
+                            metadataFormMap.put("meta", result.getString("Field"));
+                            metadataFormMap.put("type", result.getString("Type"));
+                            metadataFormMap.put("`null`", result.getString("Null"));
+                            metadataFormMap.put("deleted_mark", EmDeletedMark.VALID.getCode());
+                            metadataFormMap.put("meta_created", simpleDateFormat.format(now));
+                            metadataFormMap.put("meta_updated", simpleDateFormat.format(now));
+                            metadataFormMaps.add(metadataFormMap);
+                        }
+                        MetadataFormMap deleFormMap = new MetadataFormMap();
+                        deleFormMap.set("datasetid", id.toString());
+                        deleFormMap.set("deleted_mark", EmDeletedMark.INVALID.getCode());
+                        metadataMapper.editEntity(deleFormMap);
+                        metadataMapper.batchSave(metadataFormMaps);
+                        return "success";
+                    }
+                    else{
+                        return "failed";
+                    }
+                } catch (ClassNotFoundException e) {
+                    return "failed";
+                } catch(SQLException e) {
+                    return "failed";
+                } catch(Exception e) {
+                    return "failed";
+                }
+                finally {
+                    conn.close();
+                }
+            }
+            return "failed";
+
+        }
+        catch (Exception e){
+            return "failed";
+        }
+
+    }
+
+
+    @RequestMapping("/{id}/view")
+     public String view(@PathVariable Long id, Model model) throws Exception {
+        MetadataFormMap mf = new MetadataFormMap();
+        mf.put("datasetid",id);
+        mf.put("deleted_mark",1);
+        List<MetadataFormMap> lsm = metadataMapper.findByNames(mf);
+        List<String> ls = new ArrayList<>();
+        for(MetadataFormMap me : lsm){
+            ls.add(me.getStr("meta"));
+        }
+        model.addAttribute("meta",ls);
+        List<List<String>> as = new ArrayList<>();
+        DatasetFormMap datasetFormMap = datasetMapper.findbyFrist("id", id.toString(), DatasetFormMap.class);
+        try {
+            String type = datasetFormMap.getStr("dataset_type");
+            String url = datasetFormMap.getStr("dataset_url");
+            String name = datasetFormMap.getStr("title");
+            String username = datasetFormMap.getStr("username");
+            String psw = datasetFormMap.getStr("psw");
+            String coded_format = datasetFormMap.getStr("coded_format");
+            if(type.indexOf("mysql")!=-1){
+                Connection conn = null;
+                try{
+                    Class.forName("com.mysql.jdbc.Driver");
+                    conn = DriverManager.getConnection(url+"?useUnicode=true&characterEncoding="+coded_format, username, psw);
+                    if(!conn.isClosed()){
+                        Statement stmt = conn.createStatement();
+                        String sql = "SELECT ";
+                        for(String st:ls){
+                            sql += st;
+                            sql += ",";
+                        }
+                        sql = sql.substring(0,sql.length()-1);
+                        sql += " FROM "+ name +" LIMIT 20";
+                        ResultSet result = stmt.executeQuery(sql);
+                        while (result.next()) {
+                            List<String> a = new ArrayList<>();
+                            for(String st:ls){
+                                a.add(result.getString(st));
+                            }
+                            as.add(a);
+                        }
+                    }
+                    else{
+                    }
+                } catch (ClassNotFoundException e) {
+                } catch(SQLException e) {
+                } catch(Exception e) {
+                }
+                finally {
+                    conn.close();
+                }
+            }
+
+        }
+        catch (Exception e){
+        }
+
+        model.addAttribute("data",as);
+        return Common.BACKGROUND_PATH + "/app/resourcemanage/datasetview";
+    }
+
 }

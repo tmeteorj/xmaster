@@ -40,11 +40,15 @@ import cn.edu.tju.bigdata.plugin.PagePlugin;
 import cn.edu.tju.bigdata.plugin.PageView;
 import cn.edu.tju.bigdata.util.Common;
 import cn.edu.tju.bigdata.util.EhcacheUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Clinton Begin
  */
 public class Plugin implements InvocationHandler {
+
+	private static Logger logger = LoggerFactory.getLogger(Plugin.class);
 
 	private Object target;
 	private Interceptor interceptor;

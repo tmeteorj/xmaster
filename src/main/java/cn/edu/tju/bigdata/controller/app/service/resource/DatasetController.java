@@ -222,4 +222,67 @@ public class DatasetController extends BaseController {
 
     }
 
+
+    @RequestMapping("/{id}/view")
+     public String view(@PathVariable Long id, Model model) throws Exception {
+        MetadataFormMap mf = new MetadataFormMap();
+        mf.put("datasetid",id);
+        mf.put("deleted_mark",1);
+        List<MetadataFormMap> lsm = metadataMapper.findByNames(mf);
+        List<String> ls = new ArrayList<>();
+        for(MetadataFormMap me : lsm){
+            ls.add(me.getStr("meta"));
+        }
+        model.addAttribute("meta",ls);
+        List<List<String>> as = new ArrayList<>();
+        DatasetFormMap datasetFormMap = datasetMapper.findbyFrist("id", id.toString(), DatasetFormMap.class);
+        try {
+            String type = datasetFormMap.getStr("dataset_type");
+            String url = datasetFormMap.getStr("dataset_url");
+            String name = datasetFormMap.getStr("title");
+            String username = datasetFormMap.getStr("username");
+            String psw = datasetFormMap.getStr("psw");
+            String coded_format = datasetFormMap.getStr("coded_format");
+            if(type.indexOf("mysql")!=-1){
+                Connection conn = null;
+                try{
+                    Class.forName("com.mysql.jdbc.Driver");
+                    conn = DriverManager.getConnection(url+"?useUnicode=true&characterEncoding="+coded_format, username, psw);
+                    if(!conn.isClosed()){
+                        Statement stmt = conn.createStatement();
+                        String sql = "SELECT ";
+                        for(String st:ls){
+                            sql += st;
+                            sql += ",";
+                        }
+                        sql = sql.substring(0,sql.length()-1);
+                        sql += " FROM "+ name +" LIMIT 20";
+                        ResultSet result = stmt.executeQuery(sql);
+                        while (result.next()) {
+                            List<String> a = new ArrayList<>();
+                            for(String st:ls){
+                                a.add(result.getString(st));
+                            }
+                            as.add(a);
+                        }
+                    }
+                    else{
+                    }
+                } catch (ClassNotFoundException e) {
+                } catch(SQLException e) {
+                } catch(Exception e) {
+                }
+                finally {
+                    conn.close();
+                }
+            }
+
+        }
+        catch (Exception e){
+        }
+
+        model.addAttribute("data",as);
+        return Common.BACKGROUND_PATH + "/app/resourcemanage/datasetview";
+    }
+
 }

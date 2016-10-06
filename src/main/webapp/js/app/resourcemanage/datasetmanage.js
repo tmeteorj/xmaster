@@ -77,6 +77,11 @@ $(function () {
     $("#createmetadata").click("click", function () {
         createmetadata();
     });
+    $("#viewFun").click("click", function () {
+        viewFun();
+    });
+
+
 });
 
 function editFun() {
@@ -168,4 +173,18 @@ function createmetadata(){
     } else {
         layer.msg('生成失败');
     }
+}
+
+function viewFun() {
+    var cbox = grid.getSelectedCheckbox();
+    if (cbox.length > 1 || cbox == "") {
+        layer.msg("只能选中一个");
+        return;
+    }
+    pageii = layer.open({
+        title: "快照",
+        type: 2,
+        area: ["600px", "80%"],
+        content: rootPath + '/dataset/' + cbox + '/view.shtml'
+    });
 }

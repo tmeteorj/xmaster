@@ -30,6 +30,9 @@ $(function () {
             colkey: "psw",
             name: "密码"
         }, {
+            colkey: "coded_format",
+            name: "编码格式"
+        }, {
             colkey: "src",
             name: "数据表来源机构"
         },{
@@ -70,6 +73,9 @@ $(function () {
     });
     $("#linkFun").click("click", function () {
         linkFun();
+    });
+    $("#createmetadata").click("click", function () {
+        createmetadata();
     });
 });
 
@@ -145,5 +151,21 @@ function linkFun(){
         layer.msg('链接成功');
     } else {
         layer.msg('链接失败');
+    }
+}
+
+function createmetadata(){
+
+    var cbox = grid.getSelectedCheckbox();
+    if (cbox.length > 1 || cbox == "") {
+        layer.msg("只能选中一个");
+        return;
+    }
+    var url = rootPath + '/dataset/' + cbox + '/createmetadata.shtml';
+    var s = CommnUtil.ajax(url, {}, "json");
+    if (s == "success") {
+        layer.msg('生成成功');
+    } else {
+        layer.msg('生成失败');
     }
 }

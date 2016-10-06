@@ -35,7 +35,7 @@ public interface BaseMapper {
 	 * 
 	 * 1：自定义where查询条件，传入继承FormMap的子类对象,返回是一个List<T>集合<br/>
 	 * 2：返回查询条件数据,如不传入.则返回所有数据..如果附加条件.如下 <br/>
-	 * 3：formMap.put('where","id=XX and name= XX order by XX") <br/>
+	 * 3：formMap.put('where","where id=XX and name= XX order by XX") <br/>
 	 * <b>author：</b><br/>
 	 * <b>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsplanyuan</b><br/>
 	 * <b>date：</b><br/>

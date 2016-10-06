@@ -43,6 +43,8 @@ public class TableController extends BaseController {
 
     private Map<String, List<String>> searchMap;
 
+    private static final String BD = "bd_";
+
     @PostConstruct
     private void init(){
         searchMap = JSON.parseObject(searchJson, new TypeReference<Map<String, List<String>>>(){});
@@ -51,11 +53,15 @@ public class TableController extends BaseController {
     @Autowired
     private TableMapper tableMapper;
 
-    @RequestMapping("/{tableName}/list")
-    public String list(@PathVariable String tableName, Model model) {
+    @RequestMapping("/{tableName}/list/{deletedMark}")
+    public String list(@PathVariable String tableName, @PathVariable Integer deletedMark, Model model) {
+        if(!tableName.startsWith(BD)){
+            tableName = BD + tableName;
+        }
         model.addAttribute("res", findByRes());
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
         model.addAttribute("tableName", tableName);
+        model.addAttribute("deletedMark", deletedMark);
         model.addAttribute("tableList", tableList);
         List<String> searchColumns = searchMap.get(tableName);
         if (searchColumns == null){
@@ -77,6 +83,9 @@ public class TableController extends BaseController {
     @Transactional(readOnly = false)
     @SystemLog(module = "资源管理", methods = "删除")
     public String delete(@PathVariable String tableName, @PathVariable Long id) throws Exception {
+        if(!tableName.startsWith(BD)){
+            tableName = BD + tableName;
+        }
         String set = String.format("deleted_mark = %d", EmDeletedMark.INVALID.getCode());
         tableMapper.updateEntryById(databaseName, tableName, set, id);
         return "success";
@@ -84,6 +93,9 @@ public class TableController extends BaseController {
 
     @RequestMapping("/{tableName}/{id}/edit")
     public String edit(@PathVariable String tableName, @PathVariable Long id, Model model) throws Exception {
+        if(!tableName.startsWith(BD)){
+            tableName = BD + tableName;
+        }
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
         model.addAttribute("tableList", tableList);
         model.addAttribute("tableName", tableName);
@@ -93,6 +105,9 @@ public class TableController extends BaseController {
 
     @RequestMapping("/{tableName}/add")
     public String add(@PathVariable String tableName, Model model) throws Exception {
+        if(!tableName.startsWith(BD)){
+            tableName = BD + tableName;
+        }
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
         model.addAttribute("tableList", tableList);
         model.addAttribute("tableName", tableName);
@@ -102,6 +117,9 @@ public class TableController extends BaseController {
 
     @RequestMapping("/{tableName}/{id}/audit")
     public String audit(@PathVariable String tableName, @PathVariable Long id, Model model) throws Exception {
+        if(!tableName.startsWith(BD)){
+            tableName = BD + tableName;
+        }
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
         model.addAttribute("tableList", tableList);
         model.addAttribute("tableName", tableName);
@@ -112,6 +130,9 @@ public class TableController extends BaseController {
     @ResponseBody
     @RequestMapping("/{tableName}/{id}/check")
     public Boolean check(@PathVariable String tableName, @PathVariable Long id, Model model) throws Exception {
+        if(!tableName.startsWith(BD)){
+            tableName = BD + tableName;
+        }
         FormMap formMap = tableMapper.selectDataById(databaseName, tableName, id);
         if (formMap != null && formMap.getInt("deleted_mark") == EmDeletedMark.TO_BE_AUDITED.getCode())
             return Boolean.TRUE;
@@ -123,6 +144,9 @@ public class TableController extends BaseController {
     @Transactional(readOnly = false)
     @SystemLog(module = "资源管理", methods = "新增/修改")
     public String save(@PathVariable String tableName) throws Exception {
+        if(!tableName.startsWith(BD)){
+            tableName = BD + tableName;
+        }
         Date now = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         FormMap<String, Object> formMap = getFormMap(tableName);
@@ -209,11 +233,14 @@ public class TableController extends BaseController {
     }
 
     @ResponseBody
-    @RequestMapping("/{tableName}/findByPage")
-    public PageView findByPage(@PathVariable String tableName, String pageNow, String pageSize) {
+    @RequestMapping("/{tableName}/findByPage/{deletedMark}")
+    public PageView findByPage(@PathVariable String tableName, @PathVariable Integer deletedMark, String pageNow, String pageSize) {
+        if(!tableName.startsWith(BD)){
+            tableName = BD + tableName;
+        }
         // 获得传参，即where子句的参数
         FormMap<String, Object> formMap = getFormMap(tableName);
-        formMap.set("deleted_mark", EmDeletedMark.VALID.getCode());
+        formMap.set("deleted_mark", deletedMark);
         formMap.put("paging", getPageView(pageNow, pageSize, formMap.getStr("orderby")));
 
         // 拼接sql语句

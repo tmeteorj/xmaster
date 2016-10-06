@@ -70,7 +70,7 @@
                     </c:if>
                 },
                 </c:forEach>],
-            jsonUrl: rootPath + '/table/<c:out value="${tableName}"/>/findByPage.shtml',
+            jsonUrl: rootPath + '/table/<c:out value="${tableName}"/>/findByPage/<c:out value="${deletedMark}"/>.shtml',
             checkbox: true
         });
 

@@ -274,8 +274,18 @@
 		</dependency>
 
 	</dependencies>
-	<!--<build>-->
-		<!--<finalName>lanyuan-notebook-3.1v</finalName>-->
+	<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+        <!--<finalName>lanyuan-notebook-3.1v</finalName>-->
 		<!--<plugins>-->
 			<!--<plugin>-->
 				<!--<groupId>org.mortbay.jetty</groupId>-->
@@ -299,5 +309,6 @@
 				<!--</configuration>-->
 			<!--</plugin>-->
 		<!--</plugins>-->
-	<!--</build>-->
+	</build>
+
 </project>

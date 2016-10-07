@@ -21,7 +21,7 @@ $(function () {
             colkey: "type",
             name: "元数据类型"
         }, {
-            colkey: "null",
+            colkey: "isnull",
             name: "是否非空"
         }, {
             colkey: "remark",

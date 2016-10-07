@@ -176,7 +176,7 @@ public class DatasetController extends BaseController {
                     conn = DriverManager.getConnection(url+"?useUnicode=true&characterEncoding="+coded_format, username, psw);
                     if(!conn.isClosed()){
                         Statement stmt = conn.createStatement();
-                        String sql = "DESCRIBE "+name;
+                        String sql = "show full columns from  "+name;
                         ResultSet result = stmt.executeQuery(sql);
                         List<MetadataFormMap> metadataFormMaps = new ArrayList<>();
                         while (result.next()) {
@@ -186,7 +186,8 @@ public class DatasetController extends BaseController {
                             metadataFormMap.put("datasetid", id.toString());
                             metadataFormMap.put("meta", result.getString("Field"));
                             metadataFormMap.put("type", result.getString("Type"));
-                            metadataFormMap.put("`null`", result.getString("Null"));
+                            metadataFormMap.put("isnull", result.getString("Null"));
+                            metadataFormMap.put("remark", result.getString("Comment"));
                             metadataFormMap.put("deleted_mark", EmDeletedMark.VALID.getCode());
                             metadataFormMap.put("meta_created", simpleDateFormat.format(now));
                             metadataFormMap.put("meta_updated", simpleDateFormat.format(now));
@@ -194,8 +195,7 @@ public class DatasetController extends BaseController {
                         }
                         MetadataFormMap deleFormMap = new MetadataFormMap();
                         deleFormMap.set("datasetid", id.toString());
-                        deleFormMap.set("deleted_mark", EmDeletedMark.INVALID.getCode());
-                        metadataMapper.editEntity(deleFormMap);
+                        metadataMapper.deleteByNames(deleFormMap);
                         metadataMapper.batchSave(metadataFormMaps);
                         return "success";
                     }
@@ -221,8 +221,6 @@ public class DatasetController extends BaseController {
         }
 
     }
-
-
     @RequestMapping("/{id}/view")
      public String view(@PathVariable Long id, Model model) throws Exception {
         MetadataFormMap mf = new MetadataFormMap();
@@ -230,8 +228,16 @@ public class DatasetController extends BaseController {
         mf.put("deleted_mark",1);
         List<MetadataFormMap> lsm = metadataMapper.findByNames(mf);
         List<String> ls = new ArrayList<>();
+        List<String> lsmeta = new ArrayList<>();
         for(MetadataFormMap me : lsm){
-            ls.add(me.getStr("meta"));
+            String name1 = me.getStr("remark").trim();
+            if(!name1.equals("")){
+                ls.add(name1);
+            }
+            else {
+                ls.add(me.getStr("meta"));
+            }
+            lsmeta.add(me.getStr("meta"));
         }
         model.addAttribute("meta",ls);
         List<List<String>> as = new ArrayList<>();
@@ -251,7 +257,7 @@ public class DatasetController extends BaseController {
                     if(!conn.isClosed()){
                         Statement stmt = conn.createStatement();
                         String sql = "SELECT ";
-                        for(String st:ls){
+                        for(String st:lsmeta){
                             sql += st;
                             sql += ",";
                         }
@@ -260,8 +266,8 @@ public class DatasetController extends BaseController {
                         ResultSet result = stmt.executeQuery(sql);
                         while (result.next()) {
                             List<String> a = new ArrayList<>();
-                            for(String st:ls){
-                                a.add(result.getString(st));
+                            for(String st:lsmeta){
+                                a.add(result.getString(st).substring(0,5));
                             }
                             as.add(a);
                         }

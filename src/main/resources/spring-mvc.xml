@@ -59,6 +59,7 @@
 		<property name="prefix" value="/"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
+	<context:component-scan base-package="cn.edu.tju.bigdata.biz"/>
 	<mvc:annotation-driven>
 		<!-- 处理responseBody 里面日期类型 -->
 		<mvc:message-converters>

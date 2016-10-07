@@ -34,6 +34,12 @@
                     tb.load(rootPath + sn[2]);
                 });
             });
+
+            $("#locationNav").on('click', function(){
+                var tb = $("#loadhtml");
+                tb.html(CommnUtil.loadingImg());
+                tb.load("${ctx}/common/${userFormMap.accountName}/locationNav.shtml");
+            });
         });
     </script>
 </head>
@@ -176,8 +182,8 @@
                     <li class="divider"></li>
 
                     <!-- 传用户账号的用意是可以用它来区分数据集权限等，TODO -->
-                    <li><a href="${ctx}/common/${userFormMap.accountName}/locationNav.shtml">地名导航</a></li>
-                    <li><a href="index.shtml">信息检索</a></li>
+                    <li><a id="locationNav" href="javascript:void(0);">地名导航</a></li>
+                    <li><a href="${ctx}/common/${userFormMap.accountName}/infoRetrieval.shtml">信息检索</a></li>
                     <li>
                         <a href="index.shtml">
                             <span class="badge bg-danger pull-right">1</span> 我的消息

@@ -1,115 +1,70 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+		 pageEncoding="UTF-8" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<%@include file="/common/common.jspf"%>
-<script type="text/javascript" src="${ctx}/js/system/resources/add.js"></script>
-<style type="text/css">
-#but button {
-	margin-bottom: 5px;
-	margin-right: 5px;
-}
-.col-sm-3 {
-	width: 15%;
-	float: left;
-}
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<%@include file="/common/common.jspf" %>
+	<script type="text/javascript" src="${ctx}/js/app/gsm/gsmdatasetadd.js"></script>
 
-.col-sm-9 {
-	width: 85%;
-	float: left;
-}
+	<style type="text/css">
+		.col-sm-3 {
+			width: 15%;
+			float: left;
+		}
 
-label[class^="btn btn-default"] {
-	margin-top: -4px;
-}
-</style>
+		.col-sm-9 {
+			width: 85%;
+			float: left;
+		}
+	</style>
 </head>
 <body>
-	<div class="l_err" style="width: 100%; margin-top: 2px;"></div>
-	<form id="form" name="form" class="form-horizontal" method="post"
-	action="${pageContext.request.contextPath}/resources/addEntity.shtml">
+<div class="l_err" style="width: 100%; margin-top: 2px;"></div>
+<form id="form" name="form" enctype="multipart/form-data" class="form-horizontal" method="post"
+	  action="${ctx}/gsmdataset/adddataset.shtml">
+	<input type="hidden" class="form-control"
+		   value="${sessionScope.userSessionId}" name="upload_user_id" id="upload_user_id">
+	<input type="hidden" class="form-control"
+		   value="${sessionScope.userSessionAccountName}" name="upload_username" id="upload_username">
 	<section class="panel panel-default">
 		<div class="panel-body">
 			<div class="form-group">
-				<label class="col-sm-3 control-label">菜单名称</label>
+				<label class="col-sm-3 control-label">数据集描述</label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control checkacc"
-						placeholder="请输入菜单名称" name="resFormMap.name" id="name">
+					<input type="text" class="form-control"
+						   placeholder="请输入数据集描述"
+						   name="description" id="description">
 				</div>
 			</div>
+
 			<div class="line line-dashed line-lg pull-in"></div>
 			<div class="form-group">
-				<label class="col-sm-3 control-label">菜单标识</label>
+				<label class="col-sm-3 control-label">文件路径</label>
+
 				<div class="col-sm-9">
-					<input type="text" class="form-control checkacc"
-						placeholder="请输入菜单标识" name="resFormMap.resKey" id="resKey">
-				</div>
-			</div>
-			<div class="line line-dashed line-lg pull-in"></div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">菜单url</label>
-				<div class="col-sm-9">
-					<input type="text" class="form-control checkacc"
-						placeholder="请输入菜单url" name="resFormMap.resUrl" id="resUrl">
-				</div>
-			</div>
-			<div class="line line-dashed line-lg pull-in"></div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">上级菜单</label>
-				<div class="col-sm-9">
-					<select id="parentId" name="resFormMap.parentId" class="form-control m-b"
-						tabindex="-1">
-					</select>
-				</div>
-			</div>
-			<div class="line line-dashed line-lg pull-in"></div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">菜单类型</label>
-				<div class="col-sm-9">
-						<select id="type" name="resFormMap.type" class="form-control m-b"
-							tabindex="-1" onchange="but(this)">
-							<option value="0">------  目录  ------</option>
-							<option value="1">------  菜单  ------</option>
-							<option value="2">------  按扭  ------</option>
-						</select>
-				</div>
-			</div>
-			<div class="form-group" id="divbut" style="display: none;">
-				<label class="col-sm-3 control-label">选择</label>
-				<div class="col-sm-9">
-				<div id="but" class="doc-buttons">
-				</div><font color="red">可自定义填入html代码</font>
-				</div>
-			</div>
-			<div class="line line-dashed line-lg pull-in"></div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">图标</label>
-				<div class="col-sm-9">
-					<input type="text" class="form-control checkacc"
-						placeholder="请输入icon" name="resFormMap.icon" id="icon">
-				</div>
-			</div>
-			<div class="line line-dashed line-lg pull-in"></div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">是否隐藏</label>
-				<div class="col-sm-9">
-					<input id="gritter-light" type="checkbox" name="resFormMap.ishide" id="ishide" class="ace ace-switch ace-switch-5" value="1">
-				</div>
-			</div>
-			<div class="line line-dashed line-lg pull-in"></div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">菜单描述</label>
-				<div class="col-sm-9">
-					<input type="text" class="form-control checkacc"
-						placeholder="请输入菜单描述" name="resFormMap.description" id="description">
+					<input type="file" name="file" class="form-control"  placeholder="请选择数据集文件" id="file">
 				</div>
 			</div>
 		</div>
 		<footer class="panel-footer text-right bg-light lter">
-		<button type="submit" class="btn btn-success btn-s-xs">提交</button>
-		</footer> 
+			<button type="submit" class="btn btn-success btn-s-xs">保存</button>
+		</footer>
 	</section>
 </form>
+<script type="text/javascript">
+	onloadurl();
+	$('.form_date').datetimepicker({
+									   language: 'zh-CN',
+									   weekStart: 1,
+									   todayBtn: 1,
+									   autoclose: 1,
+									   todayHighlight: 1,
+									   startView: 2,
+									   minView: 2,
+									   forceParse: 0
+								   });
+</script>
 </body>
 </html>

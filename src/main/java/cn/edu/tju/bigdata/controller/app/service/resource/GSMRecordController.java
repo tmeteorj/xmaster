@@ -46,12 +46,4 @@ public class GSMRecordController extends BaseController {
         return pageView;
     }
 
-    @ResponseBody
-    @RequestMapping("/{id}/check")
-    public Boolean check(@PathVariable Long id, Model model) throws Exception {
-        GSMRecordFormMap gsmRecordFormMap = gsmRecordMapper.findbyFrist("id", id.toString(), GSMRecordFormMap.class);
-        if (gsmRecordFormMap != null && gsmRecordFormMap.getInt("deleted_mark") == EmDeletedMark.TO_BE_AUDITED.getCode())
-            return Boolean.TRUE;
-        return Boolean.FALSE;
-    }
 }

@@ -234,7 +234,6 @@
 
             <label style="width:auto;height:40px; display:inline">年份:</label>
             <select id="sel_year" style="width:120px;height:40px; display:inline">
-                <option value="2014">2014</option>
                 <option value="2015">2015</option>
             </select>
 

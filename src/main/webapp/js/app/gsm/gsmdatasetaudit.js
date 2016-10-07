@@ -14,7 +14,9 @@ function submit() {
     var s = CommnUtil.ajax(url, {
         gsmDatasetFormMap_id: $("#id").val(),
         gsmDatasetFormMap_remark: $("#remark").val(),
-        gsmDatasetFormMap_deleted_mark: $("#deleted_mark").val()
+        gsmDatasetFormMap_deleted_mark: $("#deleted_mark").val(),
+        gsmDatasetFormMap_audit_user_id:$("#audit_user_id").val(),
+        gsmDatasetFormMap_audit_username:$("#audit_username").val()
     }, "json");
     if (s == "success") {
         layer.confirm('操作成功！', {

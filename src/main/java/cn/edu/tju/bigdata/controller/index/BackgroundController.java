@@ -102,6 +102,7 @@ public class BackgroundController extends BaseController {
 			UserLoginFormMap userLogin = new UserLoginFormMap();
 			Session session = SecurityUtils.getSubject().getSession();
 			userLogin.put("userId", session.getAttribute("userSessionId"));
+			session.setAttribute("userSessionAccountName",username);
 			userLogin.put("accountName", username);
 			userLogin.put("loginIP", session.getHost());
 			userLoginMapper.addEntity(userLogin);

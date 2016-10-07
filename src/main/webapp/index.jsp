@@ -1,8 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<html lang="en"
-	class="app">
+<%@ page import="cn.edu.tju.bigdata.entity.UserFormMap" %>
+<html lang="en" class="app">
 <head>
-    
 <%@include file="/common/common.jspf"%>
 <script type="text/javascript">
 	$(function() {
@@ -227,9 +226,12 @@
 														<i class="fa fa-th-list icon"> <b class="bg-success"></b>
 														</i>
 													</c:if><c:if test="${s.index==7}">
-														<i class="fa fa fa-bar-chart"> <b class="bg-success"></b>
-													</i>
-											</c:if>
+														<i class="fa fa-beer icon"> <b class="bg-success"></b>
+													</i></c:if><c:if test="${s.index==8}">
+                                                        <i class="fa fa-asterisk icon"> <b class="bg-success"></b>
+                                                    </i></c:if><c:if test="${s.index==9}">
+                                                        <i class="fa fa-certificate icon"> <b class="bg-success"></b>
+                                                    </i></c:if>
 
 												<span class="pull-right"> <i
 														class="fa fa-angle-down text"></i> <i

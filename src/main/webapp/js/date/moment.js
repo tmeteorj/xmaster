@@ -2141,8 +2141,8 @@
         },
 
         // If passed a language key, it will set the language for this
-        // instance.  Otherwise, it will return the language configuration
-        // variables for this instance.
+        // plane.  Otherwise, it will return the language configuration
+        // variables for this plane.
         lang : function (key) {
             if (key === undefined) {
                 return this._lang;

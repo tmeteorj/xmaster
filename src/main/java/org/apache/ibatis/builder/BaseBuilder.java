@@ -126,7 +126,7 @@ public abstract class BaseBuilder {
 					.newInstance();
 		} catch (Exception e) {
 			throw new BuilderException(
-					"Error creating instance. Cause: "
+					"Error creating plane. Cause: "
 							+ e, e);
 		}
 	}

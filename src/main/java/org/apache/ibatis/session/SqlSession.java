@@ -204,7 +204,7 @@ public interface SqlSession extends
 	 * @param statement
 	 *            Unique identifier matching the statement to use.
 	 * @param rowBounds
-	 *            RowBound instance to limit the query results
+	 *            RowBound plane to limit the query results
 	 * @param handler
 	 *            ResultHandler that will handle each retrieved row
 	 * @return Mapped object

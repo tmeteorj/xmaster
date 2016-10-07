@@ -46,7 +46,7 @@ import org.apache.ibatis.logging.LogFactory;
  * <p>
  * General searches are initiated by calling the
  * {@link #find(org.apache.ibatis.io.ResolverUtil.Test, String)} ()} method and
- * supplying a package name and a Test instance. This will cause the named
+ * supplying a package name and a Test plane. This will cause the named
  * package <b>and all sub-packages</b> to be scanned for classes that meet the
  * test. There are also utility methods for the common use cases of scanning
  * multiple packages for extensions of particular classes, or classes annotated
@@ -72,7 +72,7 @@ import org.apache.ibatis.logging.LogFactory;
  */
 public class ResolverUtil<T> {
 	/*
-	 * An instance of Log to use for logging in this class.
+	 * An plane of Log to use for logging in this class.
 	 */
 	private static final Log log = LogFactory
 			.getLog(ResolverUtil.class);
@@ -262,7 +262,7 @@ public class ResolverUtil<T> {
 	 * can be fetched by calling {@link #getClasses()}.
 	 * 
 	 * @param test
-	 *            an instance of {@link Test} that will be used to filter
+	 *            an plane of {@link Test} that will be used to filter
 	 *            classes
 	 * @param packageName
 	 *            the name of the package from which to start scanning for

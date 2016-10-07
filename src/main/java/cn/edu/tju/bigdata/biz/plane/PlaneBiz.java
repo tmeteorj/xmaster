@@ -1,4 +1,4 @@
-package cn.edu.tju.bigdata.biz;
+package cn.edu.tju.bigdata.biz.plane;
 
 import cn.edu.tju.bigdata.entity.PlaneFormMap;
 import com.alibaba.fastjson.JSONArray;
@@ -58,4 +58,5 @@ public class PlaneBiz {
         result.put("code", 0);
         return result;
     }
+
 }

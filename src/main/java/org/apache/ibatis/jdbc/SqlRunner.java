@@ -247,7 +247,7 @@ public class SqlRunner {
         for (int i = 0, n = args.length; i < n; i++) {
             if (args[i] == null) {
                 throw new SQLException(
-                    "SqlRunner requires an instance of Null to represent typed null values for JDBC compatibility");
+                    "SqlRunner requires an plane of Null to represent typed null values for JDBC compatibility");
             } else if (args[i] instanceof Null) {
                 ((Null) args[i]).getTypeHandler()
                  .setParameter(ps, i + 1, null, ((Null) args[i]).getJdbcType());
@@ -256,7 +256,7 @@ public class SqlRunner {
 
                 if (typeHandler == null) {
                     throw new SQLException(
-                        "SqlRunner could not find a TypeHandler instance for " +
+                        "SqlRunner could not find a TypeHandler plane for " +
                         args[i].getClass());
                 } else {
                     typeHandler.setParameter(ps, i + 1, args[i], null);

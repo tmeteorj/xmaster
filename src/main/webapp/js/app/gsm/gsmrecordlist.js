@@ -48,7 +48,7 @@ $(function () {
                 return new Date(data).format("yyyy-MM-dd hh:mm:ss");
             }
         }],
-        jsonUrl: rootPath + '/gsm/gsmrecord/findByPage.shtml',
+        jsonUrl: rootPath + '/gsmrecord/findByPage.shtml',
         checkbox: false
     });
 

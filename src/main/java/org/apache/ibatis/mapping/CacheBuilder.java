@@ -198,7 +198,7 @@ public class CacheBuilder {
       return cacheClass.getConstructor(Cache.class);
     } catch (Exception e) {
       throw new CacheException("Invalid cache decorator (" + cacheClass + ").  " +
-          "Cache decorators must have a constructor that takes a Cache instance as a parameter.  Cause: " + e, e);
+          "Cache decorators must have a constructor that takes a Cache plane as a parameter.  Cause: " + e, e);
     }
   }
 }

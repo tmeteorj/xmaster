@@ -57,7 +57,7 @@ public class MapperRegistry {
 					.newInstance(sqlSession);
 		} catch (Exception e) {
 			throw new BindingException(
-					"Error getting mapper instance. Cause: "
+					"Error getting mapper plane. Cause: "
 							+ e, e);
 		}
 	}

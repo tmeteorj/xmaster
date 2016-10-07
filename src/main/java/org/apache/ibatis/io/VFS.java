@@ -41,11 +41,11 @@ public abstract class VFS {
   /** The list to which implementations are added by {@link #addImplClass(Class)}. */
   public static final List<Class<? extends VFS>> USER_IMPLEMENTATIONS = new ArrayList<Class<? extends VFS>>();
 
-  /** Singleton instance. */
+  /** Singleton plane. */
   private static VFS instance;
 
   /**
-   * Get the singleton {@link VFS} instance. If no {@link VFS} biz can be found for the
+   * Get the singleton {@link VFS} plane. If no {@link VFS} biz can be found for the
    * current environment, then this method returns null.
    */
   @SuppressWarnings("unchecked")
@@ -129,7 +129,7 @@ public abstract class VFS {
    * Invoke a method on an object and return whatever it returns.
    * 
    * @param method The method to invoke.
-   * @param object The instance or class (for static methods) on which to invoke the method.
+   * @param object The plane or class (for static methods) on which to invoke the method.
    * @param parameters The parameters to pass to the method.
    * @return Whatever the method returns.
    * @throws IOException If I/O errors occur

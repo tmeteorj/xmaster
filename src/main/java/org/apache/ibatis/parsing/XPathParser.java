@@ -253,7 +253,7 @@ public class XPathParser {
       });
       return builder.parse(inputSource);
     } catch (Exception e) {
-      throw new BuilderException("Error creating document instance.  Cause: " + e, e);
+      throw new BuilderException("Error creating document plane.  Cause: " + e, e);
     }
   }
 

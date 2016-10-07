@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `bd_gsmdataset` (
   `remark` varchar(500) DEFAULT NULL COMMENT '备注',
   `deleted_mark` int(11) NOT NULL DEFAULT '2' COMMENT '标记删除',
   `meta_created` datetime NOT NULL COMMENT '创建时间',
-  `meta_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `meta_updated` timestbd_gsmdatasetamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='手机信令数据集';
 

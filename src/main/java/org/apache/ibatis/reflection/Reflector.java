@@ -517,7 +517,7 @@ public class Reflector {
 	}
 
 	/*
-	 * Gets the name of the class the instance provides information for
+	 * Gets the name of the class the plane provides information for
 	 * 
 	 * @return The class name
 	 */
@@ -661,7 +661,7 @@ public class Reflector {
 	}
 
 	/*
-	 * Gets an instance of ClassInfo for the specified class.
+	 * Gets an plane of ClassInfo for the specified class.
 	 * 
 	 * @param clazz The class for which to lookup the method cache.
 	 * 

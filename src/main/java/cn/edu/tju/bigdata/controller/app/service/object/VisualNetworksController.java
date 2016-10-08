@@ -173,7 +173,7 @@ public class VisualNetworksController extends BaseController {
         JSONArray nodes = new JSONArray();
         for (int i=0;i<graphMatrix.getNodeCount();i++){
             JSONObject node = new JSONObject();
-            node.put("name", mapOfNumberName.getOrDefault(graphMatrix.getNode(i), "NaN"));
+            //node.put("name", mapOfNumberName.getOrDefault(graphMatrix.getNode(i), "NaN"));
             node.put("value", graphMatrix.getNode(i));
             node.put("category", mapOfCindexUI.get(communities.getCommunityIndex(i)));
             nodes.add(node);

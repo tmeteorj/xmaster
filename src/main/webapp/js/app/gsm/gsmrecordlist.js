@@ -9,6 +9,9 @@ $(function () {
             width: "50px",
             hide: true
         }, {
+            colkey: "dataset_id",
+            name: "数据集ID"
+        }, {
             colkey: "remark",
             name: "描述"
         }, {

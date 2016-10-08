@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 public class Common {
+
 	// 后台访问
 	public static final String BACKGROUND_PATH = "WEB-INF/jsp";
 	// 前台访问
@@ -50,7 +51,7 @@ public class Common {
 	// 默认除法运算精度
 	private static final int DEF_DIV_SCALE = 10;
 	
-	
+
 
 	/**
 	 * String转换double

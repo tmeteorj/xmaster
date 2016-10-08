@@ -68,9 +68,9 @@ label[class^="btn btn-default"] {
 						</button>
 						<ul class="dropdown-menu dropdown-select">
 							<li class=""><a href="#"><input type="radio"
-									name="userFormMap.locked" value="0" checked="checked">是</a></li>
+									name="userFormMap.locked" value="0" checked="checked">否</a></li>
 							<li class="active"><a href="#"><input type="radio"
-									name="userFormMap.locked" value="1">否</a></li>
+									name="userFormMap.locked" value="1">是</a></li>
 						</ul>
 					</div>
 				</div>

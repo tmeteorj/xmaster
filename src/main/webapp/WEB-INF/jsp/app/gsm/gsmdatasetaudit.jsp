@@ -32,6 +32,10 @@
     <input type="hidden" class="form-control"
            value="${gsmdataset.id}" name="gsmDatasetFormMap.id" id="id">
     <input type="hidden" class="form-control"
+           value="${sessionScope.userSessionId}" name="gsmDatasetFormMap.audit_user_id" id="audit_user_id">
+    <input type="hidden" class="form-control"
+           value="${sessionScope.userSessionAccountName}" name="gsmDatasetFormMap.audit_username" id="audit_username">
+    <input type="hidden" class="form-control"
            value="${gsmdataset.deleted_mark}" name="gsmDatasetFormMap.deleted_mark" id="deleted_mark">
     <section class="panel panel-default">
         <div class="panel-body">

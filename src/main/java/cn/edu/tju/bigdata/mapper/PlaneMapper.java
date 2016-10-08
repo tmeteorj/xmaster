@@ -11,4 +11,5 @@ import java.util.List;
 public interface PlaneMapper extends BaseMapper {
     public List<PlaneFormMap> selectYMA(PlaneFormMap map);
     public List<PlaneFormMap> selectPA(PlaneFormMap map);
+    public List<PlaneFormMap> selectAll(PlaneFormMap map);
 }

@@ -15,8 +15,14 @@ $(function () {
             colkey: "upload_user_id",
             name: "上传者ID"
         }, {
+            colkey: "upload_username",
+            name: "上传者账号"
+        }, {
             colkey: "audit_user_id",
             name: "审核者ID"
+        }, {
+            colkey: "audit_username",
+            name: "审核者账号"
         }, {
             colkey: "remark",
             name: "审核回复"
@@ -50,4 +56,15 @@ $(function () {
             data: searchParams
         });
     });
+    $("#addFun").click("click", function () {
+        addFun();
+    });
 });
+function addFun() {
+    pageii = layer.open({
+        title: "新增",
+        type: 2,
+        area: ["600px", "80%"],
+        content: rootPath + '/gsmdataset/add.shtml'
+    });
+}

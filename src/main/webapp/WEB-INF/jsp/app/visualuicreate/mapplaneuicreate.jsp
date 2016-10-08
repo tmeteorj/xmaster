@@ -142,7 +142,6 @@
                     for(var v in data[i].attr){
                         value=max(data[i].attr[v],value);
                     }
-                    value=value;
                     var polygon = new AMap.Polygon({
                         path: arr,//设置多边形边界路径
                         strokeColor: "#F33", //线颜色

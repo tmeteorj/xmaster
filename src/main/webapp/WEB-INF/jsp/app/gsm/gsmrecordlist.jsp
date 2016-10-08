@@ -7,8 +7,8 @@
   <form class="form-inline" role="form" id="searchForm"
         name="searchForm">
     <div class="form-group">
-      <label class="control-label"> <span
-              class="h4 font-thin v-middle">主体ID:</span></label> <input
+      <label class="control-label">
+        <span class="h4 font-thin v-middle">主体ID:</span></label> <input
             class="input-medium ui-autocomplete-input" id="name"
             name="gsmrecordFormMap.subject">
     </div>

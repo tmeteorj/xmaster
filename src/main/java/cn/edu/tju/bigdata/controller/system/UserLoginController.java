@@ -1,17 +1,16 @@
 package cn.edu.tju.bigdata.controller.system;
 
-import javax.inject.Inject;
-
+import cn.edu.tju.bigdata.controller.index.BaseController;
+import cn.edu.tju.bigdata.entity.UserLoginFormMap;
+import cn.edu.tju.bigdata.mapper.UserLoginMapper;
+import cn.edu.tju.bigdata.plugin.PageView;
+import cn.edu.tju.bigdata.util.Common;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.edu.tju.bigdata.mapper.UserLoginMapper;
-import cn.edu.tju.bigdata.controller.index.BaseController;
-import cn.edu.tju.bigdata.entity.UserLoginFormMap;
-import cn.edu.tju.bigdata.plugin.PageView;
-import cn.edu.tju.bigdata.util.Common;
+import javax.inject.Inject;
 
 /**
  * 
@@ -35,7 +34,8 @@ public class UserLoginController extends BaseController {
 	public PageView findByPage(String pageNow,
 			String pageSize) throws Exception {
 		UserLoginFormMap userLoginFormMap = getFormMap(UserLoginFormMap.class);
-		userLoginFormMap=toFormMap(userLoginFormMap, pageNow, pageSize,userLoginFormMap.getStr("orderby"));
+        userLoginFormMap.put("orderby", "order by loginTime DESC");
+        userLoginFormMap=toFormMap(userLoginFormMap, pageNow, pageSize,userLoginFormMap.getStr("orderby"));
         pageView.setRecords(userLoginMapper.findByPage(userLoginFormMap));
 		return pageView;
 	}

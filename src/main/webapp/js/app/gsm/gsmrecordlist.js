@@ -13,7 +13,8 @@ $(function () {
             name: "数据集ID"
         }, {
             colkey: "remark",
-            name: "描述"
+            name: "描述",
+            width: "200px"
         }, {
             colkey: "type",
             name: "记录类型",
@@ -44,12 +45,6 @@ $(function () {
         }, {
             colkey: "lat",
             name: "纬度"
-        }, {
-            colkey: "meta_created",
-            name: "创建时间",
-            renderData: function (rowindex, data, rowdata, column) {
-                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
-            }
         }],
         jsonUrl: rootPath + '/gsmrecord/findByPage.shtml',
         checkbox: false

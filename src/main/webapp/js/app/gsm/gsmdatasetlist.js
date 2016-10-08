@@ -10,7 +10,8 @@ $(function () {
             hide: true
         }, {
             colkey: "description",
-            name: "数据集描述"
+            name: "数据集描述",
+            width: "200px"
         }, {
             colkey: "upload_user_id",
             name: "上传者ID"

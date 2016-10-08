@@ -232,11 +232,16 @@ public class DatasetController extends BaseController {
         for(MetadataFormMap me : lsm){
             String name1 = me.getStr("remark").trim();
             if(!name1.equals("")){
-                ls.add(name1);
             }
             else {
-                ls.add(me.getStr("meta"));
+                name1 = me.getStr("meta");
             }
+
+            if(name1.length()>=5)
+
+                ls.add(name1.substring(0,5));
+            else
+                ls.add(name1);
             lsmeta.add(me.getStr("meta"));
         }
         model.addAttribute("meta",ls);
@@ -258,7 +263,7 @@ public class DatasetController extends BaseController {
                         Statement stmt = conn.createStatement();
                         String sql = "SELECT ";
                         for(String st:lsmeta){
-                            sql += st;
+                            sql += "`" + st + "`";
                             sql += ",";
                         }
                         sql = sql.substring(0,sql.length()-1);
@@ -267,7 +272,10 @@ public class DatasetController extends BaseController {
                         while (result.next()) {
                             List<String> a = new ArrayList<>();
                             for(String st:lsmeta){
-                                a.add(result.getString(st).substring(0,5));
+                                String se = result.getString(st);
+                                if(se.length()>=5)
+                                    a.add(se.substring(0,5));
+                                else a.add(se);
                             }
                             as.add(a);
                         }

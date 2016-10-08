@@ -261,7 +261,10 @@
                                                     <i class="fa fa-picture-o icon"> <b class="bg-success"></b>
                                                     </i>
                                                 </c:if>
-
+                                                <c:if test="${s.index==10}">
+                                                    <i class="fa fa-dashboard icon"> <b class="bg-success"></b>
+                                                    </i>
+                                                </c:if>
 												<span class="pull-right"> <i
                                                         class="fa fa-angle-down text"></i> <i
                                                         class="fa fa-angle-up text-active"></i>

@@ -9,28 +9,15 @@ import cn.edu.tju.bigdata.mapper.GSMDatasetMapper;
 import cn.edu.tju.bigdata.mapper.GSMRecordMapper;
 import cn.edu.tju.bigdata.plugin.PageView;
 import cn.edu.tju.bigdata.util.Common;
-import cn.edu.tju.bigdata.util.ExcelDataMapper;
 import cn.edu.tju.bigdata.util.plane.Const;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -129,12 +116,23 @@ public class GSMDatasetController extends BaseController {
                        @RequestParam("upload_username") String upload_username,
                        @RequestParam("description") String description,
                        @RequestParam("file") MultipartFile file) throws Exception {
-        String path=file.getOriginalFilename();
+        String path=null;
         if(file!=null){
             try {
                 byte[] bytes = file.getBytes();
+                path=file.getOriginalFilename();
+                File F=new File(Const.UPLOAD_DATA_PATH+"/"+path);
+                if(!F.getParentFile().exists()){
+                    F.getParentFile().mkdirs();
+                }
+                int index=1;
+                while(F.exists()){
+                    F=new File(Const.UPLOAD_DATA_PATH+"/"+path+"-"+index);
+                    index++;
+                }
+                path=F.getName();
                 BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(new File(Const.UPLOAD_DATA_PATH+file.getOriginalFilename())));
+                        new BufferedOutputStream(new FileOutputStream(F));
                 stream.write(bytes);
                 stream.close();
             } catch (Exception e) {
@@ -186,7 +184,7 @@ public class GSMDatasetController extends BaseController {
         String remark=gsmDatasetFormMap.getStr("description");
         int cnt=0;
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(Const.UPLOAD_DATA_PATH + path))));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(Const.UPLOAD_DATA_PATH +"/"+ path))));
             String line;
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             while((line=br.readLine())!=null){

@@ -30,7 +30,11 @@ public class PlaneBiz {
         JSONObject polygon=JSONObject.parseObject(map.get("polygon").toString());
         JSONObject attr=JSONObject.parseObject(map.get("attr").toString());
         json.put("polygon",polygon.get("edge"));
-        if(type==null||!attr.containsKey(type)) json.put("attr",attr);
+        if(type==null||!attr.containsKey(type)) {
+            JSONObject single=new JSONObject();
+            single.put(type,0);
+            json.put("attr",attr);
+        }
         else{
             JSONObject single=new JSONObject();
             single.put(type,attr.get(type));
@@ -45,9 +49,9 @@ public class PlaneBiz {
         for(PlaneFormMap pfm:list){
             String x=pfm.get("year")+"-"+pfm.get("month");
             JSONObject attrjs=JSONObject.parseObject(pfm.get("attr").toString());
-            double y=attrjs.getDouble(attr);
+            if(attrjs.containsKey(attr))valuearr.add(attrjs.getDouble(attr));
+            else valuearr.add(0.0);
             timearr.add(x);
-            valuearr.add(y);
         }
         JSONObject result = new JSONObject();
         JSONObject data = new JSONObject();

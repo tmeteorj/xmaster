@@ -38,7 +38,7 @@ public class GSMRecordDataGenerate {
         while(type<4&&object==subject)object=rd.nextInt(Const.MAX_POPULATION);
         double ps[]=pos.get(subject);
         Date last=lastdate.get(subject);
-        double diff=(now.getTime()-last.getTime())/3600.0;
+        double diff=(now.getTime()-last.getTime())/360000.0;
         for(int i=0;i<2;i++){
             ps[i]+=2*diff*rd.nextDouble()-diff;
         }

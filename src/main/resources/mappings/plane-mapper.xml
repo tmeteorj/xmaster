@@ -23,4 +23,7 @@
 	<select id="selectPA" parameterType="Integer" resultType="cn.edu.tju.bigdata.entity.PlaneFormMap">
 		select * from bd_plane where plane_id=#{plane_id} order by year,month
 	</select>
+	<select id="selectAll"  resultType="cn.edu.tju.bigdata.entity.PlaneFormMap">
+		select * from bd_plane
+	</select>
 </mapper>

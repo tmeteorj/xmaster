@@ -29,29 +29,25 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by Administrator on 2016/9/29.
+ * Created by Ethan on 2016/9/29.
  */
 @Controller
 @RequestMapping("/table")
 public class TableController extends BaseController {
 
+    private static final String BD = "bd_";
     @Value("${metadata.database:xmaster}")
     private String databaseName;
-
     @Value("${metadata.search}")
     private String searchJson;
-
     private Map<String, List<String>> searchMap;
-
-    private static final String BD = "bd_";
+    @Autowired
+    private TableMapper tableMapper;
 
     @PostConstruct
     private void init(){
         searchMap = JSON.parseObject(searchJson, new TypeReference<Map<String, List<String>>>(){});
     }
-
-    @Autowired
-    private TableMapper tableMapper;
 
     @RequestMapping("/{tableName}/list/{deletedMark}")
     public String list(@PathVariable String tableName, @PathVariable Integer deletedMark, Model model) {

@@ -1,7 +1,7 @@
 package cn.edu.tju.bigdata.entity;
 
 /**
- * Created by Administrator on 2016/9/29.
+ * Created by Ethan on 2016/9/29.
  */
 public class Table {
     private String tableName;

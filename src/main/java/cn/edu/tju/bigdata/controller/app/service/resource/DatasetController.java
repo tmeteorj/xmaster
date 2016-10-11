@@ -70,7 +70,13 @@ public class DatasetController extends BaseController {
 
     @RequestMapping("/{id}/edit")
     public String edit(@PathVariable Long id, Model model) throws Exception {
-        model.addAttribute("dataset", datasetMapper.findbyFrist("id", id.toString(), DatasetFormMap.class));
+        DatasetFormMap tdatasetFormMap = new DatasetFormMap();
+        tdatasetFormMap.put("id",id);
+        tdatasetFormMap.put("deleted_mark", EmDeletedMark.VALID.getCode());
+        List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
+        if(datasetFormMaps.size()<1) throw new Exception();
+        DatasetFormMap datasetFormMap = datasetFormMaps.get(0);
+        model.addAttribute("dataset", datasetFormMap);
         return Common.BACKGROUND_PATH + "/app/resourcemanage/datasetedit";
     }
 
@@ -98,7 +104,12 @@ public class DatasetController extends BaseController {
     @ResponseBody
     @RequestMapping("/{id}/link")
     public String link(@PathVariable Long id) throws Exception {
-        DatasetFormMap datasetFormMap = datasetMapper.findbyFrist("id", id.toString(), DatasetFormMap.class);
+        DatasetFormMap tdatasetFormMap = new DatasetFormMap();
+        tdatasetFormMap.put("id",id);
+        tdatasetFormMap.put("deleted_mark", EmDeletedMark.VALID.getCode());
+        List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
+        if(datasetFormMaps.size()<1) throw new Exception();
+        DatasetFormMap datasetFormMap = datasetFormMaps.get(0);
         try {
             String type = datasetFormMap.getStr("dataset_type");
             String url = datasetFormMap.getStr("dataset_url");
@@ -112,7 +123,16 @@ public class DatasetController extends BaseController {
                     Class.forName("com.mysql.jdbc.Driver");
                     conn = DriverManager.getConnection(url+"?useUnicode=true&characterEncoding="+coded_format, username, psw);
                     if(!conn.isClosed()){
-                        return "success";
+                        boolean flag = false;
+                        try {
+                            DatabaseMetaData meta = conn.getMetaData();
+                            ResultSet rs = meta.getTables(null, null, name, new String[]{"TABLE"});
+                            flag = rs.next();
+                        } catch (SQLException e) {
+                            return "failed";
+                        }
+                        if(flag) return "success";
+                        return "failed";
                     }
                     else{
                         return "failed";
@@ -161,7 +181,12 @@ public class DatasetController extends BaseController {
     @Transactional(readOnly = false)
     @SystemLog(module = "资源管理", methods = "新增/修改元数据")
     public String addmetadata(@PathVariable Long id) throws Exception {
-        DatasetFormMap datasetFormMap = datasetMapper.findbyFrist("id", id.toString(), DatasetFormMap.class);
+        DatasetFormMap tdatasetFormMap = new DatasetFormMap();
+        tdatasetFormMap.put("id",id);
+        tdatasetFormMap.put("deleted_mark", EmDeletedMark.VALID.getCode());
+        List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
+        if(datasetFormMaps.size()<1) throw new Exception();
+        DatasetFormMap datasetFormMap = datasetFormMaps.get(0);
         try {
             String type = datasetFormMap.getStr("dataset_type");
             String url = datasetFormMap.getStr("dataset_url");
@@ -246,7 +271,12 @@ public class DatasetController extends BaseController {
         }
         model.addAttribute("meta",ls);
         List<List<String>> as = new ArrayList<>();
-        DatasetFormMap datasetFormMap = datasetMapper.findbyFrist("id", id.toString(), DatasetFormMap.class);
+        DatasetFormMap tdatasetFormMap = new DatasetFormMap();
+        tdatasetFormMap.put("id",id);
+        tdatasetFormMap.put("deleted_mark", EmDeletedMark.VALID.getCode());
+        List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
+        if(datasetFormMaps.size()<1) throw new Exception();
+        DatasetFormMap datasetFormMap = datasetFormMaps.get(0);
         try {
             String type = datasetFormMap.getStr("dataset_type");
             String url = datasetFormMap.getStr("dataset_url");

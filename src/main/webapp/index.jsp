@@ -1,4 +1,4 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" pageEncoding="UTF-8" %>
 <html lang="en"
 	class="app">
 <head>
@@ -250,7 +250,7 @@
                                                     </i>
                                                 </c:if>
                                                 <c:if test="${s.index==7}">
-                                                    <i class="fa fa fa-bar-chart"> <b class="bg-primary"></b>
+                                                    <i class="fa fa-picture-o icon"> <b class="bg-primary"></b>
                                                     </i>
                                                 </c:if>
                                                 <c:if test="${s.index==8}">
@@ -258,11 +258,11 @@
                                                     </i>
                                                 </c:if>
                                                 <c:if test="${s.index==9}">
-                                                    <i class="fa fa-picture-o icon"> <b class="bg-success"></b>
+                                                    <i class="fa fa-plus-circle icon"> <b class="bg-success"></b>
                                                     </i>
                                                 </c:if>
                                                 <c:if test="${s.index==10}">
-                                                    <i class="fa fa-dashboard icon"> <b class="bg-success"></b>
+                                                    <i class="fa fa-coffee icon"> <b class="bg-success"></b>
                                                     </i>
                                                 </c:if>
 												<span class="pull-right"> <i

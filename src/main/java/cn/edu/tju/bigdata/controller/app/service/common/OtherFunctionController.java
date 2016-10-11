@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/10/7.
+ * Created by Ethan on 2016/10/7.
  */
 @Controller
 @RequestMapping("/common")

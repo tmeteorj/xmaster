@@ -1,6 +1,7 @@
 package cn.edu.tju.bigdata.controller.app.service.resource;
 
 import cn.edu.tju.bigdata.annotation.SystemLog;
+import cn.edu.tju.bigdata.biz.gsm.GSMRecordDataLoad;
 import cn.edu.tju.bigdata.controller.index.BaseController;
 import cn.edu.tju.bigdata.entity.GSMDatasetFormMap;
 import cn.edu.tju.bigdata.entity.GSMRecordFormMap;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -178,7 +180,7 @@ public class GSMDatasetController extends BaseController {
     @RequestMapping("/{id}/load")
     @Transactional(readOnly = false)
     @SystemLog(module = "应用管理", methods = "应用管理 - 加载手机信令数据")
-    public String load(@PathVariable Long id)  {
+    public String load(@PathVariable Integer id)  {
         GSMDatasetFormMap gsmDatasetFormMap=gsmDatasetMapper.findbyFrist("id", id.toString(), GSMDatasetFormMap.class);
         String path=gsmDatasetFormMap.getStr("path");
         String remark=gsmDatasetFormMap.getStr("description");
@@ -187,6 +189,7 @@ public class GSMDatasetController extends BaseController {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(Const.UPLOAD_DATA_PATH +"/"+ path))));
             String line;
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            GSMRecordDataLoad gsmload=new GSMRecordDataLoad();
             while((line=br.readLine())!=null){
                 try {
                     String info[] = line.split(",");
@@ -202,7 +205,8 @@ public class GSMDatasetController extends BaseController {
                         gsmRecordFormMap.set("lat", Double.parseDouble(info[5]));
                         gsmRecordFormMap.set("dataset_id", id);
                         gsmRecordFormMap.set("remark", remark);
-                        gsmRecordMapper.addEntity(gsmRecordFormMap);
+                        gsmload.add(gsmRecordFormMap);
+                        //gsmRecordMapper.addEntity(gsmRecordFormMap);
                         cnt++;
                     }
                 } catch (ParseException e) {
@@ -211,10 +215,13 @@ public class GSMDatasetController extends BaseController {
                     e.printStackTrace();
                 }
             }
+            gsmload.insert();
         } catch (FileNotFoundException e) {
             return "FileNotFoundException";
         } catch (IOException e) {
             return "IOException";
+        } catch (SQLException e) {
+            return "SQLException";
         }
         return String.valueOf(cnt);
     }

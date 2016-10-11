@@ -14,6 +14,6 @@ public class Const {
     public static final double GRID_AREA=86*111*4;
     public static final double EXTEND_RATE=0.7;
     public static final int MAX_POPULATION=1000;
-    public static final String SAMPLE_DATA_PATH="G:/gsm201501.txt";
+    public static final String SAMPLE_DATA_PATH="D:/gsm201501.txt";
     public static final String UPLOAD_DATA_PATH="C:/upload";
 }

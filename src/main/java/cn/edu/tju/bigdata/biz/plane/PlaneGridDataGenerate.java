@@ -100,7 +100,7 @@ public class PlaneGridDataGenerate {
                         idx,i,j,(dlx+drx)/2.0,(dly+dry)/2.0,polygon.toJSONString().replace("\"","\\\""),attr.toJSONString().replace("\"","\\\""));
 //                System.out.println(sql);
 //                System.exit(0);
-                MySQLUtil.updateResult("plane", sql);
+                MySQLUtil.updateResult(sql);
             }
         }
     }

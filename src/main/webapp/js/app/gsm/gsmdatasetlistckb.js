@@ -10,7 +10,8 @@ $(function () {
             hide: false
         }, {
             colkey: "description",
-            name: "数据集描述"
+            name: "数据集描述",
+            width: "200px"
         }, {
             colkey: "upload_user_id",
             name: "上传者ID"
@@ -96,6 +97,8 @@ function loadFun() {
             layer.msg('数据集文件未找到');
         }  else if(s=="IOException"){
             layer.msg('数据集文件读取错误');
+        }else if(s=="SQLException"){
+            layer.msg('数据库连接错误');
         }else{
             layer.msg('载入成功，载入了'+s+"条数据");
             grid.loadData();

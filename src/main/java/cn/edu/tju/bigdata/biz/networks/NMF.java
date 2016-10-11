@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/10/5.
+ * Created by Ethan on 2016/10/5.
  */
 @Service("nmf")
 public class NMF implements CommunityDetector {

@@ -2,14 +2,13 @@ package cn.edu.tju.bigdata.biz.networks;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.ujmp.core.Matrix;
 import org.ujmp.core.graphmatrix.DefaultGraphMatrix;
 import org.ujmp.core.graphmatrix.GraphMatrix;
 
 import java.util.*;
 
 /**
- * Created by Administrator on 2016/10/6.
+ * Created by Ethan on 2016/10/6.
  */
 @Service
 public class GraphMatrixFactory<N> {

@@ -5,7 +5,7 @@ import org.ujmp.core.graphmatrix.GraphMatrix;
 import java.util.*;
 
 /**
- * Created by Administrator on 2016/10/6.
+ * Created by Ethan on 2016/10/6.
  */
 public class Communities<N> {
 
@@ -82,5 +82,9 @@ public class Communities<N> {
             retList.add(pair.communityIndex);
         }
         return retList;
+    }
+
+    public GraphMatrix<N, Double> getGraphMatrix() {
+        return graphMatrix;
     }
 }

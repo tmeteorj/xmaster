@@ -14,13 +14,9 @@ import java.util.Properties;
  */
 public class MySQLUtil {
     private static final ThreadLocal<Connection> planeConn=new ThreadLocal<Connection>();
-    private static Connection getConnection(String source) {
+    private static Connection getConnection() {
         ThreadLocal<Connection> connectionThreadLocal = null;
-        if(source.equals("plane")){
-            connectionThreadLocal=planeConn;
-        }else{
-            return null;
-        }
+        connectionThreadLocal=planeConn;
         try {
             Connection conn = connectionThreadLocal.get();
             if (conn == null || !conn.isValid(100)) {
@@ -50,8 +46,8 @@ public class MySQLUtil {
         return conn;
     }
 
-    public static void updateResult(String source,String sql) throws SQLException {
-        Connection conn=getConnection(source);
+    public static void updateResult(String sql) throws SQLException {
+        Connection conn=getConnection();
         Statement stat=conn.createStatement();
         stat.executeUpdate(sql);
     }

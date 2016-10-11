@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/9/29.
+ * Created by Ethan on 2016/9/29.
  */
 public interface TableMapper {
 

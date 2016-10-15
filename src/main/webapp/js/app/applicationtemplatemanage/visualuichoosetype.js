@@ -45,5 +45,5 @@ function createFun() {
     var tdc = td.html();
     var tb = $("#loadhtml");
     tb.html(CommnUtil.loadingImg());
-    tb.load(rootPath + '/visual/' + tdc.trim() + '/' + cbox + '/config.shtml');
+    tb.load(rootPath + '/visual/' + tdc.trim() + '/' + cbox + '/chooseoperator.shtml');
 }

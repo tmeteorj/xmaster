@@ -8,6 +8,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/applicationtemplatemanage/visualuiconfig.js"></script>
+<label class="control-label">配置可视化界面</label>
 <form id="form" name="form" class="form-horizontal" method="post"
       action="${ctx}/visual/save.shtml">
     <div class="panel-body">
@@ -43,6 +46,16 @@
 
       <div class="line line-dashed line-lg pull-in"></div>
       <div class="form-group">
+        <label class="col-sm-3 control-label">所使用算法</label>
+
+        <div class="col-sm-9">
+          <input type="text" class="form-control" value="${operatorid}" readOnly="true"
+                 name="visualConfigFormMap.operatorid" id="operatorid">
+        </div>
+      </div>
+
+      <div class="line line-dashed line-lg pull-in"></div>
+      <div class="form-group">
         <label class="col-sm-3 control-label">选择可视化工具</label>
 
         <div class="col-sm-9">
@@ -66,7 +79,7 @@
         <div class="col-sm-9">
           <select id="${visualparameter.id}" name="${visualparameter.id}"  class="form-control">
             <c:forEach var="metadata" items="${metadatas}">
-              <option value="${metadata.id}">${metadata.meta}:${metadata.remark}</option>
+              <option value="meta:${metadata.id}">${metadata.meta}:${metadata.remark}</option>
             </c:forEach>
           </select>
         </div>
@@ -74,7 +87,7 @@
       </c:forEach>
     </div>
     <footer class="panel-footer text-right bg-light lter">
-      <button type="submit" class="btn btn-success btn-s-xs">创建</button>
+      <button type="submit" class="btn btn-success btn-s-xs" id="createconfig">创建</button>
     </footer>
 </form>
 

@@ -11,6 +11,8 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/app/applicationtemplatemanage/visualuichoosedatasets.js"></script>
 
 
+<label class="control-label">选择数据集</label>
+
 <header class="panel-heading">
   <div class="doc-buttons">
     <c:forEach items="${res}" var="key">

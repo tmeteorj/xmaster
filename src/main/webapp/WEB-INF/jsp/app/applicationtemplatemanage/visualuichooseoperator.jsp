@@ -10,17 +10,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/app/applicationtemplatemanage/visualuichooseoperator.js"></script>
 
-<label class="control-label">选择与配置算子</label>
+<label class="control-label">选择算子</label>
 
-<div class="table-responsive">
-  <div id="paging" class="pagclass"></div>
-</div>
+<div id = "ch" >
+  <div class="table-responsive">
+    <div id="paging" class="pagclass"></div>
+  </div>
 
-<div class="doc-buttons">
+  <div class="doc-buttons">
 
-  <button type="button" id="nooFun" class="btn btn-info marR10">不使用算子</button>
-  <a id="operatorc" class="btn btn-primary btn-large" href="javascript:void(0)">选择</a>
+    <button type="button" id="nooFun" class="btn btn-info marR10">不使用算子</button>
+    <a id="operatorc" class="btn btn-primary btn-large" href="javascript:void(0)">选择</a>
 
+  </div>
 </div>
 
 <div>

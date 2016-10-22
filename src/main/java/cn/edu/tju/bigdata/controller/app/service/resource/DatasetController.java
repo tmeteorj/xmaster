@@ -201,7 +201,7 @@ public class DatasetController extends BaseController {
                     conn = DriverManager.getConnection(url+"?useUnicode=true&characterEncoding="+coded_format, username, psw);
                     if(!conn.isClosed()){
                         Statement stmt = conn.createStatement();
-                        String sql = "show full columns from  "+name;
+                        String sql = "show full columns from  `"+name+"`";
                         ResultSet result = stmt.executeQuery(sql);
                         List<MetadataFormMap> metadataFormMaps = new ArrayList<>();
                         while (result.next()) {
@@ -297,12 +297,12 @@ public class DatasetController extends BaseController {
                             sql += ",";
                         }
                         sql = sql.substring(0,sql.length()-1);
-                        sql += " FROM "+ name +" LIMIT 20";
+                        sql += " FROM `"+ name +"` LIMIT 20";
                         ResultSet result = stmt.executeQuery(sql);
                         while (result.next()) {
                             List<String> a = new ArrayList<>();
                             for(String st:lsmeta){
-                                String se = result.getString(st);
+                                String se = String.valueOf(result.getObject(st));
                                 if(se.length()>=5)
                                     a.add(se.substring(0,5));
                                 else a.add(se);

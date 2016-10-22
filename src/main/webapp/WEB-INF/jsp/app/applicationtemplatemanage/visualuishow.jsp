@@ -8,9 +8,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=vYqY1p0N8melwlfnLqBwlVmy&services=&t=20160928173929"></script>
 <script src="http://webapi.amap.com/maps?v=1.3&key=7ea83963cea996848fd247e67ed8501f"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/applicationtemplatemanage/ext/echarts-all.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=vYqY1p0N8melwlfnLqBwlVmy&services=&t=20160928173929"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/echarts3/echarts.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/app/applicationtemplatemanage/diy/${js}"></script>
 
 <label class="control-label">${info}</label>

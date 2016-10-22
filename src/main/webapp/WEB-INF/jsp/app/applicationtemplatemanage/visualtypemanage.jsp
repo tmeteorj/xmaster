@@ -1,14 +1,14 @@
 <%--
   Created by IntelliJ IDEA.
   User: NING
-  Date: 2016/10/9
-  Time: 20:40
+  Date: 2016/10/22
+  Time: 11:33
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/applicationtemplatemanage/visualuimanage.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/applicationtemplatemanage/visualtypemanage.js"></script>
 
 
 <header class="panel-heading">
@@ -23,3 +23,4 @@
 <div class="table-responsive">
   <div id="paging" class="pagclass"></div>
 </div>
+

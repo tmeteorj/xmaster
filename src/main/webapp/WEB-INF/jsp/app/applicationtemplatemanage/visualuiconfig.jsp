@@ -49,8 +49,8 @@
         <label class="col-sm-3 control-label">所使用算法</label>
 
         <div class="col-sm-9">
-          <input type="text" class="form-control" value="${operatorid}" readOnly="true"
-                 name="visualConfigFormMap.operatorid" id="operatorid">
+          <input type="text" class="form-control" value="${operatorconfigid}" readOnly="true"
+                 name="visualConfigFormMap.operatorconfigid" id="operatorconfigid">
         </div>
       </div>
 
@@ -80,6 +80,9 @@
           <select id="${visualparameter.id}" name="${visualparameter.id}"  class="form-control">
             <c:forEach var="metadata" items="${metadatas}">
               <option value="meta:${metadata.id}">${metadata.meta}:${metadata.remark}</option>
+            </c:forEach>
+            <c:forEach var="operatorOutputFromMap" items="${operatorOutputFromMaps}">
+              <option value="opte:${operatorOutputFromMap.id}">${operatorOutputFromMap.name}:${operatorOutputFromMap.discription}</option>
             </c:forEach>
           </select>
         </div>

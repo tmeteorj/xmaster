@@ -8,13 +8,8 @@ var show = function(data){
     var map = new BMap.Map('con');
     var point = new BMap.Point(data.longitude[0],data.latitude[0]);
     map.centerAndZoom(point, 11);
-    function addMarker(point,laber){
-        marker.addEventListener("click", function(){
-            var infoWin = new BMap.InfoWindow(laber);
-            this.openInfoWindow(infoWin);
-        });
-
-    }
+    map.addControl(new BMap.MapTypeControl());
+    map.enableScrollWheelZoom(true);
     for(var i = 0;i < data.label.length; i++) {
 
         var marker = new BMap.Marker(new BMap.Point(data.longitude[i],data.latitude[i]));

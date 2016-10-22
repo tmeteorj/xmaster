@@ -8,15 +8,16 @@ import cn.edu.tju.bigdata.mapper.*;
 import cn.edu.tju.bigdata.plugin.PageView;
 import cn.edu.tju.bigdata.util.Common;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.Operator;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import sun.security.krb5.Config;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -42,12 +43,32 @@ public class VisualController extends BaseController {
     DatasetMapper datasetMapper;
     @Autowired
     MetadataMapper metadataMapper;
-
+    @Autowired
+    OperatorConfigMapper operatorConfigMapper;
+    @Autowired
+    OperatorMapper operatorMapper;
+    @Autowired
+    OperatorInputMapper operatorInputMapper;
+    @Autowired
+    OperatorOutputMapper operatorOutputMapper;
     @RequestMapping("/create")
     public String create(Model model) throws Exception {
         model.addAttribute("res", findByRes());
         return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/visualuichoosedatasets";
     }
+    @RequestMapping("/list")
+    public String manage(Model model) throws Exception {
+        model.addAttribute("res", findByRes());
+        return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/visualuimanage";
+    }
+
+    //可视化类型管理主界面对应controller
+    @RequestMapping("/typelist")
+    public String typemanage(Model model) throws Exception {
+        model.addAttribute("res", findByRes());
+        return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/visualtypemanage";
+    }
+
     @RequestMapping("/{datasetids}/choosetype")
     public String choosetype(@PathVariable String datasetids, Model model) throws Exception{
         model.addAttribute("datasetids",datasetids);
@@ -85,19 +106,79 @@ public class VisualController extends BaseController {
         tvisualTypeFormMap.put("id",visualConfigFormMap.get("typeid"));
         List<VisualTypeFormMap> visualTypeFormMaps = visualTypeMapper.findByNames(tvisualTypeFormMap);
         model.addAttribute("type", visualTypeFormMaps.get(0).get("name"));
+
         return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/visualuishow";
     }
+    private Map invokeStaticMethod(String className, String methodName,
+                              Object[] args) throws Exception {
+        Class ownerClass = Class.forName("cn.edu.tju.bigdata.util.operator."+className);
 
+        Class[] argsClass = new Class[args.length];
+        for (int i = 0, j = args.length; i < j; i++) {
+            if (args[i] instanceof List){
+                argsClass[i] = List.class;
+            }
+            else {
+                argsClass[i] = args[i].getClass();
+            }
+        }
+
+        Method method = ownerClass.getMethod(methodName,argsClass);
+
+        return (Map)method.invoke(null, args);
+    }
 
     @ResponseBody
     @RequestMapping("/{configid}/getconfigdata")
     public Map getconfigdata(@PathVariable int configid) throws Exception{
-        Map<String,List<String>> hs = new HashMap<>();
+        Map hs = new HashMap<>();
         try {
             VisualConfigFormMap tvisualConfigFormMap = new VisualConfigFormMap();
+            Map operatorMap = new HashMap();
             tvisualConfigFormMap.put("id", configid);
             List<VisualConfigFormMap> visualConfigFormMaps = visualConfigMapper.findByNames(tvisualConfigFormMap);
             VisualConfigFormMap visualConfigFormMap = visualConfigFormMaps.get(0);
+            List<OperatorOutputFromMap> operatorOutputFromMaps;
+            String operatorConfigid = visualConfigFormMap.get("operatorconfigid").toString();
+            if(!operatorConfigid.equals("0")) {
+                try {
+                    OperatorConfigFromMap operatorConfigFromMap = operatorConfigMapper.findbyFrist("id",operatorConfigid,OperatorConfigFromMap.class);
+                    OperatorInputFromMap toperatorInputFromMap = new OperatorInputFromMap();
+                    toperatorInputFromMap.set("operatorid",operatorConfigFromMap.get("operatorid"));
+                    toperatorInputFromMap.set("deleted_mark",EmDeletedMark.VALID.getCode());
+                    toperatorInputFromMap.put("$orderby","order by orders asc");
+                    List<OperatorInputFromMap> operatorInputFromMaps = operatorInputMapper.findByNames(toperatorInputFromMap);
+                    OperatorOutputFromMap toperatorOutputFromMap = new OperatorOutputFromMap();
+                    toperatorOutputFromMap.set("operatorid",operatorConfigFromMap.get("operatorid"));
+                    toperatorOutputFromMap.set("deleted_mark",EmDeletedMark.VALID.getCode());
+                    operatorOutputFromMaps = operatorOutputMapper.findByNames(toperatorOutputFromMap);
+                    OperatorFromMap operatorFromMap = operatorMapper.findbyFrist("id",operatorConfigFromMap.get("operatorid").toString(),OperatorFromMap.class);
+                    String className = operatorFromMap.getStr("class");
+                    String methodName = operatorFromMap.getStr("method");
+                    Object[] args = new Object[operatorInputFromMaps.size()];
+                    int i = 0;
+                    String operatorconfig = operatorConfigFromMap.getStr("config");
+                    String[] config = operatorconfig.split(";");
+                    for(OperatorInputFromMap operatorInputFromMap:operatorInputFromMaps){
+                        if(operatorInputFromMap.getInt("ismetadata")==0){
+                            args[i] = config[i].split(":")[1];
+                        }
+                        else{
+                            List<String> list = new ArrayList<>();
+                            MetadataFormMap metadataFormMap = metadataMapper.findbyFrist("id",config[i].split(":")[1],MetadataFormMap.class);
+                            getMetadata(metadataFormMap.getInt("datasetid"),metadataFormMap.getStr("meta"), list);
+                            args[i] = (List)list;
+                        }
+                        i++;
+                    }
+                    Map operatorOutput = invokeStaticMethod(className,methodName,args);
+                    for(OperatorOutputFromMap op:operatorOutputFromMaps){
+                        if(operatorOutput.containsKey(op.getStr("name"))){
+                            operatorMap.put(String.valueOf(op.get("id")),operatorOutput.get(op.getStr("name")));
+                        }
+                    }
+                } catch (Exception e){}
+            }
             String config = visualConfigFormMap.getStr("config");
             String[] confs = config.split(";");
             for(String conf:confs){
@@ -123,8 +204,10 @@ public class VisualController extends BaseController {
                     //连接数据库
                     getMetadata(datasetid,metaname,value);
                 }
-                else if(type.equals("para")){
-
+                else if(type.equals("opte")){
+                    if(operatorMap.containsKey(mid)){
+                        value = (List<String>)operatorMap.get(mid);
+                    }
                 }
                 hs.put(key,value);
             }
@@ -133,12 +216,12 @@ public class VisualController extends BaseController {
         return hs;
     }
 
-    @RequestMapping("/{datasetids}/{typeid}/{operatorid}/config")
-    public String choosetype(@PathVariable String datasetids,@PathVariable int typeid,@PathVariable int operatorid, Model model) throws Exception{
+    @RequestMapping("/{datasetids}/{typeid}/{operatorconfigid}/config")
+    public String config(@PathVariable String datasetids,@PathVariable int typeid,@PathVariable int operatorconfigid, Model model) throws Exception{
 
 
         model.addAttribute("typeid",typeid);
-        model.addAttribute("operatorid",operatorid);
+        model.addAttribute("operatorconfigid",operatorconfigid);
 
         if(datasetids.charAt(datasetids.length()-1)==','){
             datasetids = datasetids.substring(0,datasetids.length()-1);
@@ -170,21 +253,86 @@ public class VisualController extends BaseController {
         List<VisualMethodFormMap> visualMethodFormMaps = visualMethodMapper.findByNames(tvisualMethodFormMap);
         model.addAttribute("visualmethods",visualMethodFormMaps);
 
-        if(operatorid!=0){
+        if(operatorconfigid!=0){
+            OperatorConfigFromMap operatorConfigFromMap = operatorConfigMapper.findbyFrist("id", String.valueOf(operatorconfigid), OperatorConfigFromMap.class);
+            OperatorOutputFromMap toperatorOutputFromMap = new OperatorOutputFromMap();
+            toperatorOutputFromMap.set("operatorid",operatorConfigFromMap.get("operatorid"));
+            toperatorOutputFromMap.set("deleted_mark",EmDeletedMark.VALID.getCode());
+            List<OperatorOutputFromMap> operatorOutputFromMaps = operatorOutputMapper.findByNames(toperatorOutputFromMap);
+            model.addAttribute("operatorOutputFromMaps",operatorOutputFromMaps);
 
-            //operator 相关
         }
 
         return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/visualuiconfig";
     }
 
+    @RequestMapping("/{datasetids}/{typeid}/{operatorid}/operatorconfig")
+    public String operatorconfig(@PathVariable String datasetids,@PathVariable int typeid,@PathVariable int operatorid, Model model) throws Exception{
+
+
+        model.addAttribute("typeid",typeid);
+        model.addAttribute("operatorid",operatorid);
+        OperatorInputFromMap toperatorInputFromMap = new OperatorInputFromMap();
+        toperatorInputFromMap.set("operatorid",operatorid);
+        toperatorInputFromMap.set("deleted_mark",EmDeletedMark.VALID.getCode());
+        toperatorInputFromMap.put("$orderby","order by orders asc");
+        List<OperatorInputFromMap> operatorInputFromMaps = operatorInputMapper.findByNames(toperatorInputFromMap);
+        model.addAttribute("operatorInputFromMaps",operatorInputFromMaps);
+        if(datasetids.charAt(datasetids.length()-1)==','){
+            datasetids = datasetids.substring(0,datasetids.length()-1);
+        }
+        model.addAttribute("datasetids",datasetids);
+
+        List<MetadataFormMap> metadataFormMaps = new ArrayList<>();
+        try {
+            for (String datasetid : datasetids.split(",")) {
+
+                MetadataFormMap metadataFormMap = new MetadataFormMap();
+                metadataFormMap.put("datasetid",datasetid);
+                metadataFormMap.put("deleted_mark",EmDeletedMark.VALID.getCode());
+                metadataFormMaps.addAll(metadataMapper.findByNames(metadataFormMap));
+            }
+        }
+        catch (Exception e){}
+        model.addAttribute("metadatas",metadataFormMaps);
+
+
+
+        return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/visualuiconfigoperator";
+    }
+
+
+
+
     @ResponseBody
     @RequestMapping("/findvisualtypeByPage")
-    public PageView findByPage(String pageNow, String pageSize) {
+    public PageView findvisualtypeByPage(String pageNow, String pageSize) {
         VisualTypeFormMap visualTypeFormMap = getFormMap(VisualTypeFormMap.class);
         visualTypeFormMap = toFormMap(visualTypeFormMap, pageNow, pageSize, visualTypeFormMap.getStr("orderby"));
         visualTypeFormMap.set("deleted_mark", EmDeletedMark.VALID.getCode());
         pageView.setRecords(visualTypeMapper.findByPage(visualTypeFormMap));
+        return pageView;
+    }
+
+
+
+    @ResponseBody
+    @RequestMapping("/findvisualuiByPage")
+    public PageView findvisualuiByPage(String pageNow, String pageSize) {
+        VisualConfigFormMap visualConfigFormMap = getFormMap(VisualConfigFormMap.class);
+        visualConfigFormMap = toFormMap(visualConfigFormMap, pageNow, pageSize, visualConfigFormMap.getStr("orderby"));
+        visualConfigFormMap.set("deleted_mark", EmDeletedMark.VALID.getCode());
+        pageView.setRecords(visualConfigMapper.findByPage(visualConfigFormMap));
+        return pageView;
+    }
+
+    @ResponseBody
+    @RequestMapping("/findoperatorByPage")
+    public PageView findoperatorByPage(String pageNow, String pageSize) {
+        OperatorFromMap operatorFromMap = getFormMap(OperatorFromMap.class);
+        operatorFromMap = toFormMap(operatorFromMap, pageNow, pageSize, operatorFromMap.getStr("orderby"));
+        operatorFromMap.set("deleted_mark", EmDeletedMark.VALID.getCode());
+        pageView.setRecords(operatorMapper.findByPage(operatorFromMap));
         return pageView;
     }
 
@@ -231,6 +379,47 @@ public class VisualController extends BaseController {
     }
 
 
+    @ResponseBody
+    @RequestMapping("/saveoperator")
+    @Transactional(readOnly = false)
+    @SystemLog(module = "资源管理", methods = "新增算子配置")
+    public String saveoperator(HttpServletRequest request, Model model){
+        try {
+            Date now = new Date();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            OperatorConfigFromMap operatorConfigFromMap = getFormMap(OperatorConfigFromMap.class);
+            operatorConfigFromMap.set("deleted_mark", EmDeletedMark.VALID.getCode());
+            operatorConfigFromMap.set("meta_created", simpleDateFormat.format(now));
+            operatorConfigFromMap.set("meta_updated", simpleDateFormat.format(now));
+
+            OperatorInputFromMap toperatorInputFromMap = new OperatorInputFromMap();
+            toperatorInputFromMap.set("operatorid",request.getParameter("operatorConfigFromMap.operatorid"));
+            toperatorInputFromMap.set("deleted_mark",EmDeletedMark.VALID.getCode());
+            toperatorInputFromMap.put("$orderby","order by orders asc");
+            List<OperatorInputFromMap> operatorInputFromMaps = operatorInputMapper.findByNames(toperatorInputFromMap);
+            TreeMap<String, String> con = new TreeMap<>();
+            for (OperatorInputFromMap vic : operatorInputFromMaps) {
+                String val = request.getParameter(vic.get("id").toString()).trim();
+                if (!val.equals("")) {
+                    con.put(vic.get("id").toString(), val);
+                }
+            }
+            StringBuilder scon = new StringBuilder("");
+            for (Map.Entry<String, String> entry : con.entrySet()) {
+                scon.append(entry.getKey() + ":" + entry.getValue() + ";");
+            }
+
+            operatorConfigFromMap.put("config", scon.toString());
+            operatorConfigMapper.addEntity(operatorConfigFromMap);
+            List<OperatorConfigFromMap> ans = operatorConfigMapper.findByNames(operatorConfigFromMap);
+            return ans.get(0).get("id").toString();
+
+        }
+        catch (Exception e){
+            return "-1";
+        }
+    }
+
     private void getMetadata(int id,String meta,List<String> value) throws Exception{
         DatasetFormMap tdatasetFormMap = new DatasetFormMap();
         tdatasetFormMap.put("id",id);
@@ -252,10 +441,10 @@ public class VisualController extends BaseController {
                     conn = DriverManager.getConnection(url + "?useUnicode=true&characterEncoding=" + coded_format, username, psw);
                     if(!conn.isClosed()){
                         Statement stmt = conn.createStatement();
-                        String sql = "select "+meta+" from  "+name;
+                        String sql = "select "+meta+" from  `"+name+"`";
                         ResultSet result = stmt.executeQuery(sql);
                         while (result.next()) {
-                            value.add(result.getString(meta));
+                            value.add(String.valueOf(result.getObject(meta)));
 
                         }
                     }

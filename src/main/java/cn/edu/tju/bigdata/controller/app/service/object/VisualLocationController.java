@@ -1,7 +1,7 @@
 package cn.edu.tju.bigdata.controller.app.service.object;
 
 import cn.edu.tju.bigdata.controller.index.BaseController;
-import cn.edu.tju.bigdata.entity.location.LocationScore;
+import cn.edu.tju.bigdata.entity.siteselection.LocationScore;
 import cn.edu.tju.bigdata.enums.EmDeletedMark;
 import cn.edu.tju.bigdata.mapper.DatasetMapper;
 import cn.edu.tju.bigdata.mapper.PlaneMapper;
@@ -12,10 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2016/9/28.

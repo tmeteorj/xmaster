@@ -14,7 +14,7 @@ var show = function(data) {
     }
     var categories = data.label;
     var myChart = echarts.init(document.getElementById('con'));
-
+    console.log(data);
     option = {
         title: {
             subtext: 'Default layout',

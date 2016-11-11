@@ -4,7 +4,6 @@ import cn.edu.tju.bigdata.entity.PlaneFormMap;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,6 +24,7 @@ public class PlaneBiz {
     public static JSONObject toMapJSON(PlaneFormMap map,String type){
         JSONObject json=new JSONObject();
         json.put("planeid", map.get("plane_id"));
+        json.put("planename", map.get("plane_name"));
         json.put("lng",map.get("lng"));
         json.put("lat",map.get("lat"));
         JSONObject polygon=JSONObject.parseObject(map.get("polygon").toString());

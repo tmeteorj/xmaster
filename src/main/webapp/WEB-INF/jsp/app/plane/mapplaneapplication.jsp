@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/app/mapplaneuicreate.css"/>
     <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
     <script src="http://cache.amap.com/lbs/static/es5.min.js"></script>
-    <script src="http://webapi.amap.com/maps?v=1.3&key=您申请的key值&callback=init"></script>
+    <script src="http://webapi.amap.com/maps?v=1.3&key=您申请的key值&callback=inits"></script>
     <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery/jquery-1.8.3.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/echarts/echarts-all.js"></script>
@@ -37,7 +37,7 @@
         }
         function showPanel(data) {
             document.getElementById('panel').className = 'panel show';
-            document.getElementById('title').innerHTML = data.planeid+'-'+showattr.chs;
+            document.getElementById('title').innerHTML = data.planename + '-' + showattr.chs;
             generateChart(data.planeid);
         }
         function generateChart(id) {
@@ -89,7 +89,7 @@
             $tooltip.dom.style.left = (+x + 3) + 'px';
             $tooltip.dom.style.top = (+y + 3) + 'px';
         }
-        function init(){
+        function inits() {
             map= new AMap.Map('container', {
                 resizeEnable: true,
                 zoom:14,
@@ -138,7 +138,7 @@
                     for(var j=0;j<data[i].polygon.length;j++){
                         arr.push([data[i].polygon[j].lng,data[i].polygon[j].lat]);
                     }
-                    var value=0.0,planeid=data[i].planeid;
+                    var value = 0.0, planename = data[i].planename, planeid = data[i].planeid;
                     for(var v in data[i].attr){
                         value=max(data[i].attr[v],value);
                     }
@@ -151,7 +151,7 @@
                         fillOpacity: value/maxval//填充透明度
                     });
 
-                    var extD = '{"planeid":'+planeid+',"'+attr+'":'+value+'}';
+                    var extD = '{"planeid":' + planeid + ',"planename":"' + planename + '","' + attr + '":' + value + '}';
                     polygon.setExtData(extD);
                     polygon.setMap(map);
                     polygon.emit('mouseover mouseout click', {

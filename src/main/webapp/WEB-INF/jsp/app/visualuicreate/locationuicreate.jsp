@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/location/datasetmanage.js"></script>--%>
+<%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/gsm/locationdatashow.js"></script>--%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/location/locationscore.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/location/locationatm.js"></script>
+<%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/resourcemanage/datasetmanage.js"></script>--%>
 <html>
 <head>
     <meta charset="utf-8">
@@ -31,100 +36,31 @@
                 <div class="tab-pane active" id="panel-952955" contenteditable="false">
                     <br>
                     <b>
-                        地块数据(test)
-                        hihihihihihi
+                        地块数据
                     </b>
 
-                    <table class="table table-bordered" style="margin-top:10px">
-                        <thead>
-                        <tr>
-                            <th>编号</th>
-                            <th>产品</th>
-                            <th>交付时间</th>
-                            <th>状态</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>TB - Monthly</td>
-                            <td>01/04/2012</td>
-                            <td>Default</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>TB - Monthly</td>
-                            <td>01/04/2012</td>
-                            <td>Approved</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>TB - Monthly</td>
-                            <td>02/04/2012</td>
-                            <td>Declined</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>TB - Monthly</td>
-                            <td>03/04/2012</td>
-                            <td>Pending</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>TB - Monthly</td>
-                            <td>04/04/2012</td>
-                            <td>Call in to confirm</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <%--<header class="panel-heading">--%>
+                        <%--<div class="doc-buttons">--%>
+                            <%--<c:forEach items="${res}" var="key">--%>
+                                <%--${key.description}--%>
+                            <%--</c:forEach>--%>
+                        <%--</div>--%>
+                    <%--</header>--%>
+
+                    <div class="table-responsive">
+                    <div id="paging" class="pagclass"></div>
+                    </div>
 
                     <br>
                     <b>
                         ATM数据
                     </b>
 
-                    <table class="table table-bordered" style="margin-top:10px">
-                        <thead>
-                        <tr>
-                            <th>编号</th>
-                            <th>产品</th>
-                            <th>交付时间</th>
-                            <th>状态</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>TB - Monthly</td>
-                            <td>01/04/2012</td>
-                            <td>Default</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>TB - Monthly</td>
-                            <td>01/04/2012</td>
-                            <td>Approved</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>TB - Monthly</td>
-                            <td>02/04/2012</td>
-                            <td>Declined</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>TB - Monthly</td>
-                            <td>03/04/2012</td>
-                            <td>Pending</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>TB - Monthly</td>
-                            <td>04/04/2012</td>
-                            <td>Call in to confirm</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <div id="paging2" class="pagclass"></div>
+                    </div>
+
+
 
                 </div>
                 <div class="tab-pane" id="panel-177581" contenteditable="false">
@@ -136,7 +72,7 @@
                         <button type="button" class="btn btn-default">需求热力图</button>
                     </div>
 
-                    <div id="mymap" style="margin-top:10px;margin-left:auto;margin-right:auto;width: 100%;height: 94%">
+                    <div id="mymap" style="margin-top:10px;margin-left:10px;margin-right:10px;width: 100%;height: 94%">
                     </div>
                     <script>
 

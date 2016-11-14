@@ -8,7 +8,7 @@
 <link href="/favicon.ico" type="image/x-icon" rel=icon>
 <link href="/favicon.ico" type="image/x-icon" rel="shortcut icon">
 <meta name="renderer" content="webkit">
-<title>登录－大数据管理系统</title>
+	<title>登录－智慧城市分析平台</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet"	href="${pageContext.servletContext.contextPath }/admin_files/min.css">
 <link rel="stylesheet"	href="${pageContext.servletContext.contextPath }/admin_files/login.css">
@@ -31,7 +31,7 @@
 						<td align="left"><img
 							src="${pageContext.servletContext.contextPath }/admin_files/logo_left.png"
 							alt="Logo"></td>
-							<td align="center" style="font-weight: bold;color: gray;">登录－大数据管理系统</td>
+						<td align="center" style="font-weight: bold;color: gray;">登录－智慧城市分析平台</td>
 						<td align="right"><img
 							src="${pageContext.servletContext.contextPath }/admin_files/logo_left.png"
 							alt="Logo"></td>

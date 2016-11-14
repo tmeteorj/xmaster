@@ -1,19 +1,13 @@
 package cn.edu.tju.bigdata.biz.gsm;
 
 import cn.edu.tju.bigdata.entity.GSMRecordFormMap;
-import cn.edu.tju.bigdata.util.plane.Const;
 import cn.edu.tju.bigdata.util.plane.MySQLUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/10/7.
@@ -28,7 +22,7 @@ public class GSMRecordDataLoad {
         sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     }
     public void add(GSMRecordFormMap gsmRecordFormMap) throws SQLException {
-        dataList.add(String.format("(%d,%d,\"%s\",%d,%d,%f,%f,\"%s\")",
+        dataList.add(String.format("(%d,%d,\"%s\",%d,%d,%f,%f,\"%s\",\"%s\")",
                 gsmRecordFormMap.getInt("dataset_id"),
                 gsmRecordFormMap.getInt("type"),
                 gsmRecordFormMap.getStr("time"),

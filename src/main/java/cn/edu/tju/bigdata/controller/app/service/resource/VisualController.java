@@ -7,7 +7,10 @@ import cn.edu.tju.bigdata.enums.EmDeletedMark;
 import cn.edu.tju.bigdata.mapper.*;
 import cn.edu.tju.bigdata.plugin.PageView;
 import cn.edu.tju.bigdata.util.Common;
+import cn.edu.tju.bigdata.util.JsonUtils;
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.expression.spel.ast.Operator;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.ujmp.core.util.JsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -51,6 +55,14 @@ public class VisualController extends BaseController {
     OperatorInputMapper operatorInputMapper;
     @Autowired
     OperatorOutputMapper operatorOutputMapper;
+    @Autowired
+    LayoutMapper layoutMapper;
+    @Autowired
+    DecisionUiMapper decisionUiMapper;
+    @Autowired
+    UserMapper userMapper;
+    @Autowired
+    ResourcesMapper resourcesMapper;
     @RequestMapping("/create")
     public String create(Model model) throws Exception {
         model.addAttribute("res", findByRes());
@@ -107,6 +119,7 @@ public class VisualController extends BaseController {
         List<VisualTypeFormMap> visualTypeFormMaps = visualTypeMapper.findByNames(tvisualTypeFormMap);
         model.addAttribute("type", visualTypeFormMaps.get(0).get("name"));
 
+        model.addAttribute("data", JsonUtils.mapToJson(getconfigdata(Integer.valueOf(configid))));
         return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/visualuishow";
     }
     private Map invokeStaticMethod(String className, String methodName,
@@ -128,9 +141,9 @@ public class VisualController extends BaseController {
         return (Map)method.invoke(null, args);
     }
 
-    @ResponseBody
-    @RequestMapping("/{configid}/getconfigdata")
-    public Map getconfigdata(@PathVariable int configid) throws Exception{
+//    @ResponseBody
+//    @RequestMapping("/{configid}/getconfigdata")
+    public Map getconfigdata(int configid) throws Exception{
         Map hs = new HashMap<>();
         try {
             VisualConfigFormMap tvisualConfigFormMap = new VisualConfigFormMap();
@@ -419,7 +432,109 @@ public class VisualController extends BaseController {
             return "-1";
         }
     }
+    @RequestMapping("/createdecisionui")
+    public String createdecisionui(Model model) throws Exception {
+        model.addAttribute("res", findByRes());
+        List<UserFormMap> userFormMaps = userMapper.findByNames(getFormMap(UserFormMap.class));
+        LayoutFormMap tlayoutFormMap = getFormMap(LayoutFormMap.class);
+        tlayoutFormMap.set("deleted_mark", EmDeletedMark.VALID.getCode());
+        List<LayoutFormMap> layoutFormMaps = layoutMapper.findByNames(tlayoutFormMap);
+        VisualConfigFormMap visualConfigFormMap = getFormMap(VisualConfigFormMap.class);
+        visualConfigFormMap.set("deleted_mark", EmDeletedMark.VALID.getCode());
+        List<VisualConfigFormMap> visualConfigFormMaps = visualConfigMapper.findByNames(visualConfigFormMap);
+        model.addAttribute("users",userFormMaps);
+        model.addAttribute("vis",visualConfigFormMaps);
+        model.addAttribute("layouts",layoutFormMaps);
+        return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/decisionuicreate";
+    }
+    @RequestMapping("/{configid}/showdecisionui")
+    public String showdecisionui(@PathVariable String configid, Model model) throws Exception{
+//        model.addAttribute("configid",configid);
+//        VisualConfigFormMap tvisualConfigFormMap = new VisualConfigFormMap();
+//        tvisualConfigFormMap.put("id",configid);
+//        List<VisualConfigFormMap> visualConfigFormMaps = visualConfigMapper.findByNames(tvisualConfigFormMap);
+//        VisualConfigFormMap visualConfigFormMap = visualConfigFormMaps.get(0);
+//
+//        model.addAttribute("info",visualConfigFormMap.get("info"));
+//
+//        VisualMethodFormMap tvisualMethodFormMap = new VisualMethodFormMap();
+//        tvisualMethodFormMap.put("id",visualConfigFormMap.get("methodid"));
+//        List<VisualMethodFormMap> visualMethodFormMaps = visualMethodMapper.findByNames(tvisualMethodFormMap);
+//        VisualMethodFormMap visualMethodFormMap = visualMethodFormMaps.get(0);
+//        model.addAttribute("js",visualMethodFormMap.get("js"));
+//
+//        VisualTypeFormMap tvisualTypeFormMap = new VisualTypeFormMap();
+//        tvisualTypeFormMap.put("id",visualConfigFormMap.get("typeid"));
+//        List<VisualTypeFormMap> visualTypeFormMaps = visualTypeMapper.findByNames(tvisualTypeFormMap);
+//        model.addAttribute("type", visualTypeFormMaps.get(0).get("name"));
+        DecisionUiFormMap tdecisionUiFormMap = getFormMap(DecisionUiFormMap.class);
+        tdecisionUiFormMap.set("id", configid);
+        DecisionUiFormMap decisionUiFormMap = decisionUiMapper.findByNames(tdecisionUiFormMap).get(0);
+        String config = decisionUiFormMap.getStr("config");
+        String name = decisionUiFormMap.getStr("name");
+        String info = decisionUiFormMap.getStr("info");
+        int layoutid = decisionUiFormMap.getInt("layoutid");
+        LayoutFormMap tlayoutFormMap = getFormMap(LayoutFormMap.class);
+        tlayoutFormMap.set("id",layoutid);
+        LayoutFormMap layoutFormMap = layoutMapper.findByNames(tlayoutFormMap).get(0);
+        String js= layoutFormMap.getStr("js");
+        List<String> vis = new ArrayList<>();
+        String[] cons = config.split(";");
+        for(String con:cons){
+            vis.add(con.split(":")[1]);
+        }
+        model.addAttribute("count",cons.length);
+        model.addAttribute("con",vis);
+        model.addAttribute("name",name);
+        model.addAttribute("info",info);
+        model.addAttribute("js",js);
+        return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/decisionuishow";
+    }
+    @ResponseBody
+    @RequestMapping("/savedecisionui")
+    @Transactional(readOnly = false)
+    @SystemLog(module = "资源管理", methods = "新增决策可视化界面")
+    public String savedecisionui(HttpServletRequest request, Model model){
+        try {
+            Date now = new Date();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            DecisionUiFormMap decisionUiFormMap = getFormMap(DecisionUiFormMap.class);
+            decisionUiFormMap.set("deleted_mark", EmDeletedMark.VALID.getCode());
+            decisionUiFormMap.set("meta_created", simpleDateFormat.format(now));
+            decisionUiFormMap.set("meta_updated", simpleDateFormat.format(now));
 
+            int count = Integer.valueOf(request.getParameter("count"));
+            String config = "";
+            for(int i = 1 ;i <= count; i++){
+                config += String.valueOf(i)+":"+request.getParameter("co"+String.valueOf(i))+";";
+            }
+
+            decisionUiFormMap.put("config", config);
+            decisionUiMapper.addEntity(decisionUiFormMap);
+            List<DecisionUiFormMap> ans = decisionUiMapper.findByNames(decisionUiFormMap);
+            String mid = ans.get(0).get("id").toString();
+            ResFormMap resFormMap = new ResFormMap();
+            resFormMap.set("name",request.getParameter("decisionUiFormMap.name"));
+            resFormMap.set("parentId","1000");
+            resFormMap.set("resKey","decisionui_"+mid);
+            resFormMap.set("type","1");
+            resFormMap.set("ishide","1");
+            resFormMap.set("resUrl","/visual/"+mid+"/showdecisionui.shtml");
+            resFormMap.set("description",request.getParameter("decisionUiFormMap.info"));
+            resourcesMapper.addEntity(resFormMap);
+            List<ResFormMap> ans1 = resourcesMapper.findByNames(resFormMap);
+            String rid = ans1.get(0).get("id").toString();
+            ResUserFormMap resUserFormMap = new ResUserFormMap();
+            resUserFormMap.put("resId", rid);
+            resUserFormMap.put("userId", request.getParameter("decisionUiFormMap.userid"));
+            resourcesMapper.addEntity(resUserFormMap);
+            return mid;
+
+        }
+        catch (Exception e){
+            return "-1";
+        }
+    }
     private void getMetadata(int id,String meta,List<String> value) throws Exception{
         DatasetFormMap tdatasetFormMap = new DatasetFormMap();
         tdatasetFormMap.put("id",id);

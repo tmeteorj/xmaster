@@ -16,7 +16,7 @@
 <label class="control-label">${info}</label>
 </br>${type}
 <div>
-  <div id="con" style="height:400px;width: 100%"></div>
+  <div id="con${configid}" style="height:400px;width: 100%"></div>
 </div>
 <div style="display: none">
   <p id = "configid">${configid}</p>
@@ -25,37 +25,21 @@
 
 </div>
 <script>
+//    var configid = $("#configid");
+//    var tdc = configid.html();
+//    $.ajax({
+//        type: 'GET',
+//        url: '/visual/' + tdc.trim() + '/getconfigdata.shtml',
+//        datatype: 'json',
+//        async: true,
+//        success: function (data) {
+//            show(JSON.parse(data));
+//        },
+//        error:function(data){
+//            alert('error!');
+//        }
+//    });
 
-function getdata(){
-//    alert("getdata");
-    var mydata;
-
-    var configid = $("#configid");
-    var tdc = configid.html();
-//    console.log('/visual/' + tdc.trim() + '/getconfigdata.shtml');
-    $.ajax({
-        type: 'GET',
-        url: '/visual/' + tdc.trim() + '/getconfigdata.shtml',
-        datatype: 'json',
-        async: false,
-        success: function (data) {
-            mydata=data;
-//            console.log(mydata);
-        },
-        error:function(data){
-            alert('error!');
-        }
-    });
-//    console.log(mydata);
-    return mydata;
-}
-$("#beclick").on('click', function () {
-
-//    alert("loadScript");
-    mydata=getdata();
-    show(JSON.parse(mydata));
-
-});
-var beclick = $("#beclick");
-beclick.click();
+    var data = ${data};
+    show(data,"con${configid}");
 </script>

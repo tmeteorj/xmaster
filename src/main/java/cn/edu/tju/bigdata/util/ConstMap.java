@@ -11,7 +11,10 @@ public class ConstMap {
     static{
         attrMap=new ArrayList<String[]>();
         //attrMap.add(new String[]{"Type","类型"});
-        attrMap.add(new String[]{"Area","面积"});
+        attrMap.add(new String[]{"Price", "房价"});
+        attrMap.add(new String[]{"Resident", "住户数"});
+        attrMap.add(new String[]{"Green", "绿化覆盖率"});
+        attrMap.add(new String[]{"StopCar", "停车位"});
         attrMap.add(new String[]{"Population","人口"});
         attrMap.add(new String[]{"CallOutCnt","电话呼出次数"});
         attrMap.add(new String[]{"CallInCnt","电话呼入次数"});

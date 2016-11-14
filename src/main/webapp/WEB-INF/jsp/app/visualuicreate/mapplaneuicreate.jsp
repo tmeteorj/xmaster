@@ -37,7 +37,7 @@
         }
         function showPanel(data) {
             document.getElementById('panel').className = 'panel show';
-            document.getElementById('title').innerHTML = data.planeid+'-'+showattr.chs;
+            document.getElementById('title').innerHTML = data.planename + '-' + showattr.chs;
             generateChart(data.planeid);
         }
         function generateChart(id) {
@@ -138,7 +138,7 @@
                     for(var j=0;j<data[i].polygon.length;j++){
                         arr.push([data[i].polygon[j].lng,data[i].polygon[j].lat]);
                     }
-                    var value=0.0,planeid=data[i].planeid;
+                    var value = 0.0, planename = data[i].planename, planeid = data[i].planeid;
                     for(var v in data[i].attr){
                         value=max(data[i].attr[v],value);
                     }
@@ -151,7 +151,7 @@
                         fillOpacity: value/maxval//填充透明度
                     });
 
-                    var extD = '{"planeid":'+planeid+',"'+attr+'":'+value+'}';
+                    var extD = '{"planeid":' + planeid + ',"planename":"' + planename + '","' + attr + '":' + value + '}';
                     polygon.setExtData(extD);
                     polygon.setMap(map);
                     polygon.emit('mouseover mouseout click', {
@@ -233,7 +233,6 @@
 
             <label style="width:auto;height:40px; display:inline">年份:</label>
             <select id="sel_year" style="width:120px;height:40px; display:inline">
-                <option value="2014">2014</option>
                 <option value="2015">2015</option>
             </select>
 

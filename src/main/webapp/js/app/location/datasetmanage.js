@@ -1,68 +1,54 @@
 /**
  * Created by NING on 2016/10/4.
  */
-            var pageii = null;
-        var grid = null;
-        $(function () {
-            grid = lyGrid({
-                pagId: 'paging2',
-                l_column:
-                    //[{
-                    //    colkey: "id",
-                    //    name: "id",
-                    //    width: "50px",
-                    //    hide: false
-                    //}, {
-                    //    colkey: "grid_id",
-                    //    name: "地块编号",
-                    //    width: "200px"
-                    //}, {
-                    //    colkey: "lng",
-                    //    name: "经度"
-                    //}, {
-                    //    colkey: "lat",
-                    //    name: "纬度"
-                    //}, {
-                    //    colkey: "colx",
-                    //    name: "横坐标"
-                    //}, {
-                    //    colkey: "coly",
-                    //    name: "纵坐标"
-                    //}, {
-                    //    colkey: "level",
-                    //    name: "评分级别"
-                    //}, {
-                    //    colkey: "score",
-                    //    name: "分数"
-                    //}]
-            [{
-            colkey: "atm_id",
-            name: "ATM编号",
-            width: "200px"
+var pageii = null;
+var grid = null;
+$(function () {
+    grid = lyGrid({
+        id: 'paging',
+        l_column: [{
+            colkey: "id",
+            name: "id",
+            width: "50px",
+            hide: true
         }, {
-            colkey: "belong",
-            name: "所属支行"
+            colkey: "title",
+            name: "数据表名"
         }, {
-            colkey: "lng",
-            name: "经度"
+            colkey: "info",
+            name: "数据表描述"
         }, {
-            colkey: "lat",
-            name: "纬度"
+            colkey: "dataset_url",
+            name: "数据库连接"
         }, {
-            colkey: "operation",
-            name: "操作次数"
-        }, {
-            colkey: "cash_flow",
-            name: "金额"
-        }, {
-            colkey: "rank",
-            name: "排名"
+            colkey: "dataset_type",
+            name: "数据库类型"
         },{
-            colkey: "note",
-            name: "备注"
-        }]
-        ,
-        jsonUrl: rootPath + '/visualuicreate/showatm.shtml',
+            colkey: "username",
+            name: "用户名"
+        }, {
+            colkey: "psw",
+            name: "密码"
+        }, {
+            colkey: "coded_format",
+            name: "编码格式"
+        }, {
+            colkey: "src",
+            name: "数据表来源机构"
+        },{
+            colkey: "publisher",
+            name: "数据表发布者"
+        },{
+            colkey: "size",
+            name: "数据表大小"
+        },{
+            colkey: "meta_created",
+            name: "创建时间",
+            renderData: function (rowindex, data, rowdata, column) {
+                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+            }
+        }],
+        jsonUrl: rootPath + '/dataset/findByPage.shtml',
         checkbox: true
     });
 

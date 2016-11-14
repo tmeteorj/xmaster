@@ -1,8 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/location/datasetmanage.js"></script>--%>
-<%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/gsm/locationdatashow.js"></script>--%>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/app/location/locationscore.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/app/location/locationatm.js"></script>
 <%--<script type="text/javascript" src="${pageContext.request.contextPath}/js/app/resourcemanage/datasetmanage.js"></script>--%>
@@ -20,6 +18,102 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/echarts/echarts-all.js"></script>
     <link href="${ctx}/js/date/bootstrap.min.css" rel="stylesheet">
     <script type="text/javascript">
+        var map;
+        $(function(){
+            $("#relitu").click(function() {
+                show_relitu();
+            });
+            $("#grid_cut").click(function() {
+                show_grid();
+            });
+            $("#clearmap").click(function() {
+                init();
+            });
+
+        });
+        function add_line(a_lng, a_lat, b_lng, b_lat){
+            console.log(a_lng);
+            var lineArr = [
+                [a_lng, a_lat],
+                [b_lng, b_lat],
+            ];
+            var polyline = new AMap.Polyline({
+                path: lineArr,          //设置线覆盖物路径
+                strokeColor: "#3366FF", //线颜色
+                strokeOpacity: 1,       //线透明度
+                strokeWeight: 2,        //线宽
+                strokeStyle: "solid",   //线样式
+                strokeDasharray: [10, 5] //补充线样式
+            });
+            polyline.setMap(map);
+        }
+        function show_grid(){
+            var left_up_lng = 117.119114;
+            var left_up_lat = 39.200131;
+            var right_dw_lng = 117.324593;
+            var right_dw_lat = 39.06018;
+            var level = 80;
+            var gap_lng = (right_dw_lng-left_up_lng)/level;
+            var gap_lat = (left_up_lat-right_dw_lat)/level;
+            var temp=left_up_lng;
+            for(var i=0;i<level;++i){
+                temp += gap_lng;
+                add_line(temp, left_up_lat, temp, right_dw_lat);
+            }
+            temp = left_up_lat;
+            for(var i=0;i<level;++i){
+                temp -= gap_lat;
+                add_line(left_up_lng, temp, right_dw_lng, temp);
+            }
+
+        }
+        function init() {
+            map = new AMap.Map('mymap', {
+                resizeEnable: true,
+                zoom: 14,
+                center: [117.172762, 39.163204]
+
+            });
+        }
+        function draw_relitu(response){
+            map.clearMap();
+            response=JSON.parse(response);
+//            response=JSON.parse(response);
+            console.log("here-> response");
+            console.log(response);
+            if(response.code!=0){
+                alert(response.msg);
+            }else {
+                var data = response.data;
+
+                map.plugin(["AMap.Heatmap"], function() {
+                    //初始化heatmap对象
+                    heatmap = new AMap.Heatmap(map, {
+                        radius: 50, //给定半径
+                        opacity: [0, 0.8]
+                    });
+                        heatmap.setDataSet({
+                        data: data,
+                        max: 100
+                    });
+                });
+            }
+        }
+        function show_relitu(){
+            $.ajax({
+                type : "GET",
+                url : "/visualuicreate/datarelitu.shtml",
+                datatype:"json",
+                success : function(data) {
+                    //console.log(data);
+                    draw_relitu(data);
+
+                },
+                error : function() {
+                    alert("Error");
+                }
+            });
+        }
 
     </script>
 </head>
@@ -35,26 +129,22 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="panel-952955" contenteditable="false">
                     <br>
-                    <b>
-                        地块数据
-                    </b>
+                    <div>
+                        <b>
+                            地块数据
+                        </b>
+                    </div>
 
-                    <%--<header class="panel-heading">--%>
-                        <%--<div class="doc-buttons">--%>
-                            <%--<c:forEach items="${res}" var="key">--%>
-                                <%--${key.description}--%>
-                            <%--</c:forEach>--%>
-                        <%--</div>--%>
-                    <%--</header>--%>
 
                     <div class="table-responsive">
                     <div id="paging" class="pagclass"></div>
                     </div>
-
                     <br>
-                    <b>
-                        ATM数据
-                    </b>
+                    <div>
+                        <b>
+                            ATM数据
+                        </b>
+                    </div>
 
                     <div class="table-responsive">
                         <div id="paging2" class="pagclass"></div>
@@ -67,32 +157,14 @@
                     <br>
 
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default">地块划分</button>
-                        <button type="button" class="btn btn-default">已有设施</button>
-                        <button type="button" class="btn btn-default">需求热力图</button>
+                        <button id="grid_cut" type="button" class="btn btn-default">地块划分</button>
+                        <button id="device_ex" type="button" class="btn btn-default">已有设施</button>
+                        <button id="relitu" type="button" class="btn btn-default">需求热力图</button>
+                        <button id="clearmap" type="button" class="btn btn-default">清除地图</button>
                     </div>
 
                     <div id="mymap" style="margin-top:10px;margin-left:10px;margin-right:10px;width: 100%;height: 94%">
                     </div>
-                    <script>
-
-                        var map = new AMap.Map('mymap', {
-                            resizeEnable: true,
-                            zoom: 11,
-                            center: [116.397428, 39.90923]
-
-                        });
-
-                        var markers = [], positions = [[116.405467, 39.907761], [116.415467, 39.907761], [116.415467, 39.917761], [116.425467, 39.907761], [116.385467, 39.907761]];
-                        for (var i = 0, marker; i < positions.length; i++) {
-                            marker = new AMap.Marker({
-                                map: map,
-                                position: positions[i]
-                            });
-                            markers.push(marker);
-                        }
-
-                    </script>
 
                 </div>
 
@@ -148,11 +220,11 @@
                                 var map = new AMap.Map('mymap1', {
                                     resizeEnable: true,
                                     zoom: 11,
-                                    center: [116.397428, 39.90923]
+                                    center: [117.137322,39.089485]
 
                                 });
 
-                                var markers = [], positions = [[116.405467, 39.907761], [116.415467, 39.907761], [116.415467, 39.917761], [116.425467, 39.907761], [116.385467, 39.907761]];
+                                var markers = [], positions = [[117.137322,39.089485],[117.119946,39.067454],[117.102569,39.093891],[117.270544,38.895611],[117.038854,39.076267],[117.148907,39.067454],[117.229998,39.045423],[116.975139,39.093891],[117.096776,39.129141],[117.264752,38.988142]];
                                 for (var i = 0, marker; i < positions.length; i++) {
                                     marker = new AMap.Marker({
                                         map: map,
@@ -168,41 +240,41 @@
                                 <thead>
                                 <tr>
                                     <th>编号</th>
-                                    <th>产品</th>
-                                    <th>交付时间</th>
-                                    <th>状态</th>
+                                    <th>经度</th>
+                                    <th>纬度</th>
+                                    <th>推荐指数</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
                                     <td>1</td>
-                                    <td>TB - Monthly</td>
-                                    <td>01/04/2012</td>
-                                    <td>Default</td>
+                                    <td>117.137322</td>
+                                    <td>39.089485</td>
+                                    <td>10</td>
                                 </tr>
                                 <tr>
                                     <td>1</td>
-                                    <td>TB - Monthly</td>
-                                    <td>01/04/2012</td>
-                                    <td>Approved</td>
+                                    <td>117.119946</td>
+                                    <td>39.067454</td>
+                                    <td>9</td>
                                 </tr>
                                 <tr>
                                     <td>2</td>
-                                    <td>TB - Monthly</td>
-                                    <td>02/04/2012</td>
-                                    <td>Declined</td>
+                                    <td>117.102569</td>
+                                    <td>39.093891</td>
+                                    <td>8</td>
                                 </tr>
                                 <tr>
                                     <td>3</td>
-                                    <td>TB - Monthly</td>
-                                    <td>03/04/2012</td>
-                                    <td>Pending</td>
+                                    <td>117.270544</td>
+                                    <td>38.895611</td>
+                                    <td>7</td>
                                 </tr>
                                 <tr>
                                     <td>4</td>
-                                    <td>TB - Monthly</td>
-                                    <td>04/04/2012</td>
-                                    <td>Call in to confirm</td>
+                                    <td>117.038854</td>
+                                    <td>39.076267</td>
+                                    <td>6</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -217,31 +289,7 @@
             </div>
         </div>
     </div>
-
-
-    <%--<div id="container" style="margin-top:40px;margin-left:auto;margin-right:auto;width: 100%;height: 94%">--%>
-    <%--<div id="tooltip" class="tooltip">this is tooltip</div>--%>
-    <%--</div>--%>
-    <%--<div id="panel" class="panel">--%>
-    <%--<div id="close" class="close">×</div>--%>
-    <%--<div id="title" class="title"></div>--%>
-    <%--<div id="main" style="width:600px;height:300px;margin-top:0px;"></div>--%>
-    <%--</div>--%>
-
-
-    <%--<div id="mymap" style="margin-top:40px;margin-left:auto;margin-right:auto;width: 100%;height: 94%">--%>
-    <%--</div>--%>
-    <%--<script>--%>
-    <%--var map = new AMap.Map('mymap', {--%>
-    <%--resizeEnable: true,--%>
-    <%--zoom:11,--%>
-    <%--center: [116.397428, 39.90923]--%>
-
-    <%--});--%>
-
-    <%--</script>--%>
-
-
+</div>
 </body>
 
 </html>

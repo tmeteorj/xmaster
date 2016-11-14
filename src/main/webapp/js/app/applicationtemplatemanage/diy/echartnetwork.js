@@ -2,7 +2,7 @@
  * Created by NING on 2016/10/19.
  */
 
-var show = function(data) {
+var show = function(data,divid) {
     var nodes = new Array(data.id.length);
     var links = new Array(data.source.length);
     for(var i = 0;i<data.id.length;i++){
@@ -13,7 +13,7 @@ var show = function(data) {
         links[i]={'name':null,'id':i,'source':data.source[i],'target':data.target[i]};
     }
     var categories = data.label;
-    var myChart = echarts.init(document.getElementById('con'));
+    var myChart = echarts.init(document.getElementById(divid));
     console.log(data);
     option = {
         title: {

@@ -3,9 +3,9 @@
  */
 // 百度地图API功能
 
-var show = function(data){
+var show = function(data,divid){
 
-    var map = new BMap.Map('con');
+    var map = new BMap.Map(divid);
     var point = new BMap.Point(data.longitude[0],data.latitude[0]);
     map.centerAndZoom(point, 11);
     map.addControl(new BMap.MapTypeControl());

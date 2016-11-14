@@ -1,9 +1,9 @@
 /**
  * Created by NING on 2016/10/12.
  */
-var show = function(data){
+var show = function(data,divid){
 
-    var map = new AMap.Map('con', {
+    var map = new AMap.Map(divid, {
         resizeEnable: true,
         zoom:9,
         center: [data.longitude[0],data.latitude[0]]

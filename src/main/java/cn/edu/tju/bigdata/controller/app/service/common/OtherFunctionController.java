@@ -3,7 +3,10 @@ package cn.edu.tju.bigdata.controller.app.service.common;
 import cn.edu.tju.bigdata.controller.index.BaseController;
 import cn.edu.tju.bigdata.entity.Table;
 import cn.edu.tju.bigdata.mapper.TableMapper;
+import cn.edu.tju.bigdata.plugin.PagePlugin;
+import cn.edu.tju.bigdata.plugin.PageView;
 import cn.edu.tju.bigdata.util.Common;
+import cn.edu.tju.bigdata.util.FormMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +14,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,6 +30,7 @@ import java.util.List;
 @RequestMapping("/common")
 public class OtherFunctionController extends BaseController {
 
+    private static final String BD = "bd_";
     @Value("${metadata.database:xmaster}")
     private String databaseName;
 
@@ -34,14 +43,91 @@ public class OtherFunctionController extends BaseController {
         if (StringUtils.isBlank(tableName))
             tableName = "bd_meetup";
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
+        List<HashMap<String, String>> tableNameList = tableMapper.selectTableNameByDatabase(databaseName);
+        List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
+        for (HashMap<String, String> map : tableNameList) {
+            if (map.get("tableName").startsWith(BD)) {
+                if (StringUtils.isBlank(map.get("tableComment"))) {
+                    map.put("tableComment", map.get("tableName"));
+                }
+                tableNameListBD.add(map);
+            }
+        }
         for (String key : request.getParameterMap().keySet()) {
             model.addAttribute(key, request.getParameter(key));
         }
         model.addAttribute("tableName", tableName);
         model.addAttribute("accountName", accountName);
         model.addAttribute("tableList", tableList);
+        model.addAttribute("tableNameList", tableNameListBD);
         return Common.BACKGROUND_PATH + "/app/common/infoRetrieval";
     }
 
+    @ResponseBody
+    @RequestMapping("/{tableName}/findByPage/{deletedMark}")
+    public PageView findByPage(@PathVariable String tableName, @PathVariable Integer deletedMark, String pageNow, String pageSize) {
+        if (!tableName.startsWith(BD)) {
+            tableName = BD + tableName;
+        }
+        // 获得传参，即where子句的参数
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String keyword = request.getParameter("keyword");
+        getPageView(pageNow, pageSize, "");
 
+        // 拼接sql语句
+        List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
+        List<String> columnList = new ArrayList<String>();
+        for (Table table : tableList) {
+            columnList.add(table.getColumnName());
+        }
+        String columns = StringUtils.join(columnList, ", ");
+        StringBuilder stringBuilder = new StringBuilder("1");
+        if (StringUtils.isNotBlank(keyword)) {
+            for (Table table : tableList) {
+                String columnName = table.getColumnName();
+                String val = keyword;
+                switch (table.getDataType()) {
+                    case "int":
+                    case "bigint":
+//                        stringBuilder
+//                                .append(" or ")
+//                                .append(columnName)
+//                                .append(" = ")
+//                                .append(val);
+                        break;
+                    case "timestamp":
+                    case "datetime":
+//                        stringBuilder
+//                                .append(" or ")
+//                                .append(columnName)
+//                                .append(" = ")
+//                                .append(val);
+                        break;
+                    default:
+                        stringBuilder
+                                .append(" or ")
+                                .append(columnName)
+                                .append(" like '%")
+                                .append(val)
+                                .append("%'")
+                        ;
+                        break;
+                }
+            }
+        }
+        String where = stringBuilder.append(" ").toString();
+        if (where.length() > 2) {
+            where = where.substring(4);
+        }
+
+        // 数据总条数
+        Long rowCount = tableMapper.selectCountFromTable(databaseName, tableName, where);
+        pageView.setRowCount(rowCount);
+
+        // 该页内的数据
+        where = PagePlugin.generatePagesSql(where, pageView);
+        List<FormMap> dataList = tableMapper.selectDataFromTable(databaseName, tableName, columns, where);
+        pageView.setRecords(dataList);
+        return pageView;
+    }
 }

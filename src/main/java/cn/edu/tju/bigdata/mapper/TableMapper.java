@@ -4,6 +4,7 @@ import cn.edu.tju.bigdata.entity.Table;
 import cn.edu.tju.bigdata.util.FormMap;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -44,5 +45,9 @@ public interface TableMapper {
             @Param("tableName") String tableName,
             @Param("set") String set,
             @Param("id") Long id
+    );
+
+    List<HashMap<String, String>> selectTableNameByDatabase(
+            @Param("databaseName") String databaseName
     );
 }

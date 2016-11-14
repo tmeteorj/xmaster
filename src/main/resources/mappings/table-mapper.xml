@@ -15,6 +15,16 @@
       ORDER BY ordinal_position ASC
     </select>
 
+
+    <select id="selectTableNameByDatabase" resultType="java.util.Map">
+        SELECT
+        table_name as tableName,
+        table_comment as tableComment
+        FROM information_schema.tables
+        WHERE table_schema = #{databaseName}
+        ORDER BY table_comment ASC, table_name ASC
+    </select>
+
     <select id="selectDataFromTable" resultType="java.util.HashMap">
         <![CDATA[
         SELECT ${columns}

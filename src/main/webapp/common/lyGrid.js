@@ -330,53 +330,57 @@
 					td_d.appendChild(chkbox); // 第一列添加复选框
 					$.each(column, function(o) {
 						if (!column[o].hide || column[o].hide == undefined) {
-							var td_o = tr.insertCell(-1);
-							td_o.className=column[o].tbodyClass;
-							td_o.setAttribute("style", "text-align:" + column[o].align + ";width: " + column[o].width + ";vertical-align: middle;word-break: keep-all;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;");
+                            var td_o = tr.insertCell(-1);
+                            td_o.className = column[o].tbodyClass;
+                            td_o.setAttribute("style", "text-align:" + column[o].align + ";width: " + column[o].width + ";vertical-align: middle;word-break: keep-all;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;");
 
-							var clm = column[o].colkey;
-							var data = CommnUtil.notEmpty(_getValueByName(rowdata, clm));
+                            var clm = column[o].colkey;
+                            var data = CommnUtil.notEmpty(_getValueByName(rowdata, clm));
+                            if (clm == "__id__") {
+                                var tmp = CommnUtil.notEmpty(_getValueByName(rowdata, "id"));
+                                td_o.innerHTML = "<a href=\"javascript:void(0)\" class=\"btn btn-info\" dataId=\"" + tmp + "\">详情</a>";
+                            } else {
+                                if (l_tree.tree) {
+                                    var lt = l_tree.name.split(",");
+                                    if (CommnUtil.in_array(lt, clm)) {
+                                        var divtree = document.createElement("div");
+                                        divtree.className = "ly_tree";
+                                        divtree.setAttribute("style", "padding-top:5px;margin-left:5px;text-align:" + column[o].align + ";");
+                                        var img = document.createElement('img');
+                                        if (l_tree.hide || l_tree.hide != undefined)
+                                            img.src = rootPath + "/images/tree/nolines_plus.gif";
+                                        else
+                                            img.src = rootPath + "/images/tree/nolines_minus.gif";
+                                        img.onclick = datatree.bind();
+                                        divtree.appendChild(img);
+                                        td_o.appendChild(divtree);
+                                        var divspan = document.createElement("span");
+                                        divspan.className = "l_test";
+                                        divspan.setAttribute("style", "line-height:" + conf.tbodyHeight + ";");
 
-							if (l_tree.tree) {
-								var lt = l_tree.name.split(",");
-								if(CommnUtil.in_array(lt,clm)){
-									var divtree = document.createElement("div");
-									divtree.className = "ly_tree";
-									divtree.setAttribute("style", "padding-top:5px;margin-left:5px;text-align:" + column[o].align + ";");
-									var img = document.createElement('img');
-									if(l_tree.hide||l_tree.hide!=undefined)
-										img.src=rootPath+"/images/tree/nolines_plus.gif";
-									else
-										img.src=rootPath+"/images/tree/nolines_minus.gif";
-									img.onclick=datatree.bind();
-									divtree.appendChild(img);
-									td_o.appendChild(divtree);
-									var divspan = document.createElement("span");
-									divspan.className = "l_test";
-									divspan.setAttribute("style", "line-height:" + conf.tbodyHeight + ";");
-
-									if (column[o].renderData) {
-										divspan.innerHTML = column[o].renderData(rowindex, data, rowdata, clm);
-									} else {
-										divspan.innerHTML = data;
-									}
-									td_o.appendChild(divspan);
-								} else {
-									if (column[o].renderData) {
-										td_o.innerHTML = column[o].renderData(rowindex, data, rowdata, clm);
-									} else {
-										td_o.innerHTML = data;
-									}
-								}
-								;
-							} else {
-								if (column[o].renderData) {
-									td_o.innerHTML = column[o].renderData(rowindex, data, rowdata, clm);
-								} else {
-									td_o.innerHTML = data;
-								}
-							}
-							;
+                                        if (column[o].renderData) {
+                                            divspan.innerHTML = column[o].renderData(rowindex, data, rowdata, clm);
+                                        } else {
+                                            divspan.innerHTML = data;
+                                        }
+                                        td_o.appendChild(divspan);
+                                    } else {
+                                        if (column[o].renderData) {
+                                            td_o.innerHTML = column[o].renderData(rowindex, data, rowdata, clm);
+                                        } else {
+                                            td_o.innerHTML = data;
+                                        }
+                                    }
+                                    ;
+                                } else {
+                                    if (column[o].renderData) {
+                                        td_o.innerHTML = column[o].renderData(rowindex, data, rowdata, clm);
+                                    } else {
+                                        td_o.innerHTML = data;
+                                    }
+                                }
+                                ;
+                            }
 						}
 					});
 					if (l_tree.tree){

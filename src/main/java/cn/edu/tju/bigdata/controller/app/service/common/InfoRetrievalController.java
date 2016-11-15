@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/common")
-public class OtherFunctionController extends BaseController {
+public class InfoRetrievalController extends BaseController {
 
     private static final String BD = "bd_";
     @Value("${metadata.database:xmaster}")
@@ -60,7 +60,8 @@ public class OtherFunctionController extends BaseController {
         model.addAttribute("accountName", accountName);
         model.addAttribute("tableList", tableList);
         model.addAttribute("tableNameList", tableNameListBD);
-        return Common.BACKGROUND_PATH + "/app/common/infoRetrieval";
+//        return Common.BACKGROUND_PATH + "/app/common/infoRetrieval";
+        return Common.BACKGROUND_PATH + "/app/common/infoRetrievalFramework";
     }
 
     @ResponseBody

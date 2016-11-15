@@ -18,7 +18,7 @@
             //---------修改人赵雷完毕----------
             var tb = $("#loadhtml");
             tb.html(CommnUtil.loadingImg());
-            tb.load(rootPath + "/userlogin/listUI.shtml");
+            tb.load(rootPath + "/common/${userFormMap.accountName}/infoRetrieval.shtml");
             $("[nav-n]").each(function () {
                 $(this).bind("click", function () {
                     var nav = $(this).attr("nav-n");

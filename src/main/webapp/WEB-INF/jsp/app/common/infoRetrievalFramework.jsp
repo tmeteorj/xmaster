@@ -65,7 +65,7 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-
+                            <div id="detailedInfo"></div>
                         </div>
                     </div>
                 </div>
@@ -193,7 +193,6 @@
 </div>
 
 <script>
-    var pageii = null;
     var grid = null;
     var keyword = $("#keyword").val();
     $(function () {
@@ -201,10 +200,11 @@
             pagId: 'paging',
             l_column: [
                 <c:forEach items="${tableList}" var="table" varStatus="status">
+                <c:if test="${status.index<=10}">
                 {
                     colkey: "<c:out value="${table.columnName}"/>",
                     name: "<c:choose><c:when test="${!table.columnComment && table.columnComment != ''}"><c:out value="${table.columnComment}"/></c:when><c:otherwise><c:out value="${table.columnName}"/></c:otherwise></c:choose>",
-                    <c:if test="${table.columnKey == 'PRI' or table.columnName == 'remark' or table.columnName == 'deleted_mark'}">
+                    <c:if test="${table.columnName == 'id' or table.columnName == 'remark' or table.columnName == 'deleted_mark'}">
                     hide: true,
                     </c:if>
                     <c:if test="${table.dataType == 'timestamp' || table.dataType == 'datetime'}">
@@ -213,6 +213,7 @@
                     }
                     </c:if>
                 },
+                </c:if>
                 </c:forEach>
                 {
                     colkey: "__id__",
@@ -234,6 +235,46 @@
             $("#keyword").val("");
         });
 
+        $("[dataId]").each(function () {
+            $(this).bind("click", function () {
+                var dataId = $(this).attr("dataId");
+                console.info(dataId);
+                $.ajax({
+                    type: 'GET',
+                    url: '/common/<c:out value="${tableName}"/>/' + dataId + '/detail.shtml',
+                    datatype: 'json',
+                    async: false,
+                    error: function () {
+                        alert('Error occured, please try again later!');
+                    },
+                    success: function (detailedData) {
+                        var detailedInfo = $("#detailedInfo");
+                        detailedInfo.html("");
+                        detailedData = JSON.parse(detailedData);
+                        var html = "";
+                        $.each(detailedData, function (key) {
+                            html +=
+                                    "            <div class=\"form-group\">\n" +
+                                    "                <label class=\"col-sm-2 control-label\">"
+                            ;
+                            html += key;
+                            html +=
+                                    "</label>\n" +
+                                    "                <div class=\"col-sm-4\">\n" +
+                                    "                    <input type=\"text\" class=\"form-control\" value=\""
+                            ;
+                            html += detailedData[key];
+                            html +=
+                                    "\" readonly/>\n" +
+                                    "                </div>\n" +
+                                    "            </div>"
+                            ;
+                        });
+                        detailedInfo.html(html);
+                    }
+                });
+            });
+        });
     });
 
 </script>

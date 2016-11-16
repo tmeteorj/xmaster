@@ -65,6 +65,29 @@ public class InfoRetrievalController extends BaseController {
     }
 
     @ResponseBody
+    @RequestMapping("/{tableName}/{id}/detail")
+    public FormMap getDetailById(@PathVariable String tableName, @PathVariable Long id) {
+        if (!tableName.startsWith(BD)) {
+            tableName = BD + tableName;
+        }
+        List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
+        FormMap<String, Object> formMap = new FormMap<String, Object>();
+        FormMap detailedData = tableMapper.selectDataById(databaseName, tableName, id);
+        for (Table table : tableList) {
+            String key = table.getColumnComment();
+            String mid = table.getColumnName();
+            if (StringUtils.isBlank(key)) {
+                key = mid;
+            }
+            Object val = detailedData.get(mid);
+            if (val != null) {
+                formMap.put(key, val);
+            }
+        }
+        return formMap;
+    }
+
+    @ResponseBody
     @RequestMapping("/{tableName}/findByPage/{deletedMark}")
     public PageView findByPage(@PathVariable String tableName, @PathVariable Integer deletedMark, String pageNow, String pageSize) {
         if (!tableName.startsWith(BD)) {

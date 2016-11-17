@@ -238,7 +238,7 @@
 
     });
 
-    function bindingDetailBtn()
+    function bindingDetailBtn() {
     $("[dataId]").each(function () {
         $(this).bind("click", function () {
             var dataId = $(this).attr("dataId");

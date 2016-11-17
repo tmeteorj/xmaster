@@ -204,7 +204,6 @@
             url: '/common/getGraph.shtml',
             datatype: 'json',
             error: function () {
-                alert('Error occured, please try again later!');
             },
             success: function (myGraph) {
                 myChart.hideLoading();
@@ -250,13 +249,60 @@
 
             var tb = $("#bechange");
             tb.load(rootPath + '/common/' + param.data.dataset + '/selectData.shtml');
+            //alert( '/common/'+param.value+'/' + 3 + '/getGraphbyid.shtml');
+            $.ajax({
+                type: 'GET',
+                url: '/common/'+ param.data.dataset+'/'+ param.value+'/' + 4 + '/getGraphbyid.shtml',
+                datatype: 'json',
+                async: false,
+                error: function () {
+                },
+                success: function (myGraph) {
+                    myChart.hideLoading();
+                    myGraph = JSON.parse(myGraph);
+                    myGraph = JSON.parse(myGraph);
+                    option = {
+                        tooltip: {
+                            trigger: 'item'
+                        },
+
+                        animation: false,
+                        legend: {
+                            data: ['地块', '事件', '机构','人', '行为','当前选择']
+                        },
+                        series : [
+                            {
+                                type: 'graph',
+                                layout: 'force',
+                                animation: false,
+                                data: myGraph.nodes,
+                                links: myGraph.links,
+                                categories: myGraph.categories,
+                                draggable: true,
+                                roam: true,
+                                label: {
+                                    normal: {
+                                        position: 'right',
+                                        formatter: '{b}'
+                                    }
+                                },
+                                force: {
+                                    edgeLength: 5,
+                                    repulsion: 20
+                                }
+                            }
+                        ]
+                    };
+                    myChart.setOption(option);
+                }
+            });
+
             $.ajax({
                 type: 'GET',
                 url: '/common/'+param.data.dataset+'/' + param.value + '/detail1.shtml',
                 datatype: 'json',
                 async: false,
                 error: function () {
-                    alert('Error occured, please try again later!');
                 },
                 success: function (detailedData) {
                     var detailedInfo = $("#detailedInfo");
@@ -284,24 +330,6 @@
                     detailedInfo.html(html);
                 }
             });
-//            $.ajax({
-//                type: 'get',
-//                url: 'common/'+param.data.dataset+'/selectData.shtml',
-//                datatype: 'json',
-//                error: function () {
-//                    alert('Error occured, please try again later!');
-//                },
-//                success: function (myDataSet) {
-//
-//
-//
-//
-//                    //
-//                    $.ajax({
-//
-//                    });
-//                }
-//            });
 
         });
     });
@@ -361,7 +389,6 @@
           datatype: 'json',
           async: false,
           error: function () {
-            alert('Error occured, please try again later!');
           },
           success: function (detailedData) {
             var detailedInfo = $("#detailedInfo");

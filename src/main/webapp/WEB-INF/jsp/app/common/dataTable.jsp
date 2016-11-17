@@ -49,7 +49,6 @@
                     datatype: 'json',
                     async: false,
                     error: function () {
-                        alert('Error occured, please try again later!');
                     },
                     success: function (detailedData) {
                         var detailedInfo = $("#detailedInfo");

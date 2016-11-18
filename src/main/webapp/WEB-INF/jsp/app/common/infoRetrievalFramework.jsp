@@ -238,47 +238,55 @@
 
     });
 
-    function bindingDetailBtn() {
-    $("[dataId]").each(function () {
-        $(this).bind("click", function () {
-            var dataId = $(this).attr("dataId");
-            console.info(dataId);
-            $.ajax({
-                type: 'GET',
-                url: '/common/<c:out value="${tableName}"/>/' + dataId + '/detail.shtml',
-                datatype: 'json',
-                async: false,
-                error: function () {
-                    alert('Error occured, please try again later!');
-                },
-                success: function (detailedData) {
-                    var detailedInfo = $("#detailedInfo");
-                    detailedInfo.html("");
-                    detailedData = JSON.parse(detailedData);
-                    var html = "";
-                    $.each(detailedData, function (key) {
-                        html +=
-                                "            <div class=\"form-group\">\n" +
-                                "                <label class=\"col-sm-2 control-label\">"
-                        ;
-                        html += key;
-                        html +=
-                                "</label>\n" +
-                                "                <div class=\"col-sm-4\">\n" +
-                                "                    <input type=\"text\" class=\"form-control\" value=\""
-                        ;
-                        html += detailedData[key];
-                        html +=
-                                "\" readonly/>\n" +
-                                "                </div>\n" +
-                                "            </div>"
-                        ;
-                    });
-                    detailedInfo.html(html);
-                }
+    function bindingDetailBtn(column, currentData) {
+        $("[dataId]").each(function () {
+            $(this).bind("click", function () {
+                var dataId = $(this).attr("dataId");
+                var index = $(this).attr("index");
+                $.ajax({
+                    type: 'GET',
+                    url: '/common/<c:out value="${tableName}"/>/' + dataId + '/detail.shtml',
+                    datatype: 'json',
+                    async: false,
+                    error: function () {
+                        console.info(index);
+                        index = parseInt(index);
+                        var detailedData = currentData[index];
+                        createHtmlForDetailedInfo(detailedData);
+                    },
+                    success: function (detailedData) {
+                        console.info(dataId);
+                        detailedData = JSON.parse(detailedData);
+                        createHtmlForDetailedInfo(detailedData);
+                    }
+                });
             });
         });
-    });
+    }
+
+    function createHtmlForDetailedInfo(detailedData) {
+        var detailedInfo = $("#detailedInfo");
+        detailedInfo.html("");
+        var html = "";
+        $.each(detailedData, function (key) {
+            html +=
+                    "            <div class=\"form-group\">\n" +
+                    "                <label class=\"col-sm-2 control-label\">"
+            ;
+            html += key;
+            html +=
+                    "</label>\n" +
+                    "                <div class=\"col-sm-4\">\n" +
+                    "                    <input type=\"text\" class=\"form-control\" value=\""
+            ;
+            html += detailedData[key];
+            html +=
+                    "\" readonly/>\n" +
+                    "                </div>\n" +
+                    "            </div>"
+            ;
+        });
+        detailedInfo.html(html);
     }
 
 </script>

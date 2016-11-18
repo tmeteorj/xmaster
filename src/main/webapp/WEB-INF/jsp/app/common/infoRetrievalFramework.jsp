@@ -221,7 +221,7 @@
                 }],
             jsonUrl: rootPath + '/common/<c:out value="${tableName}"/>/findByPage/1.shtml?keyword=' + keyword,
             checkbox: false
-        });
+        }, bindingDetailBtn);
 
         $("#search").click(function () {
             var tableName = $("#tableName").val();
@@ -235,47 +235,70 @@
             $("#keyword").val("");
         });
 
+
+    });
+
+    function bindingDetailBtn(columns, currentData) {
         $("[dataId]").each(function () {
             $(this).bind("click", function () {
                 var dataId = $(this).attr("dataId");
-                console.info(dataId);
+                var index = $(this).attr("index");
                 $.ajax({
                     type: 'GET',
                     url: '/common/<c:out value="${tableName}"/>/' + dataId + '/detail.shtml',
                     datatype: 'json',
                     async: false,
                     error: function () {
-                        alert('Error occured, please try again later!');
+                        console.info(index);
+                        index = parseInt(index);
+                        var rowdata = currentData[index];
+                        var detailedData = {};
+                        for (var column in columns) {
+                            column = columns[column];
+                            if (column['colkey'] in rowdata) {
+                                if (!column['name'] || column['name'] == "") {
+                                    detailedData[column['colkey']] = rowdata[column['colkey']];
+                                } else {
+                                    detailedData[column['name']] = rowdata[column['colkey']];
+                                }
+                            }
+                        }
+                        createHtmlForDetailedInfo(detailedData);
                     },
                     success: function (detailedData) {
-                        var detailedInfo = $("#detailedInfo");
-                        detailedInfo.html("");
+                        console.info(dataId);
                         detailedData = JSON.parse(detailedData);
-                        var html = "";
-                        $.each(detailedData, function (key) {
-                            html +=
-                                    "            <div class=\"form-group\">\n" +
-                                    "                <label class=\"col-sm-2 control-label\">"
-                            ;
-                            html += key;
-                            html +=
-                                    "</label>\n" +
-                                    "                <div class=\"col-sm-4\">\n" +
-                                    "                    <input type=\"text\" class=\"form-control\" value=\""
-                            ;
-                            html += detailedData[key];
-                            html +=
-                                    "\" readonly/>\n" +
-                                    "                </div>\n" +
-                                    "            </div>"
-                            ;
-                        });
-                        detailedInfo.html(html);
+                        createHtmlForDetailedInfo(detailedData);
                     }
                 });
             });
         });
-    });
+    }
+
+    function createHtmlForDetailedInfo(detailedData) {
+        var detailedInfo = $("#detailedInfo");
+        detailedInfo.html("");
+        var html = "";
+        $.each(detailedData, function (key) {
+            html +=
+                    "            <div class=\"form-group\">\n" +
+                    "                <label class=\"col-sm-2 control-label\">"
+            ;
+            html += key;
+            html +=
+                    "</label>\n" +
+                    "                <div class=\"col-sm-4\">\n" +
+                    "                    <input type=\"text\" class=\"form-control\" value=\""
+            ;
+            html += detailedData[key];
+            html +=
+                    "\" readonly/>\n" +
+                    "                </div>\n" +
+                    "            </div>"
+            ;
+        });
+        detailedInfo.html(html);
+    }
 
 </script>
 <script src="http://webapi.amap.com/maps?v=1.3&key=d811dda1aae5e80c64f364d199c05d9b&callback=init"></script>

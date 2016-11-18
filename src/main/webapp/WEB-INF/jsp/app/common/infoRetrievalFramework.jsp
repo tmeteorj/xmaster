@@ -238,7 +238,7 @@
 
     });
 
-    function bindingDetailBtn(column, currentData) {
+    function bindingDetailBtn(columns, currentData) {
         $("[dataId]").each(function () {
             $(this).bind("click", function () {
                 var dataId = $(this).attr("dataId");
@@ -251,7 +251,18 @@
                     error: function () {
                         console.info(index);
                         index = parseInt(index);
-                        var detailedData = currentData[index];
+                        var rowdata = currentData[index];
+                        var detailedData = {};
+                        for (var column in columns) {
+                            column = columns[column];
+                            if (column['colkey'] in rowdata) {
+                                if (!column['name'] || column['name'] == "") {
+                                    detailedData[column['colkey']] = rowdata[column['colkey']];
+                                } else {
+                                    detailedData[column['name']] = rowdata[column['colkey']];
+                                }
+                            }
+                        }
                         createHtmlForDetailedInfo(detailedData);
                     },
                     success: function (detailedData) {

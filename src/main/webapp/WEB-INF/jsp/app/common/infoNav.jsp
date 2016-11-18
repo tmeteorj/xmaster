@@ -33,9 +33,10 @@
                               value="${mapOfTableName.get('tableComment')}"/></option>
                   </c:forEach>
                 </select>
-                <button id="search" type="button" class="btn btn-success">
-                  检索
-                </button>
+                  <button id="search" type="button" class="btn btn-success">
+                      检索
+                  </button>
+
               </form>
             </div>
           </div>
@@ -82,6 +83,7 @@
                 导航
               </h3>
             </div>
+
             <div class="panel-body"><!--body-->
               <div class="panel-group">
                 <div class="panel panel-default">
@@ -110,19 +112,32 @@
                     <li><a href="#">区县</a></li>
                   </div>
                 </div>
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h4 class="panel-title">
-                      关系导航
-                    </h4>
+                  <div class="panel panel-default">
+                      <div class="panel-heading">
+                          <h4 class="panel-title">
+                              关系导航
+                          </h4>
+                      </div>
+                      <div class="panel-body">
+                          <li><a href="#">同乘坐一辆车</a></li>
+                          <li><a href="#">同住一个地方</a></li>
+                          <li><a href="#">同发表一篇文章</a></li>
+                          <li><a href="#">其他关联关系</a></li>
+                      </div>
                   </div>
-                  <div class="panel-body">
-                    <li><a href="#">同乘坐一辆车</a></li>
-                    <li><a href="#">同住一个地方</a></li>
-                    <li><a href="#">同发表一篇文章</a></li>
-                    <li><a href="#">其他关联关系</a></li>
+                  <div class="panel panel-default">
+                      <div class="panel-heading">
+                          <h4 class="panel-title">
+                              导航功能
+                          </h4>
+                      </div>
+                      <div class="panel-body">
+                          <button id="reload" style="margin-right:2px" type="button" class="btn btn-warning">
+                              还原
+                          </button>
+                      </div>
                   </div>
-                </div>
+
               </div>
             </div>
             <!--body-->
@@ -334,7 +349,53 @@
         });
     });
 
+    $("#reload").click(function () {
+        $.ajax({
+            type: 'get',
+            url: '/common/getGraph.shtml',
+            datatype: 'json',
+            error: function () {
+            },
+            success: function (myGraph) {
+                myChart.hideLoading();
+                myGraph = JSON.parse(myGraph);
+                myGraph = JSON.parse(myGraph);
+                option = {
+                    tooltip: {
+                        trigger: 'item'
+                    },
 
+                    animation: false,
+                    legend: {
+                        data: ['地块', '事件', '机构','人', '行为']
+                    },
+                    series : [
+                        {
+                            type: 'graph',
+                            layout: 'force',
+                            animation: false,
+                            data: myGraph.nodes,
+                            links: myGraph.links,
+                            categories: myGraph.categories,
+                            draggable: true,
+                            roam: true,
+                            label: {
+                                normal: {
+                                    position: 'right',
+                                    formatter: '{b}'
+                                }
+                            },
+                            force: {
+                                edgeLength: 5,
+                                repulsion: 20
+                            }
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+            }
+        });
+    });
 </script>
 <script>
   var grid = null;

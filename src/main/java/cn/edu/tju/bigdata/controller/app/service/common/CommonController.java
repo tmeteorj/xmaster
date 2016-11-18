@@ -189,6 +189,101 @@ public class CommonController extends BaseController {
         return JSON.toJSONString(network);
 
     }
+
+
+    @ResponseBody
+    @RequestMapping("/{datasetid}/{Id}/{n}/getGraphbykey")
+    public String getGraphbykey(@PathVariable String datasetid,@PathVariable int Id,@PathVariable int n) throws Exception{
+        Session session = SecurityUtils.getSubject().getSession();
+        NavFormMap tnavFormMap = new NavFormMap();
+        tnavFormMap.set("userId", session.getAttribute("userSessionId"));
+
+        NavFormMap navFormMap = new NavFormMap();
+        try {
+            navFormMap = navMapper.findByNames(tnavFormMap).get(0);
+        }
+        catch (Exception e){
+            return null;
+        }
+        JSONObject jNetwork= JSON.parseObject(navFormMap.getStr("network"));
+
+        List<NodeandLinks> nls = new ArrayList<>();
+        List<Boolean> flag = new ArrayList<>();
+        JSONArray jnodes = JSONArray.parseArray(jNetwork.getString("nodes"));
+        NodeandLinks st = null;
+        for(int i = 0;i<jnodes.size();i++){
+            JSONObject jnode = (JSONObject) jnodes.get(i);//String name,Long category,String dataset,String metadata,String value, String remark,int myid
+            NodeandLinks nl= new NodeandLinks(jnode.getString("name"),jnode.getLong("category"),jnode.getString("dataset"),jnode.getString("metadata"),jnode.getString("value"),jnode.getString("remark"),i);
+            nls.add(nl);
+            flag.add(new Boolean(false));
+
+        }
+        JSONArray jlinks = JSONArray.parseArray(jNetwork.getString("links"));
+        for(int i = 0;i<jlinks.size();i++){
+            JSONObject jlink = (JSONObject) jlinks.get(i);
+            NodeandLinks sou = nls.get(jlink.getInteger("source"));
+            NodeandLinks tar = nls.get(jlink.getInteger("target"));
+            sou.link.add(tar);
+            sou.linkName.add(jlink.getString("name"));
+        }
+
+        for(int i = 0;i<nls.size();i++){
+            if(nls.get(i).dataset.equals(datasetid)&&nls.get(i).value.equals(String.valueOf(Id))){
+                st =nls.get(i);
+                flag.set(i,new Boolean(true));
+                break;
+            }
+        }
+        List<Node> ns = new ArrayList<>();
+        List<Link> ls = new ArrayList<>();
+        Queue<NodeandLinks> qnls = new LinkedList<>();
+        Queue<Integer> qis = new LinkedList<>();
+        qnls.offer(st);
+        Node stnode = st.getNodeforJson();
+        stnode.symbolSize="20";
+        ns.add(stnode);
+        ns.get(0).category = 5L;
+        qis.offer(new Integer(1));
+
+        List<NodeandLinks> choosnl = new ArrayList<>();
+
+        choosnl.add(st);
+        while(!qnls.isEmpty()){
+            NodeandLinks top = qnls.poll();
+            int i = qis.poll();
+            if(i>=n) continue;
+            for(int j = 0;j<top.link.size();j++){
+                NodeandLinks temnl = top.link.get(j);
+                if(flag.get(temnl.myid).compareTo(Boolean.FALSE)==0){
+                    qnls.offer(temnl);
+                    qis.offer(i+1);
+                    //此处保持两个list相同序号
+                    choosnl.add(temnl);
+                    ns.add(temnl.getNodeforJson());
+                    flag.set(temnl.myid, new Boolean(true));
+                }
+            }
+
+        }
+        for(int i = 0;i<choosnl.size();i++){
+            NodeandLinks temnl = choosnl.get(i);
+            for(int j=0;j<temnl.link.size();j++){
+                if(flag.get(temnl.link.get(j).myid).compareTo(Boolean.TRUE)==0){
+                    for(int k=0;k<choosnl.size();k++){
+                        if(temnl.link.get(j).myid==choosnl.get(k).myid){
+                            ls.add(new Link(new Long(i),new Long(k),temnl.linkName.get(j)));
+                        }
+                    }
+                }
+            }
+        }
+        Network network = new Network();
+        network.setDefaultCategory();
+        network.nodes = ns;
+        network.links = ls;
+        return JSON.toJSONString(network);
+
+    }
     @RequestMapping("/{datasetid}/selectData")
     public String selectData(@PathVariable String datasetid,Model model) throws Exception {
         model.addAttribute("tableName",datasetid);

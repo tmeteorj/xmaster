@@ -74,6 +74,55 @@
                             ;
                         });
                         detailedInfo.html(html);
+
+
+                    }
+                });
+                //alert('/common/<c:out value="${tableName}"/>'+ dataId+'/' + 4 + '/getGraphbykey.shtml');
+                $.ajax({
+                    type: 'GET',
+                    url: '/common/<c:out value="${tableName}"/>/'+ dataId+'/' + 4 + '/getGraphbykey.shtml',
+                    datatype: 'json',
+                    async: false,
+                    error: function () {
+                    },
+                    success: function (myGraph) {
+                        myChart.hideLoading();
+                        myGraph = JSON.parse(myGraph);
+                        myGraph = JSON.parse(myGraph);
+                        option = {
+                            tooltip: {
+                                trigger: 'item'
+                            },
+
+                            animation: false,
+                            legend: {
+                                data: ['地块', '事件', '机构','人', '行为','当前选择']
+                            },
+                            series : [
+                                {
+                                    type: 'graph',
+                                    layout: 'force',
+                                    animation: false,
+                                    data: myGraph.nodes,
+                                    links: myGraph.links,
+                                    categories: myGraph.categories,
+                                    draggable: true,
+                                    roam: true,
+                                    label: {
+                                        normal: {
+                                            position: 'right',
+                                            formatter: '{b}'
+                                        }
+                                    },
+                                    force: {
+                                        edgeLength: 5,
+                                        repulsion: 20
+                                    }
+                                }
+                            ]
+                        };
+                        myChart.setOption(option);
                     }
                 });
             });

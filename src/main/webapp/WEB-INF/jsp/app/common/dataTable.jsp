@@ -6,8 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+         pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <div class="table-responsive">
     <div id="paging" class="pagclass"></div>
 </div>
@@ -38,50 +38,46 @@
                 }],
             jsonUrl: rootPath + '/common/<c:out value="${tableName}"/>/showData.shtml',
             checkbox: false
-        });
+        }, bindingDetailBtn);
+    });
+
+    function bindingDetailBtn(columns, currentData) {
         $("[dataId]").each(function () {
             $(this).bind("click", function () {
                 var dataId = $(this).attr("dataId");
-                console.info(dataId);
+                var index = $(this).attr("index");
                 $.ajax({
                     type: 'GET',
                     url: '/common/<c:out value="${tableName}"/>/' + dataId + '/detail1.shtml',
                     datatype: 'json',
                     async: false,
                     error: function () {
+                        console.info(index);
+                        index = parseInt(index);
+                        var rowdata = currentData[index];
+                        var detailedData = {};
+                        for (var column in columns) {
+                            column = columns[column];
+                            if (column['colkey'] in rowdata) {
+                                if (!column['name'] || column['name'] == "") {
+                                    detailedData[column['colkey']] = rowdata[column['colkey']];
+                                } else {
+                                    detailedData[column['name']] = rowdata[column['colkey']];
+                                }
+                            }
+                        }
+                        createHtmlForDetailedInfo(detailedData);
                     },
                     success: function (detailedData) {
-                        var detailedInfo = $("#detailedInfo");
-                        detailedInfo.html("");
+                        console.info(dataId);
                         detailedData = JSON.parse(detailedData);
-                        var html = "";
-                        $.each(detailedData, function (key) {
-                            html +=
-                                    "            <div class=\"form-group\">\n" +
-                                    "                <label class=\"col-sm-2 control-label\">"
-                            ;
-                            html += key;
-                            html +=
-                                    "</label>\n" +
-                                    "                <div class=\"col-sm-4\">\n" +
-                                    "                    <input type=\"text\" class=\"form-control\" value=\""
-                            ;
-                            html += detailedData[key];
-                            html +=
-                                    "\" readonly/>\n" +
-                                    "                </div>\n" +
-                                    "            </div>"
-                            ;
-                        });
-                        detailedInfo.html(html);
-
-
+                        createHtmlForDetailedInfo(detailedData);
                     }
                 });
-                //alert('/common/<c:out value="${tableName}"/>'+ dataId+'/' + 4 + '/getGraphbykey.shtml');
+
                 $.ajax({
                     type: 'GET',
-                    url: '/common/<c:out value="${tableName}"/>/'+ dataId+'/' + 4 + '/getGraphbykey.shtml',
+                    url: '/common/<c:out value="${tableName}"/>/' + dataId + '/' + 4 + '/getGraphbykey.shtml',
                     datatype: 'json',
                     async: false,
                     error: function () {
@@ -97,9 +93,9 @@
 
                             animation: false,
                             legend: {
-                                data: ['地块', '事件', '机构','人', '行为','当前选择']
+                                data: ['地块', '事件', '机构', '人', '行为', '当前选择']
                             },
-                            series : [
+                            series: [
                                 {
                                     type: 'graph',
                                     layout: 'force',
@@ -127,6 +123,31 @@
                 });
             });
         });
-    });
+    }
+
+    function createHtmlForDetailedInfo(detailedData) {
+        var detailedInfo = $("#detailedInfo");
+        detailedInfo.html("");
+        var html = "";
+        $.each(detailedData, function (key) {
+            html +=
+                    "            <div class=\"form-group\">\n" +
+                    "                <label class=\"col-sm-2 control-label\">"
+            ;
+            html += key;
+            html +=
+                    "</label>\n" +
+                    "                <div class=\"col-sm-4\">\n" +
+                    "                    <input type=\"text\" class=\"form-control\" value=\""
+            ;
+            html += detailedData[key];
+            html +=
+                    "\" readonly/>\n" +
+                    "                </div>\n" +
+                    "            </div>"
+            ;
+        });
+        detailedInfo.html(html);
+    }
 
 </script>

@@ -1,14 +1,17 @@
 package cn.edu.tju.bigdata.controller.app.service.object;
 
 import cn.edu.tju.bigdata.annotation.SystemLog;
+import cn.edu.tju.bigdata.biz.plane.PlaneBiz;
 import cn.edu.tju.bigdata.controller.index.BaseController;
 import cn.edu.tju.bigdata.entity.PlaneFormMap;
-import cn.edu.tju.bigdata.biz.plane.PlaneBiz;
+import cn.edu.tju.bigdata.entity.Table;
 import cn.edu.tju.bigdata.mapper.PlaneMapper;
+import cn.edu.tju.bigdata.mapper.TableMapper;
 import cn.edu.tju.bigdata.util.Common;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,8 +27,15 @@ public class VisualUICreateController extends BaseController {
     @Autowired
     private PlaneMapper planeMapper;
 
+    @Autowired
+    private TableMapper tableMapper;
+
     @RequestMapping("/mapplaneuicreate")
-    public String mapplaneuicreate() {
+    public String mapplaneuicreate(Model model) {
+        List<Table> tableList = tableMapper.selectTableByName("bd_plane", "xmaster");
+        model.addAttribute("tableName", "bd_plane");
+        model.addAttribute("accountName", "lx1");
+        model.addAttribute("tableList", tableList);
         return Common.BACKGROUND_PATH + "/app/visualuicreate/mapplaneuicreate";
     }
 

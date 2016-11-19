@@ -27,10 +27,10 @@
                                 </div>
                                 <select id="tableName" name="tableName" class="form-control">
                                     <c:forEach var="mapOfTableName" items="${tableNameList}">
-                                        <option value="<c:out value="${mapOfTableName.get('tableName')}"/>"
-                                                <c:if test="${tableName eq mapOfTableName.get('tableName')}">selected</c:if>>
+                                        <option value="<c:out value="${mapOfTableName.tableName}"/>"
+                                                <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>>
                                             <c:out
-                                                    value="${mapOfTableName.get('tableComment')}"/></option>
+                                                    value="${mapOfTableName.tableComment}"/></option>
                                     </c:forEach>
                                 </select>
                                 <button id="search" type="button" class="btn btn-success">
@@ -265,18 +265,3 @@ function init() {
     });
 </script>
 
-
-<!--
-<script> // google map
-function initMap() {
-map = new google.maps.Map(document.getElementById('GMap'), {
-// center: {lat: -34.397, lng: 150.644},
-center: {lat: 39.80, lng: 116.23}, // Beijing
-zoom: 8
-});
-}
-</script>
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJAZFHarSBlboid2Qlv4FyVh3QmIL3Y2Q&callback=initMap">
-</script>
--->

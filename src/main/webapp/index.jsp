@@ -177,8 +177,8 @@
                     <li class="divider"></li>
 
                     <!-- 传用户账号的用意是可以用它来区分数据集权限等，TODO -->
-                    <li><a nav-n="常用功能,地名导航,${ctx}/common/${userFormMap.accountName}/locationNav.shtml"
-                           href="javascript:void(0);">地名导航</a></li>
+                    <li><a nav-n="常用功能,信息导航,${ctx}/common/${userFormMap.accountName}/infoNav.shtml"
+                           href="javascript:void(0);">信息导航</a></li>
                     <li><a nav-n="常用功能,信息检索,${ctx}/common/${userFormMap.accountName}/infoRetrieval.shtml"
                            href="javascript:void(0)">信息检索</a></li>
                     <li>

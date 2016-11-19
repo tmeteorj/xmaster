@@ -336,9 +336,10 @@
 
                             var clm = column[o].colkey;
                             var data = CommnUtil.notEmpty(_getValueByName(rowdata, clm));
-                            if (clm == "__id__") {
+							if (clm == "__id__") { // lhd added for adding button
                                 var tmp = CommnUtil.notEmpty(_getValueByName(rowdata, "id"));
-                                td_o.innerHTML = "<a href=\"javascript:void(0)\" class=\"btn btn-info\" dataId=\"" + tmp + "\">详情</a>";
+                                if (tmp == "") tmp = 0;
+                                td_o.innerHTML = "<a href=\"javascript:void(0)\" class=\"btn btn-info\" dataId=\"" + tmp + "\" index=\"" + d + "\">详情</a>";
                             } else {
                                 if (l_tree.tree) {
                                     var lt = l_tree.name.split(",");
@@ -396,6 +397,9 @@
 					}
 				}
 			};
+			// lhd added for binding button
+			if (callback)
+				callback(column, currentData);
 		}
 		var fenyeDiv = function(divid, jsonData) {
 			var totalRecords = _getValueByName(jsonData, conf.totalRecords);

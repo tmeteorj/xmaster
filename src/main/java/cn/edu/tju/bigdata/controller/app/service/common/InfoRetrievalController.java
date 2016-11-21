@@ -40,14 +40,11 @@ public class InfoRetrievalController extends BaseController {
     @RequestMapping("/{accountName}/infoRetrieval")
     public String infoRetrieval(@PathVariable String accountName, HttpServletRequest request, Model model) {
         String tableName = request.getParameter("tableName");
-        String parameter = request.getParameter("layerType");
-        int layerType = 0;
+        String displayType = request.getParameter("displayType");
         if (StringUtils.isBlank(tableName))
             tableName = "bd_meetup";
-        if (StringUtils.isNotBlank(parameter)) {
-            layerType = Integer.parseInt(parameter);
-        }
-//        List<FormMap> tableNameListLayer = tableMapper.selectDataFromTable(databaseName, "")
+        if (StringUtils.isBlank(displayType))
+            displayType = "1";
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
         List<HashMap<String, String>> tableNameList = tableMapper.selectTableNameByDatabase(databaseName);
         List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
@@ -66,6 +63,7 @@ public class InfoRetrievalController extends BaseController {
         model.addAttribute("accountName", accountName);
         model.addAttribute("tableList", tableList);
         model.addAttribute("tableNameList", tableNameListBD);
+        model.addAttribute("displayType", displayType);
 //        return Common.BACKGROUND_PATH + "/app/common/infoRetrieval";
         return Common.BACKGROUND_PATH + "/app/common/infoRetrievalFramework";
     }

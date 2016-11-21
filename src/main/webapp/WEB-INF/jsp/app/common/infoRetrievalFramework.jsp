@@ -21,21 +21,48 @@
                         </div>
                         <div class="panel-body">
                             <form id="searchForm" class="navbar-form" role="search">
-                                <div class="form-group col-md-8">
-                                    <input id="keyword" name="keyword" value="<c:out value="${keyword}"/>"
-                                           type="text" class="form-control" style="width: 100%" placeholder="请输入关键字"/>
+                                <div class="row">
+                                    <div class="form-group col-md-8">
+                                        <input id="keyword" name="keyword" value="<c:out value="${keyword}"/>"
+                                               type="text" class="form-control" style="width: 100%"
+                                               placeholder="请输入关键字"/>
+                                    </div>
+                                    <select id="tableName" name="tableName" class="form-control">
+                                        <c:forEach var="mapOfTableName" items="${tableNameList}">
+                                            <option value="<c:out value="${mapOfTableName.tableName}"/>"
+                                                    <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>>
+                                                <c:out
+                                                        value="${mapOfTableName.tableComment}"/></option>
+                                        </c:forEach>
+                                    </select>
+                                    <button id="search" type="button" class="btn btn-success">
+                                        检索
+                                    </button>
                                 </div>
-                                <select id="tableName" name="tableName" class="form-control">
-                                    <c:forEach var="mapOfTableName" items="${tableNameList}">
-                                        <option value="<c:out value="${mapOfTableName.tableName}"/>"
-                                                <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>>
-                                            <c:out
-                                                    value="${mapOfTableName.tableComment}"/></option>
-                                    </c:forEach>
-                                </select>
-                                <button id="search" type="button" class="btn btn-success">
-                                    检索
-                                </button>
+                                <div class="line line-dashed pull-in"></div>
+                                <div class="row ">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-4">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="displayType" value="1"
+                                                   <c:if test="${displayType eq '1'}">checked</c:if>> 集合
+                                        </label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="displayType" value="2"
+                                                   <c:if test="${displayType eq '2'}">checked</c:if>> 关系
+                                        </label>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="displayType" value="3"
+                                                   <c:if test="${displayType eq '3'}">checked</c:if>> 个体
+                                        </label>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -48,6 +75,24 @@
                 </div>
             </div>
             <!--地图栏-->
+
+            <div class="row"><!--描述栏-->
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                描述
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="description">
+                                这是 <c:out value="${tableName}"/> 数据。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--描述栏-->
             <div class="row"><!--列表栏-->
                 <div class="col-md-12">
                     <div class="table-responsive">
@@ -79,7 +124,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">
-                                导航
+                                其他
                             </h3>
                         </div>
                         <div class="panel-body"><!--body-->
@@ -87,50 +132,34 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
-                                            对象层导航
+                                            统计分析
                                         </h4>
                                     </div>
                                     <div class="panel-body">
-                                        <li><a href="javascript:void(0);" data-layer-type="1">数据集信息</a></li>
-                                        <li><a href="javascript:void(0);" data-layer-type="2">关系导航</a></li>
-                                        <li><a href="javascript:void(0);" data-layer-type="3">单个对象</a></li>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            地块层导航
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <li><a href="javascript:void(0);" data-layer-type="4">数据集信息</a></li>
-                                        <li><a href="javascript:void(0);" data-layer-type="5">关系导航</a></li>
-                                        <li><a href="javascript:void(0);" data-layer-type="6">单个地块</a></li>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            事件层导航
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <li><a href="javascript:void(0);" data-layer-type="7">数据集信息</a></li>
-                                        <li><a href="javascript:void(0);" data-layer-type="8">关系导航</a></li>
-                                        <li><a href="javascript:void(0);" data-layer-type="9">单个事件</a></li>
+                                        <p>
+                                            <button id="TimeStat" type="button"
+                                                    class="btn btn-success btn-lg btn-block">
+                                                时间统计
+                                            </button>
+                                        </p>
+                                        <p>
+                                            <button id="PlaceStat" type="button" class="btn btn-info btn-lg btn-block">
+                                                空间统计
+                                            </button>
+                                        </p>
+                                        <p>
+                                            <button type="button" class="btn btn-warning btn-lg btn-block">
+                                                其他统计1
+                                            </button>
+                                        </p>
+                                        <p>
+                                            <button type="button" class="btn btn-danger btn-lg btn-block">
+                                                其他统计2
+                                            </button>
+                                        </p>
                                     </div>
                                 </div>
 
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            行为层导航
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <li><a href="javascript:void(0);" data-layer-type="10">数据集信息</a></li>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <!--body-->
@@ -148,27 +177,70 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">数据集</label>
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            数据集限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">数据集</label>
 
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" value="生物黑客" readonly>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="生物黑客" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            时间限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">开始</label>
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">开始</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="2010-01-02" readonly>
+                                            </div>
+                                        </div>
 
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" value="2010-01-02" readonly>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">截止</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="2016-09-17" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            空间限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">国家</label>
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">截止</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="全部" readonly>
+                                            </div>
+                                        </div>
 
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" value="2016-09-17" readonly>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">州省</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="全部" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -214,11 +286,17 @@
         }, bindingDetailBtn);
 
         $("#search").click(function () {
-            var tableName = $("#tableName").val();
-            var keyword = $("#keyword").val();
+            var displayType = $("input[name='displayType']:checked").val();
+            var params = $("#searchForm").serialize();
             var tb = $("#loadhtml");
             tb.html(CommnUtil.loadingImg());
-            tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?tableName=" + tableName + '&keyword=' + keyword);
+            if (displayType == '1') {
+                tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?" + params);
+            } else if (displayType == '2') {
+                tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoNav.shtml?" + params);
+            } else if (displayType == '3') {
+                tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoNavIndividual.shtml?" + params);
+            }
         });
 
         $("#tableName").change(function () {
@@ -229,35 +307,7 @@
             advancedConfig();
         });
 
-        bindingNavBtn();
-
     });
-
-    function bindingNavBtn() {
-        $("[data-layer-type]").each(function () {
-            var layerType = $(this).attr("data-layer-type");
-            var layerTypeInt = parseInt(layerType);
-            if ((layerTypeInt - 1) % 3 == 0) {
-                $(this).bind("click", function () {
-                    var tb = $("#loadhtml");
-                    tb.html(CommnUtil.loadingImg());
-                    tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?layerType=" + layerType);
-                });
-            } else if ((layerTypeInt - 1) % 3 == 1) {
-                $(this).bind("click", function () {
-                    var tb = $("#loadhtml");
-                    tb.html(CommnUtil.loadingImg());
-                    tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?layerType=" + layerType);
-                });
-            } else if ((layerTypeInt - 1) % 3 == 2) {
-                $(this).bind("click", function () {
-                    var tb = $("#loadhtml");
-                    tb.html(CommnUtil.loadingImg());
-                    tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?layerType=" + layerType);
-                });
-            }
-        });
-    }
 
     function bindingDetailBtn(columns, currentData) {
         $("[dataId]").each(function () {
@@ -358,4 +408,3 @@ function init() {
         forceParse: 0
     });
 </script>
-

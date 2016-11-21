@@ -27,9 +27,9 @@ public class GenFZRYXX {
                              String xb, String csrq, String cym, String whcd,
                              String mz, String sg, String sfbm) throws IOException, SQLException, ParseException {
         RandomUtil ru = new RandomUtil();
-        String preffix = "insert into bd_fzryxx(gmsfhm,xm,xb,csrq,cym,whcd,mz,zc,sg,ajlb,rsrq,cljg,cljgflwsh,xq,sfbm) values";
+        String preffix = "insert into bd_fzryxx(gmsfhm,xm,xb,csrq,cym,whcd,mz,sg,ajlb,rsrq,cljg,cljgflwsh,xq,sfbm) values";
         String sql = preffix;
-        int times = ru.randomInt(1, 3);
+        int times = ru.randomInt(1, 5);
         String ajlbs[] = {"盗窃", "抢劫", "杀人", "诈骗", "寻性滋事", "聚众斗殴", "强奸", "放火"};
         String cljgs[] = {"刑拘", "罚款", "死刑", "批评教育"};
         for (int i = 0; i < times; i++) {
@@ -41,8 +41,8 @@ public class GenFZRYXX {
             int tot = ru.randomInt(1, 480);
             String xq = (tot / 12) + "年" + (tot % 12) + "月";
             if (!sql.equals(preffix)) sql += ",";
-            sql += String.format("(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')",
-                    gmsfhm, xm, xb, csrq, cym, whcd, mz, zc, sg, ajlb, rsrq, cljg, cljgflwsh, xq, sfbm);
+            sql += String.format("(\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')",
+                    gmsfhm, xm, xb, csrq, cym, whcd, mz, sg, ajlb, rsrq, cljg, cljgflwsh, xq, sfbm);
         }
         MySQLUtil.updateResult(sql);
     }
@@ -51,7 +51,7 @@ public class GenFZRYXX {
         List<String[]> ps = new ArrayList<String[]>();
         ResultSet rs = MySQLUtil.queryResult("select GMSFHM,XM,XBDM,CSRQ,CYM,XLDM,MZDM,SG,CSD_SSXQDM from bd_rkxx");
         while (rs.next()) {
-            if (Math.random() * 10000 < 1) {
+            if (Math.random() * 1000 < 1) {
                 ps.add(new String[]{rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6),
                         rs.getString(7), rs.getString(8), rs.getString(9)});
             }

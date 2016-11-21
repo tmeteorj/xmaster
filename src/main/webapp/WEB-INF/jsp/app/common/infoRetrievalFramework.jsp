@@ -20,10 +20,10 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <form id="searchForm" class="navbar-form navbar-left" role="search">
-                                <div class="form-group">
+                            <form id="searchForm" class="navbar-form" role="search">
+                                <div class="form-group col-md-8">
                                     <input id="keyword" name="keyword" value="<c:out value="${keyword}"/>"
-                                           type="text" class="form-control" placeholder="请输入关键字"/>
+                                           type="text" class="form-control" style="width: 100%" placeholder="请输入关键字"/>
                                 </div>
                                 <select id="tableName" name="tableName" class="form-control">
                                     <c:forEach var="mapOfTableName" items="${tableNameList}">
@@ -87,40 +87,48 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
-                                            时间导航
+                                            对象层导航
                                         </h4>
                                     </div>
                                     <div class="panel-body">
-                                        <li><a href="#">年</a></li>
-                                        <li><a href="#">月</a></li>
-                                        <li><a href="#">日</a></li>
-                                        <li><a href="#">周次</a></li>
+                                        <li><a href="javascript:void(0);" data-layer-type="1">数据集信息</a></li>
+                                        <li><a href="javascript:void(0);" data-layer-type="2">关系导航</a></li>
+                                        <li><a href="javascript:void(0);" data-layer-type="3">单个对象</a></li>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
-                                            空间导航
+                                            地块层导航
                                         </h4>
                                     </div>
                                     <div class="panel-body">
-                                        <li><a href="#">国家</a></li>
-                                        <li><a href="#">州省</a></li>
-                                        <li><a href="#">郡市</a></li>
-                                        <li><a href="#">区县</a></li>
+                                        <li><a href="javascript:void(0);" data-layer-type="4">数据集信息</a></li>
+                                        <li><a href="javascript:void(0);" data-layer-type="5">关系导航</a></li>
+                                        <li><a href="javascript:void(0);" data-layer-type="6">单个地块</a></li>
                                     </div>
                                 </div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
-                                            关系导航
+                                            事件层导航
                                         </h4>
                                     </div>
                                     <div class="panel-body">
-                                        <li><a href="#">同乘坐一辆车</a></li>
-                                        <li><a href="#">同住一个地方</a></li>
-                                        <li><a href="#">同发表一篇文章</a></li>
-                                        <li><a href="#">其他关联关系</a></li>
+                                        <li><a href="javascript:void(0);" data-layer-type="7">数据集信息</a></li>
+                                        <li><a href="javascript:void(0);" data-layer-type="8">关系导航</a></li>
+                                        <li><a href="javascript:void(0);" data-layer-type="9">单个事件</a></li>
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            行为层导航
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <li><a href="javascript:void(0);" data-layer-type="10">数据集信息</a></li>
                                     </div>
                                 </div>
                             </div>
@@ -136,6 +144,7 @@
                         <div class="panel-heading">
                             <h3 class="panel-title">
                                 限定
+                                <a href="javascript:void(0);" class="pull-right" id="advancedConfig">高级设置</a>
                             </h3>
                         </div>
                         <div class="panel-body">
@@ -143,42 +152,23 @@
                                 <label class="col-sm-3 control-label">数据集</label>
 
                                 <div class="col-sm-9">
-                                    <select class="form-control">
-                                        <option>请选择数据集</option>
-                                        <option>生物黑客活动</option>
-                                        <option selected>生物黑客组织</option>
-                                        <option>生物黑客成员</option>
-                                    </select>
+                                    <input type="text" class="form-control" value="生物黑客" readonly>
                                 </div>
                             </div>
+
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">起始</label>
+                                <label class="col-sm-3 control-label">开始</label>
 
                                 <div class="col-sm-9">
-                                    <div class="input-group date form_date" data-date="" data-date-format="yyyy-MM-dd"
-                                         data-link-field="" data-link-format="yyyy-mm-dd">
-                                        <input class="form-control" size="16" type="text" value="2009-12-10" readonly>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-remove"></span></span>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-calendar"></span></span>
-                                    </div>
-                                    <input type="hidden" value=""/>
+                                    <input type="text" class="form-control" value="2010-01-02" readonly>
                                 </div>
                             </div>
+
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">截止</label>
 
                                 <div class="col-sm-9">
-                                    <div class="input-group date form_date" data-date="" data-date-format="yyyy-MM-dd"
-                                         data-link-field="" data-link-format="yyyy-mm-dd">
-                                        <input class="form-control" size="16" type="text" value="2016-01-01" readonly>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-remove"></span></span>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-calendar"></span></span>
-                                    </div>
-                                    <input type="hidden" value=""/>
+                                    <input type="text" class="form-control" value="2016-09-17" readonly>
                                 </div>
                             </div>
 
@@ -235,8 +225,39 @@
             $("#keyword").val("");
         });
 
+        $("#advancedConfig").click(function () {
+            advancedConfig();
+        });
+
+        bindingNavBtn();
 
     });
+
+    function bindingNavBtn() {
+        $("[data-layer-type]").each(function () {
+            var layerType = $(this).attr("data-layer-type");
+            var layerTypeInt = parseInt(layerType);
+            if ((layerTypeInt - 1) % 3 == 0) {
+                $(this).bind("click", function () {
+                    var tb = $("#loadhtml");
+                    tb.html(CommnUtil.loadingImg());
+                    tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?layerType=" + layerType);
+                });
+            } else if ((layerTypeInt - 1) % 3 == 1) {
+                $(this).bind("click", function () {
+                    var tb = $("#loadhtml");
+                    tb.html(CommnUtil.loadingImg());
+                    tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?layerType=" + layerType);
+                });
+            } else if ((layerTypeInt - 1) % 3 == 2) {
+                $(this).bind("click", function () {
+                    var tb = $("#loadhtml");
+                    tb.html(CommnUtil.loadingImg());
+                    tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?layerType=" + layerType);
+                });
+            }
+        });
+    }
 
     function bindingDetailBtn(columns, currentData) {
         $("[dataId]").each(function () {
@@ -298,6 +319,15 @@
             ;
         });
         detailedInfo.html(html);
+    }
+
+    function advancedConfig() {
+        pageii = layer.open({
+            title: "高级设置",
+            type: 2,
+            area: ["600px", "80%"],
+            content: rootPath + '/common/advancedConfig.shtml'
+        });
     }
 
 </script>

@@ -91,6 +91,7 @@
             <div class="row"><!--地图栏-->
                 <div class="col-md-12">
                     <div id="map">
+                        <div id="tooltip" class="tooltip">this is tooltip</div>
                         <div id="panel" class="panel">
                             <div id="close" class="close">×</div>
                             <div id="title" class="title"></div>
@@ -117,7 +118,7 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-
+                            <div id="detailedInfo"></div>
                         </div>
                     </div>
                 </div>
@@ -462,7 +463,7 @@
                 }],
             jsonUrl: rootPath + '/common/bd_plane/findByPage/1.shtml',
             checkbox: false
-        });
+        }, bindingDetailBtn);
 
         $("#search").click(function () {
             var tableName = $("#tableName").val();
@@ -477,6 +478,67 @@
         });
 
     });
+    function bindingDetailBtn(columns, currentData) {
+        $("[dataId]").each(function () {
+            $(this).bind("click", function () {
+                var dataId = $(this).attr("dataId");
+                var index = $(this).attr("index");
+                $.ajax({
+                    type: 'GET',
+                    url: '/common/<c:out value="${tableName}"/>/' + dataId + '/detail.shtml',
+                    datatype: 'json',
+                    async: false,
+                    error: function () {
+                        console.info(index);
+                        index = parseInt(index);
+                        var rowdata = currentData[index];
+                        var detailedData = {};
+                        for (var column in columns) {
+                            column = columns[column];
+                            if (column['colkey'] in rowdata) {
+                                if (!column['name'] || column['name'] == "") {
+                                    detailedData[column['colkey']] = rowdata[column['colkey']];
+                                } else {
+                                    detailedData[column['name']] = rowdata[column['colkey']];
+                                }
+                            }
+                        }
+                        createHtmlForDetailedInfo(detailedData);
+                    },
+                    success: function (detailedData) {
+                        console.info(dataId);
+                        detailedData = JSON.parse(detailedData);
+                        createHtmlForDetailedInfo(detailedData);
+                    }
+                });
+            });
+        });
+    }
+
+    function createHtmlForDetailedInfo(detailedData) {
+        var detailedInfo = $("#detailedInfo");
+        detailedInfo.html("");
+        var html = "";
+        $.each(detailedData, function (key) {
+            html +=
+                    "            <div class=\"form-group\">\n" +
+                    "                <label class=\"col-sm-2 control-label\">"
+            ;
+            html += key;
+            html +=
+                    "</label>\n" +
+                    "                <div class=\"col-sm-4\">\n" +
+                    "                    <input type=\"text\" class=\"form-control\" value=\""
+            ;
+            html += detailedData[key];
+            html +=
+                    "\" readonly/>\n" +
+                    "                </div>\n" +
+                    "            </div>"
+            ;
+        });
+        detailedInfo.html(html);
+    }
     $('.form_date').datetimepicker({
         language: 'zh-CN',
         weekStart: 1,

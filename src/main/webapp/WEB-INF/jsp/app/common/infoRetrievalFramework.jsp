@@ -20,22 +20,49 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <form id="searchForm" class="navbar-form navbar-left" role="search">
-                                <div class="form-group">
-                                    <input id="keyword" name="keyword" value="<c:out value="${keyword}"/>"
-                                           type="text" class="form-control" placeholder="请输入关键字"/>
+                            <form id="searchForm" class="navbar-form" role="search">
+                                <div class="row">
+                                    <div class="form-group col-md-8">
+                                        <input id="keyword" name="keyword" value="<c:out value="${keyword}"/>"
+                                               type="text" class="form-control" style="width: 100%"
+                                               placeholder="请输入关键字"/>
+                                    </div>
+                                    <select id="tableName" name="tableName" class="form-control">
+                                        <c:forEach var="mapOfTableName" items="${tableNameList}">
+                                            <option value="<c:out value="${mapOfTableName.tableName}"/>"
+                                                    <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>>
+                                                <c:out
+                                                        value="${mapOfTableName.tableComment}"/></option>
+                                        </c:forEach>
+                                    </select>
+                                    <button id="search" type="button" class="btn btn-success">
+                                        检索
+                                    </button>
                                 </div>
-                                <select id="tableName" name="tableName" class="form-control">
-                                    <c:forEach var="mapOfTableName" items="${tableNameList}">
-                                        <option value="<c:out value="${mapOfTableName.tableName}"/>"
-                                                <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>>
-                                            <c:out
-                                                    value="${mapOfTableName.tableComment}"/></option>
-                                    </c:forEach>
-                                </select>
-                                <button id="search" type="button" class="btn btn-success">
-                                    检索
-                                </button>
+                                <div class="line line-dashed pull-in"></div>
+                                <div class="row ">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-4">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="displayType" value="1"
+                                                   <c:if test="${displayType eq '1'}">checked</c:if>> 集合
+                                        </label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="displayType" value="2"
+                                                   <c:if test="${displayType eq '2'}">checked</c:if>> 关系
+                                        </label>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="displayType" value="3"
+                                                   <c:if test="${displayType eq '3'}">checked</c:if>> 个体
+                                        </label>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -48,6 +75,24 @@
                 </div>
             </div>
             <!--地图栏-->
+
+            <div class="row"><!--描述栏-->
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                描述
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="description">
+                                这是 <c:out value="${tableName}"/> 数据。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--描述栏-->
             <div class="row"><!--列表栏-->
                 <div class="col-md-12">
                     <div class="table-responsive">
@@ -79,7 +124,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">
-                                导航
+                                其他
                             </h3>
                         </div>
                         <div class="panel-body"><!--body-->
@@ -87,42 +132,34 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
-                                            时间导航
+                                            统计分析
                                         </h4>
                                     </div>
                                     <div class="panel-body">
-                                        <li><a href="#">年</a></li>
-                                        <li><a href="#">月</a></li>
-                                        <li><a href="#">日</a></li>
-                                        <li><a href="#">周次</a></li>
+                                        <p>
+                                            <button id="TimeStat" type="button"
+                                                    class="btn btn-success btn-lg btn-block">
+                                                时间统计
+                                            </button>
+                                        </p>
+                                        <p>
+                                            <button id="PlaceStat" type="button" class="btn btn-info btn-lg btn-block">
+                                                空间统计
+                                            </button>
+                                        </p>
+                                        <p>
+                                            <button type="button" class="btn btn-warning btn-lg btn-block">
+                                                其他统计1
+                                            </button>
+                                        </p>
+                                        <p>
+                                            <button type="button" class="btn btn-danger btn-lg btn-block">
+                                                其他统计2
+                                            </button>
+                                        </p>
                                     </div>
                                 </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            空间导航
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <li><a href="#">国家</a></li>
-                                        <li><a href="#">州省</a></li>
-                                        <li><a href="#">郡市</a></li>
-                                        <li><a href="#">区县</a></li>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            关系导航
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <li><a href="#">同乘坐一辆车</a></li>
-                                        <li><a href="#">同住一个地方</a></li>
-                                        <li><a href="#">同发表一篇文章</a></li>
-                                        <li><a href="#">其他关联关系</a></li>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                         <!--body-->
@@ -136,49 +173,74 @@
                         <div class="panel-heading">
                             <h3 class="panel-title">
                                 限定
+                                <a href="javascript:void(0);" class="pull-right" id="advancedConfig">高级设置</a>
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">数据集</label>
-
-                                <div class="col-sm-9">
-                                    <select class="form-control">
-                                        <option>请选择数据集</option>
-                                        <option>生物黑客活动</option>
-                                        <option selected>生物黑客组织</option>
-                                        <option>生物黑客成员</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">起始</label>
-
-                                <div class="col-sm-9">
-                                    <div class="input-group date form_date" data-date="" data-date-format="yyyy-MM-dd"
-                                         data-link-field="" data-link-format="yyyy-mm-dd">
-                                        <input class="form-control" size="16" type="text" value="2009-12-10" readonly>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-remove"></span></span>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-calendar"></span></span>
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            数据集限定
+                                        </h4>
                                     </div>
-                                    <input type="hidden" value=""/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">截止</label>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">数据集</label>
 
-                                <div class="col-sm-9">
-                                    <div class="input-group date form_date" data-date="" data-date-format="yyyy-MM-dd"
-                                         data-link-field="" data-link-format="yyyy-mm-dd">
-                                        <input class="form-control" size="16" type="text" value="2016-01-01" readonly>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-remove"></span></span>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-calendar"></span></span>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="生物黑客" readonly>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <input type="hidden" value=""/>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            时间限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">开始</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="2010-01-02" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">截止</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="2016-09-17" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            空间限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">国家</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="全部" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">州省</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="全部" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -224,17 +286,26 @@
         }, bindingDetailBtn);
 
         $("#search").click(function () {
-            var tableName = $("#tableName").val();
-            var keyword = $("#keyword").val();
+            var displayType = $("input[name='displayType']:checked").val();
+            var params = $("#searchForm").serialize();
             var tb = $("#loadhtml");
             tb.html(CommnUtil.loadingImg());
-            tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?tableName=" + tableName + '&keyword=' + keyword);
+            if (displayType == '1') {
+                tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?" + params);
+            } else if (displayType == '2') {
+                tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoNav.shtml?" + params);
+            } else if (displayType == '3') {
+                tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoNavIndividual.shtml?" + params);
+            }
         });
 
         $("#tableName").change(function () {
             $("#keyword").val("");
         });
 
+        $("#advancedConfig").click(function () {
+            advancedConfig();
+        });
 
     });
 
@@ -300,6 +371,15 @@
         detailedInfo.html(html);
     }
 
+    function advancedConfig() {
+        pageii = layer.open({
+            title: "高级设置",
+            type: 2,
+            area: ["600px", "80%"],
+            content: rootPath + '/common/advancedConfig.shtml'
+        });
+    }
+
 </script>
 <script src="http://webapi.amap.com/maps?v=1.3&key=d811dda1aae5e80c64f364d199c05d9b&callback=init"></script>
 <script> // gaode map
@@ -328,4 +408,3 @@ function init() {
         forceParse: 0
     });
 </script>
-

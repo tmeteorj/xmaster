@@ -10,14 +10,18 @@ import java.util.Properties;
 public class MySQLUtil {
 
     private static final ThreadLocal<Connection> xmasterConn = new ThreadLocal<Connection>();
-
+    private static final ThreadLocal<Connection> smartcityConn = new ThreadLocal<Connection>();
     private static Connection getConnection(String prop) {
         ThreadLocal<Connection> connectionThreadLocal = null;
-        connectionThreadLocal = xmasterConn;
+        if ("jdbc".equals(prop)) {
+            connectionThreadLocal = xmasterConn;
+        } else {
+            connectionThreadLocal = smartcityConn;
+        }
         try {
             Connection conn = connectionThreadLocal.get();
             if (conn == null || !conn.isValid(100)) {
-                conn = connect("jdbc");
+                conn = connect(prop);
                 connectionThreadLocal.set(conn);
             }
             return conn;

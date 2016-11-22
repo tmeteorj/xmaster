@@ -2,9 +2,13 @@
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="cn.edu.tju.bigdata.util.ConstMap" %>
-<meta charset="utf-8">
 <style type="text/css">
     #map {
+        height: 400px;
+        margin: 0 20px 20px 20px;
+    }
+
+    #panelFigure {
         height: 400px;
         margin: 0 20px 20px 20px;
     }
@@ -28,61 +32,23 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <div id="div_control" style="text-align:center">
-
-                                <div id="div_work" style="width:300px;height:40px; display:inline">
-
-                                    <label style="width:auto;height:40px; display:inline">功能:</label>
-                                    <select id="sel_work" style="width:120px;height:40px; display:inline">
-                                        <option value="0">地块特征</option>
-                                    </select>
+                            <form id="searchForm" class="navbar-form navbar-left" role="search">
+                                <div class="form-group">
+                                    <input id="keyword" name="keyword" value="<c:out value="${keyword}"/>"
+                                           type="text" class="form-control" placeholder="请输入关键字"/>
                                 </div>
-
-                                <div id="div_yml" style="width:300px;height:40px; display:inline">
-
-                                    <label style="width:auto;height:40px; display:inline">年份:</label>
-                                    <select id="sel_year" style="width:120px;height:40px; display:inline">
-                                        <option value="2015">2015</option>
-                                    </select>
-
-                                    <label style="width:auto;height:40px; display:inline">月份:</label>
-                                    <select id="sel_month" style="width:120px;height:40px; display:inline">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
-                                    </select>
-                                    <label class="attr" id="label_attr" style="width:120px;height:40px; display:inline">属性:</label>
-                                    <select class="attr" id="sel_attr" style="width:120px;height:40px; display:inline">
-                                        <%
-                                            for (String[] items : ConstMap.attrMap) {
-                                                out.println(String.format("<option value=\"%s\">%s</option>", items[0], items[1]));
-                                            }
-                                        %>
-                                    </select>
-
-                                    <label class="movetype" id="label_movetype"
-                                           style="width:120px;height:40px; display:inline">类型:</label>
-                                    <select class="movetype" id="sel_movetype"
-                                            style="width:120px;height:40px; display:inline">
-                                        <option value="0">真实迁徙</option>
-                                        <option value="1">预测迁徙</option>
-                                    </select>
-
-                                    <input type="button" id="btn_search" value="搜索"
-                                           style="width:120px;height:40px; display:inline">
-                                </div>
-
-
-                            </div>
+                                <select id="tableName" name="tableName" class="form-control">
+                                    <c:forEach var="mapOfTableName" items="${tableNameList}">
+                                        <option value="<c:out value="${mapOfTableName.tableName}"/>"
+                                                <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>>
+                                            <c:out
+                                                    value="${mapOfTableName.tableComment}"/></option>
+                                    </c:forEach>
+                                </select>
+                                <button id="search" type="button" class="btn btn-success">
+                                    检索
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -90,11 +56,25 @@
             <!--搜索栏-->
             <div class="row"><!--地图栏-->
                 <div class="col-md-12">
-                    <div id="map">
-                    </div>
+                    <div id="map"></div>
                 </div>
             </div>
             <!--地图栏-->
+            <div class="row"><!--统计图-->
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                统计图
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="panelFigure"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--统计图-->
             <div class="row"><!--列表栏-->
                 <div class="col-md-12">
                     <div class="table-responsive">
@@ -118,7 +98,6 @@
                 </div>
             </div>
             <!--详情栏-->
-
         </div>
         <!--左侧-->
         <div class="col-md-3"><!--右侧-->
@@ -171,6 +150,19 @@
                                         <li><a href="#">其他关联关系</a></li>
                                     </div>
                                 </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            导航功能
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <button id="btn_planeDisplay" style="margin-right:2px" type="button"
+                                                class="btn btn-warning">
+                                            地图展示
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <!--body-->
@@ -193,41 +185,48 @@
                                 <div class="col-sm-9">
                                     <select class="form-control">
                                         <option>请选择数据集</option>
-                                        <option>生物黑客活动</option>
-                                        <option>生物黑客组织</option>
-                                        <option>生物黑客成员</option>
                                         <option selected>天津中心城区块</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">起始</label>
 
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">年份</label>
                                 <div class="col-sm-9">
-                                    <div class="input-group date form_date" data-date="" data-date-format="yyyy-MM-dd"
-                                         data-link-field="" data-link-format="yyyy-mm-dd">
-                                        <input class="form-control" size="16" type="text" value="2009-12-10" readonly>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-remove"></span></span>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-calendar"></span></span>
-                                    </div>
-                                    <input type="hidden" value=""/>
+                                    <select class="form-control" id="sel_year">
+                                        <option value="2015">2015年</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">截止</label>
-
+                                <label class="col-sm-3 control-label">月份</label>
                                 <div class="col-sm-9">
-                                    <div class="input-group date form_date" data-date="" data-date-format="yyyy-MM-dd"
-                                         data-link-field="" data-link-format="yyyy-mm-dd">
-                                        <input class="form-control" size="16" type="text" value="2016-01-01" readonly>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-remove"></span></span>
-                                    <span class="input-group-addon"><span
-                                            class="glyphicon glyphicon-calendar"></span></span>
-                                    </div>
-                                    <input type="hidden" value=""/>
+                                    <select class="form-control" id="sel_month">
+                                        <option value="1">1月</option>
+                                        <option value="2">2月</option>
+                                        <option value="3">3月</option>
+                                        <option value="4">4月</option>
+                                        <option value="5">5月</option>
+                                        <option value="6">6月</option>
+                                        <option value="7">7月</option>
+                                        <option value="8">8月</option>
+                                        <option value="9">9月</option>
+                                        <option value="10">10月</option>
+                                        <option value="11">11月</option>
+                                        <option value="12">12月</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">属性</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" id="sel_attr">
+                                        <%
+                                            for (String[] items : ConstMap.attrMap) {
+                                                out.println(String.format("<option value=\"%s\">%s</option>", items[0], items[1]));
+                                            }
+                                        %>
+                                    </select>
                                 </div>
                             </div>
 
@@ -248,26 +247,15 @@
     var showattr = {
         eng: null,
         chs: null
-    };
-    var $tooltip = { //tooltip数据模型
-        dom: null,
-        data: ''
-    };
-    function bindTooltip(data, callback) {
-        $tooltip.data = data;
-        $tooltip.dom.innerHTML = 'ID: ' + data.planeid + '<br>' + showattr.chs + ':' + data[showattr.eng] + '<br>';
-        callback();
     }
     function max(a, b) {
         if (a < b)return b;
         else return a;
     }
-    function showPanel(data) {
-        document.getElementById('panel').className = 'panel show';
-        document.getElementById('title').innerHTML = data.planename + '-' + showattr.chs;
-        generateChart(data.planeid);
-    }
-    function generateChart(id) {
+
+    function showPanel(response) {
+        var id = response.planeid;
+        var name = response.planename;
         var t = id + '-' + showattr.chs;
         console.info("gen " + id);
         $.ajax({
@@ -275,15 +263,18 @@
             url: "/visualuicreate/" + id + "/" + showattr.eng + "/search-by-pa.shtml",
             datatype: "json",
             success: function (response) {
-                document.getElementById('main')
                 response = JSON.parse(response);
                 console.info(response);
                 if (response.code != 0) {
-                    document.getElementById('main').innerHTML = "没有该地块的数据";
+                    document.getElementById('panelFigure').innerHTML = "没有该地块的数据";
                 } else {
                     var data = response.data;
-                    var myChart = echarts.init(document.getElementById('main'));
+                    var myChart = echarts.init(document.getElementById('panelFigure'));
                     option = {
+                        title: {
+                            text: name + '-' + showattr.chs,
+                            left: 'center',
+                        },
                         xAxis: {
                             type: 'category',
                             boundaryGap: false,
@@ -307,48 +298,14 @@
             }
         });
     }
-    function handler(e) {
-        relocate(e.clientX, e.clientY); //分发事件参数
-    }
-    function relocate(x, y) {
-        $tooltip.dom.style.left = (+x + 3) + 'px';
-        $tooltip.dom.style.top = (+y + 3) + 'px';
-    }
     function init() {
         map = new AMap.Map('map', {
             resizeEnable: true,
             zoom: 14,
             center: [117.172762, 39.111031]
         });
-        $("#sel_work").change(function () {
-            initWork();
-        });
-        $("#btn_search").click(function () {
-            updateView();
-        });
-        initWork();
-        if (document.getElementById('panel')) {
-            document.getElementById('close').addEventListener('click', function () {
-                document.getElementById('panel').className = 'panel';
-            });
 
-            document.getElementById('panel').addEventListener('mouseover', function () {
-                $tooltip.dom.style.display = 'none';
-            });
-        }
-        $tooltip.dom = document.getElementById('tooltip');
     }
-    function initWork() {
-        var type = $("#sel_work").val();
-        if (type == 0) {
-            $(".attr").show();
-            $(".movetype").hide();
-        } else {
-            $(".attr").hide();
-            $(".movetype").show();
-        }
-    }
-    ;
     function drawPolygon(attr, response) {
         console.info("draw->" + attr);
         map.clearMap();
@@ -388,19 +345,6 @@
                 polygon.emit('mouseover mouseout click', {
                     target: polygon
                 });
-
-                AMap.event.addListener(polygon, 'mouseover', function (e) {
-                    bindTooltip(JSON.parse(e.target.getExtData()), function () {
-                        $tooltip.dom.style.display = 'block';
-                    });
-                    document.addEventListener('mousemove', handler);
-                });
-
-                AMap.event.addListener(polygon, 'mouseout', function (e) {
-                    document.removeEventListener('mousemove', handler);
-                    $tooltip.dom.style.display = 'none';
-                });
-
                 AMap.event.addListener(polygon, 'click', function (e) {
                     showPanel(JSON.parse(e.target.getExtData()));
                 });
@@ -427,12 +371,6 @@
                 alert("Error");
             }
         });
-    }
-    function updateView() {
-        var type = $("#sel_work").val();
-        if (type == 0) {
-            searchAttr();
-        }
     }
     $(function () {
         grid = lyGrid({
@@ -467,7 +405,9 @@
             tb.html(CommnUtil.loadingImg());
             tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?tableName=" + tableName + '&keyword=' + keyword);
         });
-
+        $("#btn_planeDisplay").click(function () {
+            searchAttr();
+        })
         $("#tableName").change(function () {
             $("#keyword").val("");
         });

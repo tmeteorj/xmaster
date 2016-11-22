@@ -1,306 +1,500 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-		 pageEncoding="UTF-8"%>
-<%@ page import="cn.edu.tju.bigdata.util.ConstMap"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/app/mapplaneuicreate.css"/>
-    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
-    <script src="http://cache.amap.com/lbs/static/es5.min.js"></script>
-    <script src="http://webapi.amap.com/maps?v=1.3&key=您申请的key值&callback=inits"></script>
-    <script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery/jquery-1.8.3.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/echarts/echarts-all.js"></script>
-    <script type="text/javascript">
-        var map ;
+         pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="cn.edu.tju.bigdata.util.ConstMap" %>
+<meta charset="utf-8">
+<style type="text/css">
+    #map {
+        height: 400px;
+        margin: 0 20px 20px 20px;
+    }
 
-        var showattr={
-            eng:null,
-            chs:null
-        };
+    #panelFigure {
+        height: 400px;
+        margin: 0 20px 20px 20px;
+    }
+</style>
+<link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+<script src="http://cache.amap.com/lbs/static/es5.min.js"></script>
+<script src="http://webapi.amap.com/maps?v=1.3&key=d811dda1aae5e80c64f364d199c05d9b&callback=init"></script>
+<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/echarts/echarts-all.js"></script>
 
-        var $tooltip = { //tooltip数据模型
-            dom: null,
-            data: ''
-        };
-        function bindTooltip(data, callback) {
-            $tooltip.data = data ;
-            $tooltip.dom.innerHTML = 'ID: '+data.planeid+'<br>'+showattr.chs+':'+data[showattr.eng]+'<br>';
-            callback();
-        }
-        function max(a,b){
-            if(a<b)return b;
-            else return a;
-        }
-        function showPanel(data) {
-            document.getElementById('panel').className = 'panel show';
-            document.getElementById('title').innerHTML = data.planename + '-' + showattr.chs;
-            generateChart(data.planeid);
-        }
-        function generateChart(id) {
-            var t=id+'-'+showattr.chs;
-            console.info("gen "+id);
-            $.ajax({
-                type : "GET",
-                url : "/visualuicreate/"+id+"/"+showattr.eng+"/search-by-pa.shtml",
-                datatype:"json",
-                success : function(response) {
-                    document.getElementById('main')
-                    response=JSON.parse(response);
-                    console.info(response);
-                    if(response.code!=0){
-                        document.getElementById('main').innerHTML="没有该地块的数据";
-                    }else{
-                        var data=response.data;
-                        var myChart = echarts.init(document.getElementById('main'));
-                        option = {
-                            xAxis: {
-                                type: 'category',
-                                boundaryGap: false,
-                                data: data.time
-                            },
-                            yAxis: {
-                                type: 'value'
-                            },
-                            series: [{
-                                    name: t,
-                                    type: 'line',
-                                    stack: '总量',
-                                    data: data.value
-                                }]
-                        };
-                        myChart.setOption(option);
-                    }
-                },
-                error : function() {
-                    alert("Error");
-                }
-            });
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9"><!--左侧-->
+            <div class="row"><!--搜索栏-->
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                检索
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="div_control" style="text-align:center">
+
+                                <div id="div_work" style="width:300px;height:40px; display:inline">
+
+                                    <label style="width:auto;height:40px; display:inline">功能:</label>
+                                    <select id="sel_work" style="width:120px;height:40px; display:inline">
+                                        <option value="0">地块特征</option>
+                                    </select>
+                                </div>
+
+                                <div id="div_yml" style="width:300px;height:40px; display:inline">
+
+                                    <label style="width:auto;height:40px; display:inline">年份:</label>
+                                    <select id="sel_year" style="width:120px;height:40px; display:inline">
+                                        <option value="2015">2015</option>
+                                    </select>
+
+                                    <label style="width:auto;height:40px; display:inline">月份:</label>
+                                    <select id="sel_month" style="width:120px;height:40px; display:inline">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <label id="label_attr" style="width:120px;height:40px; display:inline">属性:</label>
+                                    <select id="sel_attr" style="width:120px;height:40px; display:inline">
+                                        <%
+                                            for (String[] items : ConstMap.attrMap) {
+                                                out.println(String.format("<option value=\"%s\">%s</option>", items[0], items[1]));
+                                            }
+                                        %>
+                                    </select>
+                                    <input type="button" id="btn_search" value="搜索"
+                                           style="width:120px;height:40px; display:inline">
+                                </div>
 
 
-        }
-        function handler(e) {
-            relocate(e.clientX, e.clientY); //分发事件参数
-        }
-        function relocate(x, y) {
-            $tooltip.dom.style.left = (+x + 3) + 'px';
-            $tooltip.dom.style.top = (+y + 3) + 'px';
-        }
-        function inits() {
-            map= new AMap.Map('container', {
-                resizeEnable: true,
-                zoom:14,
-                center: [117.172762, 39.111031]
-            });
-            initWork();
-            if(document.getElementById('panel')){
-                document.getElementById('close').addEventListener('click', function() {
-                    document.getElementById('panel').className = 'panel';
-                });
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--搜索栏-->
+            <div class="row"><!--地图栏-->
+                <div class="col-md-12">
+                    <div id="map">
+                    </div>
+                </div>
+            </div>
+            <!--地图栏-->
+            <div class="row"><!--详情栏-->
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                统计图
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="panelFigure"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--统计图-->
+            <div class="row"><!--列表栏-->
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <div id="paging" class="pagclass"></div>
+                    </div>
+                </div>
+            </div>
+            <!--列表栏-->
+            <div class="row"><!--详情栏-->
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                详情
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="detailedInfo"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--详情栏-->
 
-                document.getElementById('panel').addEventListener('mouseover', function() {
-                    $tooltip.dom.style.display = 'none';
-                });
-            }
-            $tooltip.dom = document.getElementById('tooltip');
-        }
-        function initWork(){
-            var type = $("#sel_work").val();
-            if (type == 0) {
-                $(".attr").show();
-                $(".movetype").hide();
-            } else {
-                $(".attr").hide();
-                $(".movetype").show();
-            }
-        };
-
-        function drawPolygon(attr,response){
-            console.info("draw->"+attr);
-            map.clearMap();
-            response=JSON.parse(response);
-            if(response.code!=0){
-                alert(response.msg);
-            }else{
-                var data=response.data;
-                var maxval=1.0;
-                for(var i=0;i<data.length;i++){
-                    for(var v in data[i].attr){
-                        maxval=max(data[i].attr[v],maxval);
-                    }
-                }
-                maxval=maxval*1.5;
-                for(var i=0;i<data.length;i++){
-                    var arr=new Array();
-                    for(var j=0;j<data[i].polygon.length;j++){
-                        arr.push([data[i].polygon[j].lng,data[i].polygon[j].lat]);
-                    }
-                    var value = 0.0, planename = data[i].planename, planeid = data[i].planeid;
-                    for(var v in data[i].attr){
-                        value=max(data[i].attr[v],value);
-                    }
-                    var polygon = new AMap.Polygon({
-                        path: arr,//设置多边形边界路径
-                        strokeColor: "#F33", //线颜色
-                        strokeOpacity: 1, //线透明度
-                        strokeWeight: 3,    //线宽
-                        fillColor: "#ee2200", //填充色
-                        fillOpacity: value/maxval//填充透明度
-                    });
-
-                    var extD = '{"planeid":' + planeid + ',"planename":"' + planename + '","' + attr + '":' + value + '}';
-                    polygon.setExtData(extD);
-                    polygon.setMap(map);
-                    polygon.emit('mouseover mouseout click', {
-                        target: polygon
-                    });
-
-                    AMap.event.addListener(polygon, 'mouseover', function(e) {
-                        bindTooltip(JSON.parse(e.target.getExtData()), function() {
-                            $tooltip.dom.style.display = 'block';
-                        });
-                        document.addEventListener('mousemove', handler);
-                    });
-
-                    AMap.event.addListener(polygon, 'mouseout', function(e) {
-                        document.removeEventListener('mousemove', handler);
-                        $tooltip.dom.style.display = 'none';
-                    });
-
-                    AMap.event.addListener(polygon, 'click', function(e) {
-                        showPanel(JSON.parse(e.target.getExtData()));
-                    });
-                }
-
-            }
-        }
-        function searchAttr(){
-            var year=$("#sel_year").val();
-            var month=$("#sel_month").val();
-            var attr=$("#sel_attr").val();
-            console.log("searchAttr "+year+"-"+month+"-"+attr);
-            showattr.eng=attr;
-            showattr.chs=$("#sel_attr").find("option:selected").text();
-            $.ajax({
-                type : "GET",
-                url : "/visualuicreate/"+year+"/"+month+"/"+attr+"/search-by-yma.shtml",
-                datatype:"json",
-                success : function(data) {
-                    //console.log(data);
-                    drawPolygon(attr,data);
-                },
-                error : function() {
-                    alert("Error");
-                }
-            });
-        }
-
-        function updateView(){
-            var type=$("#sel_work").val();
-            if(type==0){
-                searchAttr();
-            }
-        }
-
-        $(function(){
-            //init();
-            $("#sel_work").change(function() {
-                initWork();
-            });
-            $("#btn_search").click(function() {
-                updateView();
-            });
-            $("#btn_compute").click(function() {
-                var year=$("#sel_year").val();
-                var month=$("#sel_month").val();
-                var attr=$("#sel_attr").val();
-                console.log("computeAttr "+year+"-"+month+"-"+attr);
-                showattr.eng=attr;
-                showattr.chs=$("#sel_attr").find("option:selected").text();
-                $.ajax({
-                    type : "GET",
-                    url : "/plane/"+year+"/"+month+"/"+attr+"/compute-by-yma.shtml",
-                    datatype:"json",
-                    success : function(data) {
-                        alert("计算"+year+"年"+month+"月"+showattr.chs+"成功");
-                    },
-                    error : function() {
-                        alert("计算失败，请核对数据是否正确");
-                    }
-                });
-                alert("计算中...请勿重复点击");
-            });
-        });
-    </script>
-</head>
-<body>
-<div>
-    <div id="div_control" style="text-align:center">
-
-        <div id="div_work" style="width:300px;height:40px; display:inline">
-
-            <label style="width:auto;height:40px; display:inline">功能:</label>
-            <select id="sel_work" style="width:120px;height:40px; display:inline">
-                <option value="0">地块特征</option>
-                <!-- 			  <option value="1">人口迁徙</option> -->
-            </select>
         </div>
+        <!--左侧-->
+        <div class="col-md-3"><!--右侧-->
+            <div class="row"><!--导航栏-->
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                导航
+                            </h3>
+                        </div>
+                        <div class="panel-body"><!--body-->
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            时间导航
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <li><a href="#">年</a></li>
+                                        <li><a href="#">月</a></li>
+                                        <li><a href="#">日</a></li>
+                                        <li><a href="#">周次</a></li>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            空间导航
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <li><a href="#">国家</a></li>
+                                        <li><a href="#">州省</a></li>
+                                        <li><a href="#">郡市</a></li>
+                                        <li><a href="#">区县</a></li>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            关系导航
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <li><a href="#">同乘坐一辆车</a></li>
+                                        <li><a href="#">同住一个地方</a></li>
+                                        <li><a href="#">同发表一篇文章</a></li>
+                                        <li><a href="#">其他关联关系</a></li>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--body-->
+                    </div>
+                </div>
+            </div>
+            <!--导航栏-->
+            <div class="row"><!--限定栏-->
+                <div class="col-md-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                限定
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">数据集</label>
 
-        <div id="div_yml" style="width:300px;height:40px; display:inline">
+                                <div class="col-sm-9">
+                                    <select class="form-control">
+                                        <option>请选择数据集</option>
+                                        <option>生物黑客活动</option>
+                                        <option>生物黑客组织</option>
+                                        <option>生物黑客成员</option>
+                                        <option selected>天津中心城区块</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">起始</label>
 
-            <label style="width:auto;height:40px; display:inline">年份:</label>
-            <select id="sel_year" style="width:120px;height:40px; display:inline">
-                <option value="2014">2014</option>
-                <option value="2015">2015</option>
-            </select>
+                                <div class="col-sm-9">
+                                    <div class="input-group date form_date" data-date="" data-date-format="yyyy-MM-dd"
+                                         data-link-field="" data-link-format="yyyy-mm-dd">
+                                        <input class="form-control" size="16" type="text" value="2009-12-10" readonly>
+                                    <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                    <input type="hidden" value=""/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">截止</label>
 
-            <label style="width:auto;height:40px; display:inline">月份:</label>
-            <select id="sel_month" style="width:120px;height:40px; display:inline">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-            </select>
-            <label class="attr" id="label_attr" style="width:120px;height:40px; display:inline">属性:</label>
-            <select class="attr" id="sel_attr" style="width:120px;height:40px; display:inline">
-                <%
-                    for(String[] items:ConstMap.attrMap){
-                        out.println(String.format("<option value=\"%s\">%s</option>",items[0],items[1]));
-                    }
-                %>
-            </select>
+                                <div class="col-sm-9">
+                                    <div class="input-group date form_date" data-date="" data-date-format="yyyy-MM-dd"
+                                         data-link-field="" data-link-format="yyyy-mm-dd">
+                                        <input class="form-control" size="16" type="text" value="2016-01-01" readonly>
+                                    <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                    <input type="hidden" value=""/>
+                                </div>
+                            </div>
 
-            <label class="movetype" id="label_movetype" style="width:120px;height:40px; display:inline">类型:</label>
-            <select class="movetype" id="sel_movetype" style="width:120px;height:40px; display:inline">
-                <option value="0">真实迁徙</option>
-                <option value="1">预测迁徙</option>
-            </select>
-
-            <input type="button" id="btn_search" value="搜索" style="width:120px;height:40px; display:inline">
-            <input type="button" id="btn_compute" value="计算" style="width:120px;height:40px; display:inline">
+                        </div>
+                    </div>
+                </div>
+                <!--限定栏-->
+            </div>
         </div>
-
-
-    </div>
-    <div id="container" style="margin-top:40px;margin-left:auto;margin-right:auto;width: 100%;height: 94%">
-        <div id="tooltip" class="tooltip" >this is tooltip</div>
-    </div>
-    <div id="panel" class="panel">
-        <div id="close" class="close">×</div>
-        <div id="title" class="title"></div>
-        <div id="main" style="width:600px;height:300px;margin-top:0px;"></div>
+        <!--右侧-->
     </div>
 </div>
-</body>
-</html>
+
+<script>
+    var pageii = null;
+    var grid = null;
+    var keyword = $("#keyword").val();
+    var showattr = {
+        eng: null,
+        chs: null
+    }
+    function max(a, b) {
+        if (a < b)return b;
+        else return a;
+    }
+
+    function showPanel(response) {
+        var id = response.planeid;
+        var name = response.planename;
+        var t = id + '-' + showattr.chs;
+        console.info("gen " + id);
+        $.ajax({
+            type: "GET",
+            url: "/visualuicreate/" + id + "/" + showattr.eng + "/search-by-pa.shtml",
+            datatype: "json",
+            success: function (response) {
+                response = JSON.parse(response);
+                console.info(response);
+                if (response.code != 0) {
+                    document.getElementById('panelFigure').innerHTML = "没有该地块的数据";
+                } else {
+                    var data = response.data;
+                    var myChart = echarts.init(document.getElementById('panelFigure'));
+                    option = {
+                        title: {
+                            text: name + '-' + showattr.chs,
+                            left: 'center',
+                        },
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: data.time
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [{
+                            name: t,
+                            type: 'line',
+                            stack: '总量',
+                            data: data.value
+                        }]
+                    };
+                    myChart.setOption(option);
+                }
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+    function init() {
+        map = new AMap.Map('map', {
+            resizeEnable: true,
+            zoom: 14,
+            center: [117.172762, 39.111031]
+        });
+
+    }
+    function drawPolygon(attr, response) {
+        console.info("draw->" + attr);
+        map.clearMap();
+        response = JSON.parse(response);
+        if (response.code != 0) {
+            alert(response.msg);
+        } else {
+            var data = response.data;
+            var maxval = 1.0;
+            for (var i = 0; i < data.length; i++) {
+                for (var v in data[i].attr) {
+                    maxval = max(data[i].attr[v], maxval);
+                }
+            }
+            maxval = maxval * 1.5;
+            for (var i = 0; i < data.length; i++) {
+                var arr = new Array();
+                for (var j = 0; j < data[i].polygon.length; j++) {
+                    arr.push([data[i].polygon[j].lng, data[i].polygon[j].lat]);
+                }
+                var value = 0.0, planename = data[i].planename, planeid = data[i].planeid;
+                for (var v in data[i].attr) {
+                    value = max(data[i].attr[v], value);
+                }
+                var polygon = new AMap.Polygon({
+                    path: arr,//设置多边形边界路径
+                    strokeColor: "#F33", //线颜色
+                    strokeOpacity: 1, //线透明度
+                    strokeWeight: 3,    //线宽
+                    fillColor: "#ee2200", //填充色
+                    fillOpacity: value / maxval//填充透明度
+                });
+
+                var extD = '{"planeid":' + planeid + ',"planename":"' + planename + '","' + attr + '":' + value + '}';
+                polygon.setExtData(extD);
+                polygon.setMap(map);
+                polygon.emit('mouseover mouseout click', {
+                    target: polygon
+                });
+                AMap.event.addListener(polygon, 'click', function (e) {
+                    showPanel(JSON.parse(e.target.getExtData()));
+                });
+            }
+
+        }
+    }
+    function searchAttr() {
+        var year = $("#sel_year").val();
+        var month = $("#sel_month").val();
+        var attr = $("#sel_attr").val();
+        console.log("searchAttr " + year + "-" + month + "-" + attr);
+        showattr.eng = attr;
+        showattr.chs = $("#sel_attr").find("option:selected").text();
+        $.ajax({
+            type: "GET",
+            url: "/visualuicreate/" + year + "/" + month + "/" + attr + "/search-by-yma.shtml",
+            datatype: "json",
+            success: function (data) {
+                //console.log(data);
+                drawPolygon(attr, data);
+            },
+            error: function () {
+                alert("Error");
+            }
+        });
+    }
+    $(function () {
+        grid = lyGrid({
+            pagId: 'paging',
+            l_column: [
+                <c:forEach items="${tableList}" var="table" varStatus="status">
+                {
+                    colkey: "<c:out value="${table.columnName}"/>",
+                    name: "<c:choose><c:when test="${!table.columnComment && table.columnComment != ''}"><c:out value="${table.columnComment}"/></c:when><c:otherwise><c:out value="${table.columnName}"/></c:otherwise></c:choose>",
+                    <c:if test="${table.columnKey == 'PRI' or table.columnName == 'remark' or table.columnName == 'deleted_mark'}">
+                    hide: true,
+                    </c:if>
+                    <c:if test="${table.dataType == 'timestamp' || table.dataType == 'datetime'}">
+                    renderData: function (rowindex, data, rowdata, column) {
+                        return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+                    }
+                    </c:if>
+                },
+                </c:forEach>
+                {
+                    colkey: "__id__",
+                    name: "操作"
+                }],
+            jsonUrl: rootPath + '/common/bd_plane/findByPage/1.shtml',
+            checkbox: false
+        }, bindingDetailBtn);
+
+        $("#search").click(function () {
+            var tableName = $("#tableName").val();
+            var keyword = $("#keyword").val();
+            var tb = $("#loadhtml");
+            tb.html(CommnUtil.loadingImg());
+            tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?tableName=" + tableName + '&keyword=' + keyword);
+        });
+        $("#btn_search").click(function () {
+            searchAttr();
+        });
+        $("#tableName").change(function () {
+            $("#keyword").val("");
+        });
+
+    });
+    function bindingDetailBtn(columns, currentData) {
+        $("[dataId]").each(function () {
+            $(this).bind("click", function () {
+                var dataId = $(this).attr("dataId");
+                var index = $(this).attr("index");
+                $.ajax({
+                    type: 'GET',
+                    url: '/common/<c:out value="${tableName}"/>/' + dataId + '/detail.shtml',
+                    datatype: 'json',
+                    async: false,
+                    error: function () {
+                        console.info(index);
+                        index = parseInt(index);
+                        var rowdata = currentData[index];
+                        var detailedData = {};
+                        for (var column in columns) {
+                            column = columns[column];
+                            if (column['colkey'] in rowdata) {
+                                if (!column['name'] || column['name'] == "") {
+                                    detailedData[column['colkey']] = rowdata[column['colkey']];
+                                } else {
+                                    detailedData[column['name']] = rowdata[column['colkey']];
+                                }
+                            }
+                        }
+                        createHtmlForDetailedInfo(detailedData);
+                    },
+                    success: function (detailedData) {
+                        console.info(dataId);
+                        detailedData = JSON.parse(detailedData);
+                        createHtmlForDetailedInfo(detailedData);
+                    }
+                });
+            });
+        });
+    }
+
+    function createHtmlForDetailedInfo(detailedData) {
+        var detailedInfo = $("#detailedInfo");
+        detailedInfo.html("");
+        var html = "";
+        $.each(detailedData, function (key) {
+            html +=
+                    "            <div class=\"form-group\">\n" +
+                    "                <label class=\"col-sm-2 control-label\">"
+            ;
+            html += key;
+            html +=
+                    "</label>\n" +
+                    "                <div class=\"col-sm-4\">\n" +
+                    "                    <input type=\"text\" class=\"form-control\" value=\""
+            ;
+            html += detailedData[key];
+            html +=
+                    "\" readonly/>\n" +
+                    "                </div>\n" +
+                    "            </div>"
+            ;
+        });
+        detailedInfo.html(html);
+    }
+    $('.form_date').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+</script>
+

@@ -1,15 +1,23 @@
 package cn.edu.tju.bigdata.biz.plane;
 
 import cn.edu.tju.bigdata.entity.PlaneFormMap;
+import cn.edu.tju.bigdata.util.ConstMap;
+import cn.edu.tju.bigdata.util.plane.MySQLUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by xliu on 2016/9/29.
  */
 public class PlaneBiz {
+    public static Logger LOGGER = LoggerFactory.getLogger(PlaneBiz.class);
     public static JSONObject searchByYMA(List<PlaneFormMap> list, String attr) {
         JSONArray data = new JSONArray();
         for (PlaneFormMap pfm:list) {
@@ -63,4 +71,38 @@ public class PlaneBiz {
         return result;
     }
 
+    public static void genRandomData() throws SQLException {
+        ResultSet rs = MySQLUtil.queryResult("select plane_id,attr from bd_plane where year=2015 and month=1");
+        List<Object[]> list = new ArrayList<Object[]>();
+        while (rs.next()) {
+            int pid = rs.getInt("plane_id");
+            JSONObject attr = JSONObject.parseObject(rs.getString("attr"));
+            list.add(new Object[]{pid, attr});
+        }
+        int tot = list.size();
+        int solve = 0;
+        for (Object[] items : list) {
+            int pid = (Integer) items[0];
+            JSONObject attr = (JSONObject) items[1];
+            for (int month = 2; month <= 12; month++) {
+                for (String[] its : ConstMap.attrMap) {
+                    if (its[0].equals("Price")) {
+                        attr.put(its[0], attr.getDoubleValue(its[0]) * (0.99 + Math.random() / 3));
+                    } else if (its[0].contains("NMI") || its[0].contains("Entropy")) {
+                        attr.put(its[0], Math.random());
+                    } else {
+                        attr.put(its[0], Math.random() * 100000);
+                    }
+                }
+                MySQLUtil.updateResult(String.format("update bd_plane set attr=\'%s\' where year=2015 and month=%d and plane_id=%d",
+                        attr.toJSONString().replace("\"", "\\\""), month, pid));
+            }
+            ++solve;
+            LOGGER.info(String.format("%d/%d=%.4f%%", solve, tot, solve * 100.0 / tot));
+        }
+    }
+
+    public static void main(String args[]) throws SQLException {
+        genRandomData();
+    }
 }

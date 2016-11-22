@@ -61,6 +61,8 @@ public class InfoRetrievalController extends BaseController {
         model.addAttribute("tableList", tableList);
         model.addAttribute("tableNameList", tableNameListBD);
 //        return Common.BACKGROUND_PATH + "/app/common/infoRetrieval";
+        if (tableName.equals("bd_plane"))
+            return Common.BACKGROUND_PATH + "/app/plane/infoRetrievalPlane";
         return Common.BACKGROUND_PATH + "/app/common/infoRetrievalFramework";
     }
 

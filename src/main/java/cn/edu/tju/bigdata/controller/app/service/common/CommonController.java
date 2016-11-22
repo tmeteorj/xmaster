@@ -476,6 +476,7 @@ public class CommonController extends BaseController {
         }
         // 数据总条数
         String where = "1";
+        int a;
         // 数据总条数
         getPageView(pageNow, pageSize, "");
         Long rowCount = tableMapper.selectCountFromTable(databaseName, tableName, where);

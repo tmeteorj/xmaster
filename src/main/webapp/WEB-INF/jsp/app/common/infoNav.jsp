@@ -224,21 +224,29 @@
                 myChart.hideLoading();
                 myGraph = JSON.parse(myGraph);
                 myGraph = JSON.parse(myGraph);
+                var legendConfig = {
+                    data: ['地块', '事件', '机构', '人', '行为']
+                };
+                console.log(myGraph);
+                if (myGraph.legend) {
+                    legendConfig = myGraph.legend;
+                }
                 option = {
                     tooltip: {
                         trigger: 'item'
                     },
 
                     animation: false,
-                    legend: {
-                        data: ['地块', '事件', '机构','人', '行为']
-                    },
+                    legend: legendConfig,
                     series : [
                         {
                             type: 'graph',
                             layout: 'force',
                             animation: false,
-                            data: myGraph.nodes,
+                            data: myGraph.nodes.map(function (node, idx) {
+                                node.id = idx;
+                                return node;
+                            }),
                             links: myGraph.links,
                             categories: myGraph.categories,
                             draggable: true,
@@ -250,7 +258,7 @@
                                 }
                             },
                             force: {
-                                edgeLength: 5,
+                                edgeLength: 50,
                                 repulsion: 20
                             }
                         }
@@ -302,8 +310,8 @@
                                     }
                                 },
                                 force: {
-                                    edgeLength: 5,
-                                    repulsion: 20
+                                    edgeLength: 160,
+                                    repulsion: 160
                                 }
                             }
                         ]
@@ -360,15 +368,20 @@
                 myChart.hideLoading();
                 myGraph = JSON.parse(myGraph);
                 myGraph = JSON.parse(myGraph);
+                var legendConfig = {
+                    data: ['地块', '事件', '机构', '人', '行为']
+                };
+                console.log(myGraph);
+                if (myGraph.legend) {
+                    legendConfig = myGraph.legend;
+                }
                 option = {
                     tooltip: {
                         trigger: 'item'
                     },
 
                     animation: false,
-                    legend: {
-                        data: ['地块', '事件', '机构','人', '行为']
-                    },
+                    legend: legendConfig,
                     series : [
                         {
                             type: 'graph',

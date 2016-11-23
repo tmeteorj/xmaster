@@ -256,9 +256,15 @@
                 var legendConfig = {
                     data: ['地块', '事件', '机构', '人', '行为']
                 };
-                console.log(myGraph);
                 if (myGraph.legend) {
                     legendConfig = myGraph.legend;
+                }
+                var forceConfig = {
+                    edgeLength: 5,
+                    repulsion: 20
+                };
+                if (myGraph.force) {
+                    forceConfig = myGraph.force;
                 }
                 option = {
                     tooltip: {
@@ -286,10 +292,7 @@
                                     formatter: '{b}'
                                 }
                             },
-                            force: {
-                                edgeLength: 50,
-                                repulsion: 20
-                            }
+                            force: forceConfig
                         }
                     ]
                 };
@@ -339,8 +342,8 @@
                                     }
                                 },
                                 force: {
-                                    edgeLength: 160,
-                                    repulsion: 160
+                                    edgeLength: 100,
+                                    repulsion: 20
                                 }
                             }
                         ]
@@ -488,34 +491,6 @@
             $("#keyword").val("");
         });
 
-        bindingNavBtn();
-
-        function bindingNavBtn() {
-            $("[data-layer-type]").each(function () {
-                var layerType = $(this).attr("data-layer-type");
-                var layerTypeInt = parseInt(layerType);
-                if ((layerTypeInt - 1) % 3 == 0) {
-                    $(this).bind("click", function () {
-                        var tb = $("#loadhtml");
-                        tb.html(CommnUtil.loadingImg());
-                        tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?layerType=" + layerType);
-                    });
-                } else if ((layerTypeInt - 1) % 3 == 1) {
-                    $(this).bind("click", function () {
-                        var tb = $("#loadhtml");
-                        tb.html(CommnUtil.loadingImg());
-                        tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?layerType=" + layerType);
-                    });
-                } else if ((layerTypeInt - 1) % 3 == 2) {
-                    $(this).bind("click", function () {
-                        var tb = $("#loadhtml");
-                        tb.html(CommnUtil.loadingImg());
-                        //alert(rootPath + "/common/<c:out value="${accountName}"/>/infoNavIndividual.shtml?layerType=" + layerType);
-                        tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoNavIndividual.shtml?layerType=" + layerType);
-                    });
-                }
-            });
-        }
         function bindingDetailBtn(columns, currentData) {
             $("[dataId]").each(function () {
                 $(this).bind("click", function () {

@@ -112,7 +112,7 @@
                                         }
                                     },
                                     force: {
-                                        edgeLength: 5,
+                                        edgeLength: 120,
                                         repulsion: 20
                                     }
                                 }

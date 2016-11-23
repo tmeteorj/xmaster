@@ -5,7 +5,7 @@ package cn.edu.tju.bigdata.entity.networks.netWorkforJson;
  */
 public class Node {
     public String name;
-    public Long category;
+    public Long category = 0L;
     public String value;
     public String dataset;
     public String metadata;
@@ -18,6 +18,9 @@ public class Node {
         this.dataset = dataset;
         this.metadata = metadata;
         this.remark = remark;
+    }
+
+    public Node() {
     }
 }
 

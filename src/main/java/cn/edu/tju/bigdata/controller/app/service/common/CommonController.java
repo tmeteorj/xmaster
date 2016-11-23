@@ -378,7 +378,7 @@ public class CommonController extends BaseController {
     @ResponseBody
     @RequestMapping("/{tableName}/{id}/getGps")
     public JSONArray getGps(@PathVariable String tableName, @PathVariable int id) {
-        File filec=new File("D://gps");
+        File filec=new File("C://gps");
         File[] files=filec.listFiles();
         File file = files[id%files.length];
         BufferedReader reader = null;

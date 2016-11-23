@@ -318,23 +318,6 @@
 <script>
     var grid = null;
     var keyword = $("#keyword").val();
-    function changeContent() {
-        var sel_year =${sessionScope.sel_year};
-        var sel_month =${sessionScope.sel_month};
-        var sel_attr = "${sessionScope.sel_attr}";
-        var sel_attr_chs = "${sessionScope.sel_attr_chs}";
-        document.getElementById("re_year").innerHTML = "<input type=\"text\" class=\"form-control\" value=\"" +
-                sel_year + "\" readonly>" +
-                "<input type=\"hidden\" id=\"sel_year\" value=\"" + sel_year + "\">";
-        document.getElementById("re_month").innerHTML = "<input type=\"text\" class=\"form-control\" value=\"" +
-                sel_month + "\" readonly>" +
-                "<input type=\"hidden\" id=\"sel_month\" value=\"" + sel_month + "\">";
-        document.getElementById("re_attr").innerHTML = "<input type=\"text\" class=\"form-control\" value=\"" +
-                sel_attr_chs + "\" readonly>" +
-                "<input type=\"hidden\" id=\"sel_attr\" value=\"" + sel_attr + "\">";
-        console.info(document.getElementById("re_attr").innerHTML);
-    }
-
     var showattr = {
         eng: null,
         chs: null
@@ -518,7 +501,6 @@
         $("#advancedConfig").click(function () {
             advancedConfig();
         });
-        window.setInterval("changeContent()", 10000);//每隔一秒钟刷新div内容
     });
 
     function bindingDetailBtn(columns, currentData) {

@@ -106,17 +106,11 @@
             var year = $("#sel_year").val();
             var month = $("#sel_month").val();
             var attr = $("#sel_attr").val();
-            $.ajax({
-                type: "POST",
-                url: "/plane/" + year + "/" + month + "/" + attr + "/session-set.shtml",
-                success: function (response) {
-
-                },
-                error: function () {
-                    alert("Error");
-                }
-            });
+            console.info(year + "-" + month + "-" + attr);
+            var s = CommnUtil.ajax("/plane/" + year + "/" + month + "/" + attr + "/session-set.shtml", {}, "json");
+            parent.layer.close(parent.pageii);
         })
+    });
 </script>
 </body>
 </html>

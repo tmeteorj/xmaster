@@ -579,4 +579,13 @@ public class VisualController extends BaseController {
         }
 
     }
+
+
+    @RequestMapping("/{id}/showdecisionbank")
+    public String showdecisionbank(@PathVariable int id) throws Exception{
+        if(id==1)
+            return Common.BACKGROUND_PATH + "/app/decisionui/showdecisionbank";
+        return null;
+    }
+
 }

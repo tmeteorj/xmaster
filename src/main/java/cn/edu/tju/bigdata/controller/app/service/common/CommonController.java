@@ -69,6 +69,7 @@ public class CommonController extends BaseController {
         String tableName = null;
         DatasetFormMap tdatasetFormMap = new DatasetFormMap();
         tdatasetFormMap.set("id",tableID);
+        tdatasetFormMap.put("deleted_mark", 1);
         List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
         DatasetFormMap datasetFormMap = datasetFormMaps.get(0);
         String[] temda  = datasetFormMap.getStr("dataset_url").split("/");
@@ -104,6 +105,7 @@ public class CommonController extends BaseController {
         String tableName = null;
         DatasetFormMap tdatasetFormMap = new DatasetFormMap();
         tdatasetFormMap.set("id",tableID);
+        tdatasetFormMap.put("deleted_mark", 1);
         List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
         DatasetFormMap datasetFormMap = datasetFormMaps.get(0);
         String[] temda  = datasetFormMap.getStr("dataset_url").split("/");
@@ -476,7 +478,6 @@ public class CommonController extends BaseController {
         }
         // 数据总条数
         String where = "1";
-        int a;
         // 数据总条数
         getPageView(pageNow, pageSize, "");
         Long rowCount = tableMapper.selectCountFromTable(databaseName, tableName, where);
@@ -487,6 +488,20 @@ public class CommonController extends BaseController {
         List<FormMap> dataList = tableMapper.selectDataFromTable(databaseName, tableName, "*", where);
         pageView.setRecords(dataList);
         return pageView;
+    }
+    private String[] getDatasetInfo(String datasetName){
+        DatasetFormMap tdatasetFormMap = new DatasetFormMap();
+        tdatasetFormMap.put("id",datasetName);
+        tdatasetFormMap.put("deleted_mark",1);
+        List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
+        if(datasetFormMaps.size()<1){
+            return new String[]{"xmaster",datasetName};
+        }
+        else{
+            DatasetFormMap datasetFormMap = datasetFormMaps.get(0);
+            String[] temda  = datasetFormMap.getStr("dataset_url").split("/");
+            return new String[]{temda[temda.length-1],datasetFormMap.getStr("title")};
+        }
     }
 }
 //    public String locationNav(Model model){

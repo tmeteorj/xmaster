@@ -26,6 +26,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -52,32 +56,76 @@ public class CommonController extends BaseController {
     private NavMapper navMapper;
     @Autowired
     MetadataMapper metadataMapper;
-    @RequestMapping("/{accountName}/infoNav")
-    public String locationNav(@PathVariable String accountName, HttpServletRequest request,Model model){
-        String tableName = request.getParameter("tableName");
-        if (StringUtils.isBlank(tableName))
-            tableName = "bd_meetup";
+
+
+    @RequestMapping("/{accountName}/infoNavIndividual")
+    public  String infoNavIndividual(@PathVariable String accountName,Model model, HttpServletRequest request){
+        //System.out.println(accountName);
+        //System.out.println(request.getParameter("layerType"));
+        String tableID = request.getParameter("tableName");
+        String parameter = request.getParameter("layerType");
+        int layerType = 0;
+        tableID = "242";
+        String tableName = null;
+        DatasetFormMap tdatasetFormMap = new DatasetFormMap();
+        tdatasetFormMap.set("id",tableID);
+        List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
+        DatasetFormMap datasetFormMap = datasetFormMaps.get(0);
+        String[] temda  = datasetFormMap.getStr("dataset_url").split("/");
+        databaseName = temda[temda.length-1];
+        tableName = datasetFormMap.getStr("title");
+//        List<FormMap> tableNameListLayer = tableMapper.selectDataFromTable(databaseName, "")
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
         List<HashMap<String, String>> tableNameList = tableMapper.selectTableNameByDatabase(databaseName);
         List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
         for (HashMap<String, String> map : tableNameList) {
-            if (map.get("tableName").startsWith(BD)) {
-                if (StringUtils.isBlank(map.get("tableComment"))) {
-                    map.put("tableComment", map.get("tableName"));
-                }
-                tableNameListBD.add(map);
+            if (StringUtils.isBlank(map.get("tableComment"))) {
+                map.put("tableComment", map.get("tableName"));
             }
+            tableNameListBD.add(map);
         }
         for (String key : request.getParameterMap().keySet()) {
             model.addAttribute(key, request.getParameter(key));
         }
-        model.addAttribute("tableName", tableName);
+        model.addAttribute("tableName", tableID);
         model.addAttribute("accountName", accountName);
         model.addAttribute("tableList", tableList);
         model.addAttribute("tableNameList", tableNameListBD);
+        return Common.BACKGROUND_PATH + "/app/common/infoNavIndividual";
+    }
 
 
-
+    @RequestMapping("/{accountName}/infoNav")
+    public String locationNav(@PathVariable String accountName, HttpServletRequest request,Model model){
+        String tableID = request.getParameter("tableName");
+        String parameter = request.getParameter("layerType");
+        int layerType = 0;
+        tableID = "242";
+        String tableName = null;
+        DatasetFormMap tdatasetFormMap = new DatasetFormMap();
+        tdatasetFormMap.set("id",tableID);
+        List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
+        DatasetFormMap datasetFormMap = datasetFormMaps.get(0);
+        String[] temda  = datasetFormMap.getStr("dataset_url").split("/");
+        databaseName = temda[temda.length-1];
+        tableName = datasetFormMap.getStr("title");
+//        List<FormMap> tableNameListLayer = tableMapper.selectDataFromTable(databaseName, "")
+        List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
+        List<HashMap<String, String>> tableNameList = tableMapper.selectTableNameByDatabase(databaseName);
+        List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
+        for (HashMap<String, String> map : tableNameList) {
+            if (StringUtils.isBlank(map.get("tableComment"))) {
+                map.put("tableComment", map.get("tableName"));
+            }
+            tableNameListBD.add(map);
+        }
+        for (String key : request.getParameterMap().keySet()) {
+            model.addAttribute(key, request.getParameter(key));
+        }
+        model.addAttribute("tableName", tableID);
+        model.addAttribute("accountName", accountName);
+        model.addAttribute("tableList", tableList);
+        model.addAttribute("tableNameList", tableNameListBD);
         return Common.BACKGROUND_PATH + "/app/common/infoNav";
     }
 
@@ -326,6 +374,47 @@ public class CommonController extends BaseController {
         return  Common.BACKGROUND_PATH + "/app/common/dataTable";
     }
     @ResponseBody
+    @RequestMapping("/{tableName}/{id}/getGps")
+    public JSONArray getGps(@PathVariable String tableName, @PathVariable int id) {
+        File filec=new File("D://gps");
+        File[] files=filec.listFiles();
+        File file = files[id%files.length];
+        BufferedReader reader = null;
+        JSONArray loc = new JSONArray();
+        try {
+            //System.out.println("以行为单位读取文件内容，一次读一整行：");
+            reader = new BufferedReader(new FileReader(file));
+            String tempString = null;
+            //int line = 1;
+            // 一次读入一行，直到读入null为文件结束
+            while ((tempString = reader.readLine()) != null) {
+                // 显示行号
+                // System.out.println("line " + line + ": " + tempString);
+                //line++;
+                String[] sp = tempString.split(",");
+                JSONArray lloc = new JSONArray();
+                try {
+                    lloc.add(Double.valueOf(sp[2]));
+                    lloc.add(Double.valueOf(sp[3]));
+                    loc.add(lloc);
+                }
+                catch (Exception e){}
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+
+        return loc;
+    }
+    @ResponseBody
     @RequestMapping("/{tableName}/{id}/detail1")
     public FormMap getDetailById(@PathVariable String tableName, @PathVariable Long id) {
         DatasetFormMap tdatasetFormMap = new DatasetFormMap();
@@ -387,6 +476,7 @@ public class CommonController extends BaseController {
         }
         // 数据总条数
         String where = "1";
+        int a;
         // 数据总条数
         getPageView(pageNow, pageSize, "");
         Long rowCount = tableMapper.selectCountFromTable(databaseName, tableName, where);

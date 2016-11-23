@@ -1,13 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="cn.edu.tju.bigdata.util.ConstMap" %>
 <style type="text/css">
     #map {
         height: 400px;
         margin: 0 20px 20px 20px;
     }
-
     #panelFigure {
         height: 400px;
         margin: 0 20px 20px 20px;
@@ -32,22 +30,49 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <form id="searchForm" class="navbar-form navbar-left" role="search">
-                                <div class="form-group">
-                                    <input id="keyword" name="keyword" value="<c:out value="${keyword}"/>"
-                                           type="text" class="form-control" placeholder="请输入关键字"/>
+                            <form id="searchForm" class="navbar-form" role="search">
+                                <div class="row">
+                                    <div class="form-group col-md-7">
+                                        <input id="keyword" name="keyword" value="<c:out value="${keyword}"/>"
+                                               type="text" class="form-control" style="width: 100%"
+                                               placeholder="请输入关键字"/>
+                                    </div>
+                                    <select id="tableName" name="tableName" class="form-control">
+                                        <c:forEach var="mapOfTableName" items="${tableNameList}">
+                                            <option value="<c:out value="${mapOfTableName.tableName}"/>"
+                                                    <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>>
+                                                <c:out
+                                                        value="${mapOfTableName.tableComment}"/></option>
+                                        </c:forEach>
+                                    </select>
+                                    <button id="search" type="button" class="btn btn-success">
+                                        检索
+                                    </button>
                                 </div>
-                                <select id="tableName" name="tableName" class="form-control">
-                                    <c:forEach var="mapOfTableName" items="${tableNameList}">
-                                        <option value="<c:out value="${mapOfTableName.tableName}"/>"
-                                                <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>>
-                                            <c:out
-                                                    value="${mapOfTableName.tableComment}"/></option>
-                                    </c:forEach>
-                                </select>
-                                <button id="search" type="button" class="btn btn-success">
-                                    检索
-                                </button>
+                                <div class="line line-dashed pull-in"></div>
+                                <div class="row ">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-4">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="displayType" value="1"
+                                                   <c:if test="${displayType eq '1'}">checked</c:if>> 集合
+                                        </label>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="displayType" value="2"
+                                                   <c:if test="${displayType eq '2'}">checked</c:if>> 关系
+                                        </label>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="displayType" value="3"
+                                                   <c:if test="${displayType eq '3'}">checked</c:if>> 个体
+                                        </label>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -60,9 +85,22 @@
                 </div>
             </div>
             <!--地图栏-->
-            <div class="row"><!--统计图-->
+
+            <div class="row"><!--描述栏-->
                 <div class="col-md-12">
-                    <div class="panel panel-primary">
+                    <div id="dataDetail" class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                描述
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="description">
+                                中心城区的概念是相对于滨海新区的，一般指市内六区，和平、河西、河北、河东、南开、红桥，包括2742个地块。
+                            </div>
+                        </div>
+                    </div>
+                    <div id="dataFigure" class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">
                                 统计图
@@ -74,7 +112,7 @@
                     </div>
                 </div>
             </div>
-            <!--统计图-->
+            <!--描述栏-->
             <div class="row"><!--列表栏-->
                 <div class="col-md-12">
                     <div class="table-responsive">
@@ -106,7 +144,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">
-                                导航
+                                其他
                             </h3>
                         </div>
                         <div class="panel-body"><!--body-->
@@ -114,55 +152,35 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
-                                            时间导航
+                                            统计分析
                                         </h4>
                                     </div>
                                     <div class="panel-body">
-                                        <li><a href="#">年</a></li>
-                                        <li><a href="#">月</a></li>
-                                        <li><a href="#">日</a></li>
-                                        <li><a href="#">周次</a></li>
+                                        <p>
+                                            <button id="TimeStat" type="button"
+                                                    class="btn btn-success btn-lg btn-block">
+                                                时间统计
+                                            </button>
+                                        </p>
+                                        <p>
+                                            <button id="PlaceStat" type="button" class="btn btn-info btn-lg btn-block">
+                                                空间统计
+                                            </button>
+                                        </p>
+                                        <p>
+                                            <button id="btn_planeDisplay" type="button"
+                                                    class="btn btn-warning btn-lg btn-block">
+                                                地图展示
+                                            </button>
+                                        </p>
+                                        <p>
+                                            <button type="button" class="btn btn-danger btn-lg btn-block">
+                                                其他统计2
+                                            </button>
+                                        </p>
                                     </div>
                                 </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            空间导航
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <li><a href="#">国家</a></li>
-                                        <li><a href="#">州省</a></li>
-                                        <li><a href="#">郡市</a></li>
-                                        <li><a href="#">区县</a></li>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            关系导航
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <li><a href="#">同乘坐一辆车</a></li>
-                                        <li><a href="#">同住一个地方</a></li>
-                                        <li><a href="#">同发表一篇文章</a></li>
-                                        <li><a href="#">其他关联关系</a></li>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            导航功能
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <button id="btn_planeDisplay" style="margin-right:2px" type="button"
-                                                class="btn btn-warning">
-                                            地图展示
-                                        </button>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                         <!--body-->
@@ -176,57 +194,114 @@
                         <div class="panel-heading">
                             <h3 class="panel-title">
                                 限定
+                                <a href="javascript:void(0);" class="pull-right" id="advancedConfig">高级设置</a>
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">数据集</label>
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            数据集限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">数据集</label>
 
-                                <div class="col-sm-9">
-                                    <select class="form-control">
-                                        <option>请选择数据集</option>
-                                        <option selected>天津中心城区块</option>
-                                    </select>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="中心城区块" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            时间限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">年份</label>
+                                            <%
+                                                if (session.getAttribute("sel_year") == null) {
+                                                    session.setAttribute("sel_year", 2015);
+                                                }
+                                            %>
+                                            <div id="re_year" class="col-sm-9">
+                                                <input type="text" class="form-control"
+                                                       value="<%=session.getAttribute("sel_year")%>" readonly>
+                                                <input type="hidden" id="sel_year"
+                                                       value="<%=session.getAttribute("sel_year")%>">
+                                            </div>
+                                        </div>
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">年份</label>
-                                <div class="col-sm-9">
-                                    <select class="form-control" id="sel_year">
-                                        <option value="2015">2015年</option>
-                                    </select>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">月份</label>
+                                            <%
+                                                if (session.getAttribute("sel_month") == null) {
+                                                    session.setAttribute("sel_month", 1);
+                                                }
+                                            %>
+                                            <div id="re_month" class="col-sm-9">
+                                                <input type="text" class="form-control"
+                                                       value="<%=session.getAttribute("sel_month")%>" readonly>
+                                                <input type="hidden" id="sel_month"
+                                                       value="<%=session.getAttribute("sel_month")%>">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">月份</label>
-                                <div class="col-sm-9">
-                                    <select class="form-control" id="sel_month">
-                                        <option value="1">1月</option>
-                                        <option value="2">2月</option>
-                                        <option value="3">3月</option>
-                                        <option value="4">4月</option>
-                                        <option value="5">5月</option>
-                                        <option value="6">6月</option>
-                                        <option value="7">7月</option>
-                                        <option value="8">8月</option>
-                                        <option value="9">9月</option>
-                                        <option value="10">10月</option>
-                                        <option value="11">11月</option>
-                                        <option value="12">12月</option>
-                                    </select>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            空间限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">国家</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="中国" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">州省</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="天津" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">属性</label>
-                                <div class="col-sm-9">
-                                    <select class="form-control" id="sel_attr">
-                                        <%
-                                            for (String[] items : ConstMap.attrMap) {
-                                                out.println(String.format("<option value=\"%s\">%s</option>", items[0], items[1]));
-                                            }
-                                        %>
-                                    </select>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            属性限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">属性</label>
+
+                                            <div class="col-sm-9">
+                                                <%
+                                                    if (session.getAttribute("sel_attr") == null) {
+                                                        session.setAttribute("sel_attr", "Price");
+                                                        session.setAttribute("sel_attr_chs", "房价");
+                                                    }
+                                                %>
+                                                <div id="re_attr" class="col-sm-9">
+                                                    <input type="text" id="sel_attr_chs" class="form-control"
+                                                           value="<%=session.getAttribute("sel_attr_chs")%>" readonly>
+                                                    <input type="hidden" id="sel_attr"
+                                                           value="<%=session.getAttribute("sel_attr")%>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -241,9 +316,25 @@
 </div>
 
 <script>
-    var pageii = null;
     var grid = null;
     var keyword = $("#keyword").val();
+    function changeContent() {
+        var sel_year =${sessionScope.sel_year};
+        var sel_month =${sessionScope.sel_month};
+        var sel_attr = "${sessionScope.sel_attr}";
+        var sel_attr_chs = "${sessionScope.sel_attr_chs}";
+        document.getElementById("re_year").innerHTML = "<input type=\"text\" class=\"form-control\" value=\"" +
+                sel_year + "\" readonly>" +
+                "<input type=\"hidden\" id=\"sel_year\" value=\"" + sel_year + "\">";
+        document.getElementById("re_month").innerHTML = "<input type=\"text\" class=\"form-control\" value=\"" +
+                sel_month + "\" readonly>" +
+                "<input type=\"hidden\" id=\"sel_month\" value=\"" + sel_month + "\">";
+        document.getElementById("re_attr").innerHTML = "<input type=\"text\" class=\"form-control\" value=\"" +
+                sel_attr_chs + "\" readonly>" +
+                "<input type=\"hidden\" id=\"sel_attr\" value=\"" + sel_attr + "\">";
+        console.info(document.getElementById("re_attr").innerHTML);
+    }
+
     var showattr = {
         eng: null,
         chs: null
@@ -304,7 +395,8 @@
             zoom: 14,
             center: [117.172762, 39.111031]
         });
-
+        $("#dataDetail").show();
+        $("#dataFigure").hide();
     }
     function drawPolygon(attr, response) {
         console.info("draw->" + attr);
@@ -356,9 +448,10 @@
         var year = $("#sel_year").val();
         var month = $("#sel_month").val();
         var attr = $("#sel_attr").val();
-        console.log("searchAttr " + year + "-" + month + "-" + attr);
         showattr.eng = attr;
-        showattr.chs = $("#sel_attr").find("option:selected").text();
+        showattr.chs = $("#sel_attr_chs").val();
+
+        console.log("searchAttr " + year + "-" + month + "-" + attr);
         $.ajax({
             type: "GET",
             url: "/visualuicreate/" + year + "/" + month + "/" + attr + "/search-by-yma.shtml",
@@ -377,10 +470,11 @@
             pagId: 'paging',
             l_column: [
                 <c:forEach items="${tableList}" var="table" varStatus="status">
+                <c:if test="${status.index<=10}">
                 {
                     colkey: "<c:out value="${table.columnName}"/>",
                     name: "<c:choose><c:when test="${!table.columnComment && table.columnComment != ''}"><c:out value="${table.columnComment}"/></c:when><c:otherwise><c:out value="${table.columnName}"/></c:otherwise></c:choose>",
-                    <c:if test="${table.columnKey == 'PRI' or table.columnName == 'remark' or table.columnName == 'deleted_mark'}">
+                    <c:if test="${table.columnName == 'id' or table.columnName == 'remark' or table.columnName == 'deleted_mark'}">
                     hide: true,
                     </c:if>
                     <c:if test="${table.dataType == 'timestamp' || table.dataType == 'datetime'}">
@@ -389,6 +483,7 @@
                     }
                     </c:if>
                 },
+                </c:if>
                 </c:forEach>
                 {
                     colkey: "__id__",
@@ -399,20 +494,33 @@
         }, bindingDetailBtn);
 
         $("#search").click(function () {
-            var tableName = $("#tableName").val();
-            var keyword = $("#keyword").val();
+            var displayType = $("input[name='displayType']:checked").val();
+            var params = $("#searchForm").serialize();
             var tb = $("#loadhtml");
             tb.html(CommnUtil.loadingImg());
-            tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?tableName=" + tableName + '&keyword=' + keyword);
+            if (displayType == '1') {
+                tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoRetrieval.shtml?" + params);
+            } else if (displayType == '2') {
+                tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoNav.shtml?" + params);
+            } else if (displayType == '3') {
+                tb.load(rootPath + "/common/<c:out value="${accountName}"/>/infoNavIndividual.shtml?" + params);
+            }
         });
         $("#btn_planeDisplay").click(function () {
+            $("#dataDetail").hide();
+            $("#dataFigure").show();
             searchAttr();
         })
         $("#tableName").change(function () {
             $("#keyword").val("");
         });
 
+        $("#advancedConfig").click(function () {
+            advancedConfig();
+        });
+        window.setInterval("changeContent()", 10000);//每隔一秒钟刷新div内容
     });
+
     function bindingDetailBtn(columns, currentData) {
         $("[dataId]").each(function () {
             $(this).bind("click", function () {
@@ -474,15 +582,14 @@
         });
         detailedInfo.html(html);
     }
-    $('.form_date').datetimepicker({
-        language: 'zh-CN',
-        weekStart: 1,
-        todayBtn: 1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: 2,
-        forceParse: 0
-    });
+
+    function advancedConfig() {
+        pageii = layer.open({
+            title: "高级设置",
+            type: 2,
+            area: ["600px", "80%"],
+            content: rootPath + '/common/bd_plane/advancedConfig.shtml'
+        });
+    }
 </script>
 

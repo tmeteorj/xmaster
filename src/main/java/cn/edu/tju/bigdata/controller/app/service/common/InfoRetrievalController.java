@@ -93,8 +93,10 @@ public class InfoRetrievalController extends BaseController {
         return formMap;
     }
 
-    @RequestMapping("/advancedConfig")
-    public String advancedConfig() {
+    @RequestMapping("/{tableName}/advancedConfig")
+    public String advancedConfig(@PathVariable String tableName) {
+        if (tableName.equals("bd_plane"))
+            return Common.BACKGROUND_PATH + "/app/plane/advancedConfigPlane";
         return Common.BACKGROUND_PATH + "/app/common/advancedConfig";
     }
 

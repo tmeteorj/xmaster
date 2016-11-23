@@ -7,7 +7,10 @@ import cn.edu.tju.bigdata.entity.Table;
 import cn.edu.tju.bigdata.mapper.PlaneMapper;
 import cn.edu.tju.bigdata.mapper.TableMapper;
 import cn.edu.tju.bigdata.util.Common;
+import cn.edu.tju.bigdata.util.ConstMap;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,6 +61,25 @@ public class PlaneApplicationController extends BaseController {
             }
             plane.set("attr",js.toJSONString());
             planeMapper.editEntity(plane);
+        }
+        return "success";
+    }
+
+    @ResponseBody
+    @RequestMapping("/{year}/{month}/{attr}/session-set")
+    @SystemLog(module = "地块应用管理", methods = "地块应用管理 - 地块属性计算")
+    String sessionSet(
+            @PathVariable Integer year,
+            @PathVariable Integer month,
+            @PathVariable String attr) throws Exception {
+        Session session = SecurityUtils.getSubject().getSession();
+        session.setAttribute("sel_year", year);
+        session.setAttribute("sel_month", month);
+        session.setAttribute("sel_attr", attr);
+        for (String[] items : ConstMap.attrMap) {
+            if (items[0].equals(attr)) {
+                session.setAttribute("sel_attr_chs", items[1]);
+            }
         }
         return "success";
     }

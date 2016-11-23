@@ -22,7 +22,7 @@
                         <div class="panel-body">
                             <form id="searchForm" class="navbar-form" role="search">
                                 <div class="row">
-                                    <div class="form-group col-md-8">
+                                    <div class="form-group col-md-7">
                                         <input id="keyword" name="keyword" value="<c:out value="${keyword}"/>"
                                                type="text" class="form-control" style="width: 100%"
                                                placeholder="请输入关键字"/>

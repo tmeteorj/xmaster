@@ -316,6 +316,18 @@
             advancedConfig();
         });
 
+        $("#timeStat").click(function () {
+            var tableName = $("select[name='tableName'] option:selected").val();
+            if (tableName == "bd_meetup" || tableName == "bd_member") {
+                var columnName = "member_since";
+                if (tableName == "bd_meetup") {
+                    columnName = "time_founded";
+                }
+                var tb = $("#map");
+                tb.load(rootPath + '/common/<c:out value="${tableName}"/>/timeStat.shtml?columnName=' + columnName);
+            }
+        });
+
         $("#placeStat").click(function () {
             var tableName = $("select[name='tableName'] option:selected").val();
             if (tableName == "bd_meetup" || tableName == "bd_member") {

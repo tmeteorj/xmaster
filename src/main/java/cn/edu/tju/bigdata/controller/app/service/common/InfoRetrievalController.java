@@ -7,6 +7,7 @@ import cn.edu.tju.bigdata.plugin.PagePlugin;
 import cn.edu.tju.bigdata.plugin.PageView;
 import cn.edu.tju.bigdata.util.Common;
 import cn.edu.tju.bigdata.util.FormMap;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,9 +33,9 @@ import java.util.List;
 public class InfoRetrievalController extends BaseController {
 
     private static final String BD = "bd_";
+    String columnName;
     @Value("${metadata.database:xmaster}")
     private String databaseName;
-
     @Autowired
     private TableMapper tableMapper;
 
@@ -72,6 +74,33 @@ public class InfoRetrievalController extends BaseController {
     public String placeStat(@PathVariable String tableName, Model model) {
         model.addAttribute("tableName", tableName);
         return Common.BACKGROUND_PATH + "/app/common/placeStat";
+    }
+
+    @RequestMapping("/{tableName}/timeStat")
+    public String timeStat(@PathVariable String tableName, HttpServletRequest request, Model model) {
+        model.addAttribute("tableName", tableName);
+        columnName = request.getParameter("columnName");
+        return Common.BACKGROUND_PATH + "/app/common/timeStat";
+    }
+
+    @ResponseBody
+    @RequestMapping("timeStatData/{tableName}")
+    public JSONObject getTimeStatData(@PathVariable String tableName) {
+        JSONObject data = new JSONObject();
+        String columns = String.format("date_format(%s, '%%Y') as name, count(date_format(%s, '%%Y')) as count", columnName, columnName);
+        String where = String.format(" 1 group by date_format(%s, '%%Y')", columnName);
+        List<FormMap> formMapList = tableMapper.selectDataFromTable(databaseName, tableName, columns, where);
+        List<String> xList = new ArrayList<String>();
+        List<Long> yList = new ArrayList<Long>();
+        for (FormMap formMap : formMapList) {
+            xList.add(formMap.getStr("name"));
+            yList.add(formMap.getLong("count"));
+        }
+        List<String> legend = new ArrayList<String>(Arrays.asList("数量"));
+        data.put("xAxis", xList);
+        data.put("yAxis", yList);
+        data.put("legend", legend);
+        return data;
     }
 
     @ResponseBody

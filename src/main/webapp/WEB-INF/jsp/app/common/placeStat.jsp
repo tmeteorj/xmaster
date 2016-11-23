@@ -10,11 +10,6 @@
 
     $(function () {
         getGeoData();
-
-        $("#search").on('click', function () {
-            getGeoData();
-        });
-
     });
 
     function getGeoData() {

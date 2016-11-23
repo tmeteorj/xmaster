@@ -301,7 +301,10 @@
         });
 
         myChart.on('click', function (param){
-
+            if (typeof param.data.value == 'undefined') {
+                layer.msg("关系类型：" + param.data.name);
+                return;
+            }
             var tb = $("#bechange");
             tb.load(rootPath + '/common/' + param.data.dataset + '/selectData.shtml');
             //alert( '/common/'+param.value+'/' + 3 + '/getGraphbyid.shtml');

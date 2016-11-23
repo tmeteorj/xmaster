@@ -25,7 +25,7 @@
         ORDER BY table_comment ASC, table_name ASC
     </select>
 
-    <select id="selectDataFromTable" resultType="java.util.HashMap">
+    <select id="selectDataFromTable" resultType="cn.edu.tju.bigdata.util.FormMap">
         <![CDATA[
         SELECT ${columns}
         FROM ${databaseName}.${tableName}

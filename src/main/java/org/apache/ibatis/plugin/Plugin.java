@@ -114,7 +114,11 @@ public class Plugin implements InvocationHandler {
         if (null != formMap) {
             table = formMap.get("ly_table");
             mapfield = (Map<String, Object>) EhcacheUtils.get(table);
-            field = mapfield.get("field").toString();
+            try {
+                field = mapfield.get("field").toString();
+            } catch (Exception e) {
+                field = "*";
+            }
             sql = " select " + field + " from " + String.valueOf(table);
         }
         String sqlId = mappedStatement.getId();

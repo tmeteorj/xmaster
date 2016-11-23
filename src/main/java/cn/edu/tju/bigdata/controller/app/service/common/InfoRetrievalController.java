@@ -68,6 +68,12 @@ public class InfoRetrievalController extends BaseController {
         return Common.BACKGROUND_PATH + "/app/common/infoRetrievalFramework";
     }
 
+    @RequestMapping("/{tableName}/placeStat")
+    public String placeStat(@PathVariable String tableName, Model model) {
+        model.addAttribute("tableName", tableName);
+        return Common.BACKGROUND_PATH + "/app/common/placeStat";
+    }
+
     @ResponseBody
     @RequestMapping("/{tableName}/{id}/detail")
     public FormMap getDetailById(@PathVariable String tableName, @PathVariable Long id) {

@@ -69,6 +69,9 @@ public class InfoRetrievalController extends BaseController {
 //        return Common.BACKGROUND_PATH + "/app/common/infoRetrieval";
         if (tableName.equals("bd_plane"))
             return Common.BACKGROUND_PATH + "/app/plane/infoRetrievalPlane";
+        else if (tableName.startsWith("bd_location")) {
+            return Common.BACKGROUND_PATH + "/app/visualuicreate/locationFramework";
+        }
         return Common.BACKGROUND_PATH + "/app/common/infoRetrievalFramework";
     }
 

@@ -86,7 +86,16 @@
                         </div>
                         <div class="panel-body">
                             <div id="description">
-                                这是 <c:out value="${tableName}"/> 数据。
+                                这是 <c:out value="${tableName}"/> 数据。其中的属性包括：
+                                <c:forEach items="${tableList}" var="table" varStatus="status">
+                                    <c:if test="${status.index<=10}">
+                                        <c:if test="${status.index > 0}">，</c:if>
+                                        <c:choose><c:when
+                                                test="${!table.columnComment && table.columnComment != ''}"><c:out
+                                                value="${table.columnComment}"/></c:when><c:otherwise><c:out
+                                                value="${table.columnName}"/></c:otherwise></c:choose> </c:if>
+                                </c:forEach>
+                                等。
                             </div>
                         </div>
                     </div>
@@ -137,13 +146,13 @@
                                     </div>
                                     <div class="panel-body">
                                         <p>
-                                            <button id="TimeStat" type="button"
+                                            <button id="timeStat" type="button"
                                                     class="btn btn-success btn-lg btn-block">
                                                 时间统计
                                             </button>
                                         </p>
                                         <p>
-                                            <button id="PlaceStat" type="button" class="btn btn-info btn-lg btn-block">
+                                            <button id="placeStat" type="button" class="btn btn-info btn-lg btn-block">
                                                 空间统计
                                             </button>
                                         </p>
@@ -307,6 +316,25 @@
             advancedConfig();
         });
 
+        $("#timeStat").click(function () {
+            var tableName = $("select[name='tableName'] option:selected").val();
+            if (tableName == "bd_meetup" || tableName == "bd_member") {
+                var columnName = "member_since";
+                if (tableName == "bd_meetup") {
+                    columnName = "time_founded";
+                }
+                var tb = $("#map");
+                tb.load(rootPath + '/common/<c:out value="${tableName}"/>/timeStat.shtml?columnName=' + columnName);
+            }
+        });
+
+        $("#placeStat").click(function () {
+            var tableName = $("select[name='tableName'] option:selected").val();
+            if (tableName == "bd_meetup" || tableName == "bd_member") {
+                var tb = $("#map");
+                tb.load(rootPath + '/common/<c:out value="${tableName}"/>/placeStat.shtml');
+            }
+        });
     });
 
     function bindingDetailBtn(columns, currentData) {

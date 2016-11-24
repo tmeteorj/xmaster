@@ -8,6 +8,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<link rel="stylesheet"	href="${pageContext.servletContext.contextPath }/css/cikonss.css">
 <style type="text/css">
   #map {
     height: 400px;
@@ -83,6 +85,28 @@
         </div>
       </div>
       <!--地图栏-->
+      <div class="row"><!--描述栏-->
+        <div class="col-md-12">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                描述
+              </h3>
+            </div>
+            <div class="panel-body">
+              <fieldset>
+                <div id="legend" class="">
+                  <legend class="">人轨迹</legend>
+                </div>
+                <div id = "miaoshu">
+
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--描述栏-->
       <div class="row"><!--列表栏-->
         <div class="col-md-12">
           <div class="table-responsive">
@@ -122,31 +146,13 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title">
-                      统计分析
+                     视频监控
                     </h4>
                   </div>
-                  <div class="panel-body">
-                    <p>
-                      <button id="TimeStat" type="button"
-                              class="btn btn-success btn-lg btn-block">
-                        时间统计
-                      </button>
-                    </p>
-                    <p>
-                      <button id="PlaceStat" type="button" class="btn btn-info btn-lg btn-block">
-                        空间统计
-                      </button>
-                    </p>
-                    <p>
-                      <button type="button" class="btn btn-warning btn-lg btn-block">
-                        其他统计1
-                      </button>
-                    </p>
-                    <p>
-                      <button type="button" class="btn btn-danger btn-lg btn-block">
-                        其他统计2
-                      </button>
-                    </p>
+                  <div class="panel-body" style="display: none;"  id = "jk">
+                    <video width="320" height="240"  autoplay loop >
+                      <source src="${pageContext.servletContext.contextPath }/images/jk.mp4" type="video/mp4">
+                    </video>
                   </div>
                 </div>
 
@@ -303,6 +309,8 @@
   function bindingDetailBtn(columns, currentData) {
     $("[dataId]").each(function () {
       $(this).bind("click", function () {
+
+        document.getElementById("jk").style.display="block";
         var dataId = $(this).attr("dataId");
         var index = $(this).attr("index");
         $.ajax({
@@ -333,27 +341,57 @@
             createHtmlForDetailedInfo(detailedData);
             $.ajax({
               type: 'GET',
-              url: '/common/<c:out value="${tableName}"/>/' + dataId + '/getGps.shtml',
+              url:  '/common/<c:out value="${tableName}"/>/' + dataId + '/getTrace.shtml',
               datatype: 'json',
               async: false,
               error: function () {
 
               },
-              success: function (gpsData) {
-                //console.log(gpsData);
-//                alert(gpsData);
-                //gpsData = JSON.parse(gpsData);
-                //alert(gpsData);
-                init();
-                var polyline = new AMap.Polyline({
-                  path: JSON.parse(gpsData),          //设置线覆盖物路径
-                  strokeColor: "#33CC33", //线颜色
-                  strokeOpacity: 1,       //线透明度
-                  strokeWeight: 5,        //线宽
-                  strokeStyle: "solid",   //线样式
-                  strokeDasharray: [10, 5] //补充线样式
+              success: function (trace) {
+                trace = JSON.parse(trace);
+
+                var miaoshu = $("#miaoshu");
+                var html = "";
+                for(var o=0; o<trace.length; o++){
+                  //console.log(trace[o][0]);
+
+                  html += "<div class=\"form-group\">"+
+                          "      <div class=\"col-sm-2\">"+
+
+                          "      <p style=\"float: right\">"+trace[o][0]+"</p>"+
+                          "        </div>"+
+                          "       <div class=\"col-sm-10\">"+
+                          "       <span class=\"icon icon-mid\"><span class=\"icon-file\"></span></span>"+
+                          "       <p>"+trace[o][1]+"</p>"+
+                          "       </div>"+
+                          "       </div>"
+                }
+                miaoshu.html(html);
+                $.ajax({
+                  type: 'GET',
+                  url: '/common/<c:out value="${tableName}"/>/' + dataId + '/getGps.shtml',
+                  datatype: 'json',
+                  async: false,
+                  error: function () {
+
+                  },
+                  success: function (gpsData) {
+                    init();
+                    var arrayObj = getsubJson(gpsData,0,100);
+                    gpsData = JSON.parse(gpsData);
+                    console.log(gpsData);
+                    var polyline = new AMap.Polyline({
+                      path:gpsData,          //设置线覆盖物路径
+                      strokeColor: "#33CC33", //线颜色
+                      strokeOpacity: 1,       //线透明度
+                      strokeWeight: 5,        //线宽
+                      strokeStyle: "solid",   //线样式
+                      strokeDasharray: [10, 5] //补充线样式
+                    });
+                    polyline.setMap(amap);
+
+                  }
                 });
-                polyline.setMap(amap);
               }
             });
           }
@@ -363,6 +401,18 @@
     });
   }
 
+  function getsubJson(json,s,e){
+    var arrayObj = new Array();
+    for(var o=s;o<e-1;o++){
+      var obj = {};
+      var tmp = json[o];
+      for(var key in tmp){
+        obj[key] = tmp[key];
+      }
+      arrayObj.push(obj);
+    }
+    return arrayObj;
+  }
   function createHtmlForDetailedInfo(detailedData) {
     var detailedInfo = $("#detailedInfo");
     detailedInfo.html("");

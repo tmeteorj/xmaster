@@ -9,6 +9,9 @@ import cn.edu.tju.bigdata.plugin.PageView;
 import cn.edu.tju.bigdata.util.Common;
 import cn.edu.tju.bigdata.util.JsonUtils;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.expression.spel.ast.Operator;
@@ -51,6 +54,8 @@ public class VisualController extends BaseController {
     OperatorConfigMapper operatorConfigMapper;
     @Autowired
     OperatorMapper operatorMapper;
+    @Autowired
+    TableMapper tableMapper;
     @Autowired
     OperatorInputMapper operatorInputMapper;
     @Autowired
@@ -582,9 +587,44 @@ public class VisualController extends BaseController {
 
 
     @RequestMapping("/{id}/showdecisionbank")
-    public String showdecisionbank(@PathVariable int id) throws Exception{
-        if(id==1)
+    public String showdecisionbank(@PathVariable int id,Model model,HttpServletRequest request) throws Exception{
+        if(id==1) {
+            Session session = SecurityUtils.getSubject().getSession();
+            NavFormMap tnavFormMap = new NavFormMap();
+            //System.out.println(accountName);
+            //System.out.println(request.getParameter("layerType"));
+            String tableID = request.getParameter("tableName");
+            String parameter = request.getParameter("layerType");
+            int layerType = 0;
+            tableID = "24";
+            String tableName = null;
+            DatasetFormMap tdatasetFormMap = new DatasetFormMap();
+            tdatasetFormMap.set("id",tableID);
+            tdatasetFormMap.put("deleted_mark", 1);
+            List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
+            DatasetFormMap datasetFormMap = datasetFormMaps.get(0);
+            String[] temda  = datasetFormMap.getStr("dataset_url").split("/");
+            String databaseName = temda[temda.length - 1];
+            tableName = datasetFormMap.getStr("title");
+//        List<FormMap> tableNameListLayer = tableMapper.selectDataFromTable(databaseName, "")
+            List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
+            List<HashMap<String, String>> tableNameList = tableMapper.selectTableNameByDatabase(databaseName);
+            List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
+            for (HashMap<String, String> map : tableNameList) {
+                if (StringUtils.isBlank(map.get("tableComment"))) {
+                    map.put("tableComment", map.get("tableName"));
+                }
+                tableNameListBD.add(map);
+            }
+            for (String key : request.getParameterMap().keySet()) {
+                model.addAttribute(key, request.getParameter(key));
+            }
+            model.addAttribute("tableName", tableID);
+            model.addAttribute("accountName", session.getAttribute("userSessionId"));
+            model.addAttribute("tableList", tableList);
+            model.addAttribute("tableNameList", tableNameListBD);
             return Common.BACKGROUND_PATH + "/app/decisionui/showdecisionbank";
+        }
         return null;
     }
 

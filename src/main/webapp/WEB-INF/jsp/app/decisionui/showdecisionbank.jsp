@@ -78,7 +78,51 @@
       <!--搜索栏-->
       <div class="row"><!--地图栏-->
         <div class="col-md-12">
-          <div id="map"></div>
+          <div class="carousel slide" id="carousel-568214">
+            <ol class="carousel-indicators">
+              <li class="active" data-slide-to="0" data-target="#carousel-568214">
+              </li>
+              <li data-slide-to="1" data-target="#carousel-568214">
+              </li>
+              <li data-slide-to="2" data-target="#carousel-568214">
+              </li>
+            </ol>
+            <div class="carousel-inner">
+              <div class="item active">
+                <img alt="Carousel Bootstrap First" src="http://lorempixel.com/output/sports-q-c-1600-500-1.jpg" />
+                <div class="carousel-caption">
+                  <h4>
+                    First Thumbnail label
+                  </h4>
+                  <p>
+                    Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+                  </p>
+                </div>
+              </div>
+              <div class="item">
+                <img alt="Carousel Bootstrap Second" src="http://lorempixel.com/output/sports-q-c-1600-500-2.jpg" />
+                <div class="carousel-caption">
+                  <h4>
+                    Second Thumbnail label
+                  </h4>
+                  <p>
+                    Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+                  </p>
+                </div>
+              </div>
+              <div class="item">
+                <img alt="Carousel Bootstrap Third" src="http://lorempixel.com/output/sports-q-c-1600-500-3.jpg" />
+                <div class="carousel-caption">
+                  <h4>
+                    Third Thumbnail label
+                  </h4>
+                  <p>
+                    Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+                  </p>
+                </div>
+              </div>
+            </div> <a class="left carousel-control" href="#carousel-568214" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#carousel-568214" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+          </div>
         </div>
       </div>
       <!--地图栏-->
@@ -93,7 +137,7 @@
             </div>
             <div class="panel-body">
               <div id="description">
-                这是 <c:out value="${tableName}"/> 数据。
+                这是银行网点数据。
               </div>
             </div>
           </div>
@@ -288,7 +332,7 @@
           colkey: "__id__",
           name: "操作"
         }],
-      jsonUrl: rootPath + '/common/<c:out value="${tableName}"/>/findByPage/1.shtml?keyword=' + keyword,
+      jsonUrl: rootPath + '/common/<c:out value="${tableName}"/>/showData.shtml',
       checkbox: false
     }, bindingDetailBtn);
 
@@ -323,7 +367,7 @@
         var index = $(this).attr("index");
         $.ajax({
           type: 'GET',
-          url: '/common/<c:out value="${tableName}"/>/' + dataId + '/detail.shtml',
+          url:'/common/<c:out value="${tableName}"/>/' + dataId + '/detail.shtml',
           datatype: 'json',
           async: false,
           error: function () {

@@ -5,6 +5,7 @@
 
     <select id="selectTableByName" resultType="cn.edu.tju.bigdata.entity.Table">
       SELECT
+        table_schema as tableSchema,
         table_name as tableName,
         column_name as columnName,
         data_type as dataType,
@@ -18,6 +19,7 @@
 
     <select id="selectTableNameByDatabase" resultType="java.util.Map">
         SELECT
+        table_schema as tableSchema,
         table_name as tableName,
         table_comment as tableComment
         FROM information_schema.tables

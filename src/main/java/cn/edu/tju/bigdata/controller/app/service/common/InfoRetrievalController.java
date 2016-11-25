@@ -9,6 +9,8 @@ import cn.edu.tju.bigdata.util.Common;
 import cn.edu.tju.bigdata.util.FormMap;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -47,40 +49,29 @@ public class InfoRetrievalController extends BaseController {
         String displayType = request.getParameter("displayType");
         databaseName = request.getParameter("databaseName");
         if (StringUtils.isBlank(tableName))
-            tableName = "bd_meetup";
+            tableName = "bd_normal_event";
         if (StringUtils.isBlank(displayType))
             displayType = "1";
         if (StringUtils.isBlank(databaseName))
             databaseName = "xmaster";
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
-        List<HashMap<String, String>> tableNameList = new ArrayList<HashMap<String, String>>();
-        for (String dbName : databaseNameList) {
-            List<HashMap<String, String>> tableNameListTmp = tableMapper.selectTableNameByDatabase(dbName);
-            tableNameList.addAll(tableNameListTmp);
-        }
-        List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
-        for (HashMap<String, String> map : tableNameList) {
-            if (!map.get("tableName").startsWith(LY)) {
-                if (StringUtils.isBlank(map.get("tableComment"))) {
-                    map.put("tableComment", map.get("tableName"));
-                }
-                tableNameListBD.add(map);
-            }
-        }
+        getTableNameList(model);
         for (String key : request.getParameterMap().keySet()) {
             model.addAttribute(key, request.getParameter(key));
         }
         model.addAttribute("tableName", tableName);
         model.addAttribute("accountName", accountName);
         model.addAttribute("tableList", tableList);
-        model.addAttribute("tableNameList", tableNameListBD);
         model.addAttribute("displayType", displayType);
 //        return Common.BACKGROUND_PATH + "/app/common/infoRetrieval";
-        if (tableName.equals("bd_plane"))
-            return Common.BACKGROUND_PATH + "/app/plane/infoRetrievalPlane";
-        else if (tableName.startsWith("bd_location")) {
-            return Common.BACKGROUND_PATH + "/app/visualuicreate/locationFramework";
-        }
+//        Session session = SecurityUtils.getSubject().getSession();
+//        if (session.getAttribute("tableName") != null) {
+//            if (session.getAttribute("tableName").equals("bd_plane"))
+//                return Common.BACKGROUND_PATH + "/app/plane/infoRetrievalPlane";
+//            else if (session.getAttribute("tableName").toString().startsWith("bd_location")) {
+//                return Common.BACKGROUND_PATH + "/app/visualuicreate/locationFramework";
+//            }
+//        }
         return Common.BACKGROUND_PATH + "/app/common/infoRetrievalFramework";
     }
 
@@ -137,11 +128,46 @@ public class InfoRetrievalController extends BaseController {
         return formMap;
     }
 
+    private void getTableNameList(Model model) {
+        List<String> excluded = new ArrayList<String>( // 需要排除的表，或者是系统表，或是其他不需要展示的表
+                Arrays.asList("bd_city", "bd_dataset", "bd_decisionui", "bd_district", "bd_layout", "bd_location"
+                        , "bd_metadata", "bd_operator", "bd_operatorconfig", "bd_operatorinput", "bd_operatoroutput"
+                        , "bd_province", "bd_visualconfig", "bd_visualmethod", "bd_visualparameter", "bd_visualtype"
+                        , "bd_normal_people_copy")
+        );
+        List<HashMap<String, String>> tableNameList = new ArrayList<HashMap<String, String>>();
+        for (String dbName : databaseNameList) {
+            List<HashMap<String, String>> tableNameListTmp = tableMapper.selectTableNameByDatabase(dbName);
+            tableNameList.addAll(tableNameListTmp);
+        }
+        List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
+        for (HashMap<String, String> map : tableNameList) {
+            if (!map.get("tableName").startsWith(LY) && !excluded.contains(map.get("tableName"))) {
+                if (StringUtils.isBlank(map.get("tableComment"))) {
+                    map.put("tableComment", map.get("tableName"));
+                }
+                tableNameListBD.add(map);
+            }
+        }
+        model.addAttribute("tableNameList", tableNameListBD);
+    }
+
     @RequestMapping("/{tableName}/advancedConfig")
-    public String advancedConfig(@PathVariable String tableName) {
+    public String advancedConfig(@PathVariable String tableName, HttpServletRequest request, Model model) {
+        getTableNameList(model);
         if (tableName.equals("bd_plane"))
             return Common.BACKGROUND_PATH + "/app/plane/advancedConfigPlane";
         return Common.BACKGROUND_PATH + "/app/common/advancedConfig";
+    }
+
+    @ResponseBody
+    @RequestMapping("/configSave")
+    public String configSave(HttpServletRequest request, Model model) {
+        Session session = SecurityUtils.getSubject().getSession();
+        for (String key : request.getParameterMap().keySet()) {
+            session.setAttribute(key, request.getParameter(key));
+        }
+        return "success";
     }
 
     @ResponseBody

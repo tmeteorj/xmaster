@@ -38,14 +38,7 @@
                                                placeholder="请输入关键字"/>
                                     </div>
                                     <input type="hidden" value="${databaseName}" name="databaseName" id="databaseName">
-                                    <select id="tableName" name="tableName" class="form-control">
-                                        <c:forEach var="mapOfTableName" items="${tableNameList}">
-                                            <option value="<c:out value="${mapOfTableName.tableName}"/>"
-                                                    <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>
-                                                    dbName="<c:out value="${mapOfTableName.tableSchema}"/>">
-                                                <c:out value="${mapOfTableName.tableComment}"/></option>
-                                        </c:forEach>
-                                    </select>
+                                    <%@include file="../common/retrievalDatasetConfig.jsp" %>
                                     <button id="search" type="button" class="btn btn-success">
                                         检索
                                     </button>

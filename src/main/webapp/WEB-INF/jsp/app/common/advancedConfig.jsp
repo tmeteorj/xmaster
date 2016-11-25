@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="l_err" style="width: 100%; margin-top: 2px;"></div>
-<form id="form" name="form" class="form-horizontal" method="post"
+<form id="configForm" name="form" class="form-horizontal" method="post"
       action="">
     <input type="hidden" class="form-control"
            value="" name="">
@@ -19,7 +19,8 @@
                 <label class="col-sm-3 control-label">数据集</label>
 
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" value="生物黑客" readonly>
+                    <input type="hidden" value="${databaseName}" name="databaseName" id="databaseName">
+                    <%@include file="retrievalDatasetFlexiable.jsp" %>
                 </div>
             </div>
 
@@ -104,10 +105,24 @@
 
         </div>
         <footer class="panel-footer text-right bg-light lter">
-            <button type="submit" class="btn btn-success btn-s-xs">保存</button>
+            <button id="btn_save" type="submit" class="btn btn-success btn-s-xs">保存</button>
         </footer>
     </section>
 </form>
+<script>
+    $(function () {
+        $("#btn_save").click(function () {
+            var params = $("#configForm").serialize();
+            var s = CommnUtil.ajax(rootPath + "/common/configSave.shtml?" + params, {}, "json");
+            parent.layer.close(parent.pageii);
+        });
+
+        $("#tableName").change(function () {
+            var dbName = $("select[name='tableName'] option:selected").attr("dbName");
+            $("#databaseName").val(dbName);
+        });
+    });
+</script>
 <script type="text/javascript">
     onloadurl();
     $('.form_date').datetimepicker({
@@ -120,6 +135,7 @@
         minView: 2,
         forceParse: 0
     });
+
 </script>
 </body>
 </html>

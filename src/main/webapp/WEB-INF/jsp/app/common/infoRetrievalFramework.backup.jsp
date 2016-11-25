@@ -22,7 +22,7 @@
                         <div class="panel-body">
                             <form id="searchForm" class="navbar-form" role="search">
                                 <div class="row">
-                                    <div class="form-group col-md-8">
+                                    <div class="form-group col-md-7">
                                         <input id="keyword" name="keyword" value="<c:out value="${keyword}"/>"
                                                type="text" class="form-control" style="width: 100%"
                                                placeholder="请输入关键字"/>
@@ -180,7 +180,73 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <%@include file="restrictionConfig.jsp" %>
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            数据集限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">数据集</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="生物黑客" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            时间限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">开始</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="2010-01-02" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">截止</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="2016-09-17" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            空间限定
+                                        </h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">国家</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="全部" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">州省</label>
+
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" value="全部" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -199,7 +265,7 @@
             pagId: 'paging',
             l_column: [
                 <c:forEach items="${tableList}" var="table" varStatus="status">
-                <c:if test="${status.index<8}">
+                <c:if test="${status.index<=10}">
                 {
                     colkey: "<c:out value="${table.columnName}"/>",
                     name: "<c:choose><c:when test="${!table.columnComment && table.columnComment != ''}"><c:out value="${table.columnComment}"/></c:when><c:otherwise><c:out value="${table.columnName}"/></c:otherwise></c:choose>",

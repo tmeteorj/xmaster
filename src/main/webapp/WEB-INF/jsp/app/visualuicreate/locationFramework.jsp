@@ -39,9 +39,9 @@
                   <button id="search" type="button" class="btn btn-success">
                     检索
                   </button>
-                    <button id="clearmap" type="button" class="btn btn-success">
-                        清除地图
-                    </button>
+                    <%--<button id="clearmap" type="button" class="btn btn-success">--%>
+                        <%--清除地图--%>
+                    <%--</button>--%>
                 </div>
                 <div class="line line-dashed pull-in"></div>
                 <div class="row ">
@@ -316,7 +316,7 @@
   var keyword = $("#keyword").val();
 
   function buttonshow(table_name){
-    alert(table_name);
+//    alert(table_name);
     if(table_name=="bd_location_atm_bus") {
         $("#relitu").show();
         $("#shouru").show();
@@ -394,7 +394,7 @@
                   columnName = "time_founded";
               }
               var tb = $("#map");
-              alert("relitu");
+//              alert("relitu");
               tb.load(rootPath+'/visualuicreate/pinglv.shtml');
               <%--tb.load(rootPath + '/common/<c:out value="${tableName}"/>/timeStat.shtml?columnName=' + columnName);--%>
           }

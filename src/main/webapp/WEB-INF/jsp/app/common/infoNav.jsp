@@ -27,12 +27,13 @@
                                                type="text" class="form-control" style="width: 100%"
                                                placeholder="请输入关键字"/>
                                     </div>
+                                    <input type="hidden" value="${databaseName}" name="databaseName" id="databaseName">
                                     <select id="tableName" name="tableName" class="form-control">
                                         <c:forEach var="mapOfTableName" items="${tableNameList}">
                                             <option value="<c:out value="${mapOfTableName.tableName}"/>"
-                                                    <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>>
-                                                <c:out
-                                                        value="${mapOfTableName.tableComment}"/></option>
+                                                    <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>
+                                                    dbName="<c:out value="${mapOfTableName.tableSchema}"/>">
+                                                <c:out value="${mapOfTableName.tableComment}"/></option>
                                         </c:forEach>
                                     </select>
                                     <button id="search" type="button" class="btn btn-success">
@@ -114,31 +115,17 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
-                                            统计分析
+                                            功能
                                         </h4>
                                     </div>
                                     <div class="panel-body">
                                         <p>
-                                            <button id="TimeStat" type="button"
+                                            <button id="reload" type="button"
                                                     class="btn btn-success btn-lg btn-block">
-                                                时间统计
+                                                还原
                                             </button>
                                         </p>
-                                        <p>
-                                            <button id="PlaceStat" type="button" class="btn btn-info btn-lg btn-block">
-                                                空间统计
-                                            </button>
-                                        </p>
-                                        <p>
-                                            <button type="button" class="btn btn-warning btn-lg btn-block">
-                                                其他统计1
-                                            </button>
-                                        </p>
-                                        <p>
-                                            <button type="button" class="btn btn-danger btn-lg btn-block">
-                                                其他统计2
-                                            </button>
-                                        </p>
+
                                     </div>
                                 </div>
 
@@ -492,6 +479,8 @@
 
         $("#tableName").change(function () {
             $("#keyword").val("");
+            var dbName = $("select[name='tableName'] option:selected").attr("dbName");
+            $("#databaseName").val(dbName);
         });
 
         function bindingDetailBtn(columns, currentData) {

@@ -4,6 +4,7 @@ package cn.edu.tju.bigdata.entity;
  * Created by Ethan on 2016/9/29.
  */
 public class Table {
+    private String tableSchema;
     private String tableName;
     private String columnName;
     private String dataType;
@@ -11,6 +12,14 @@ public class Table {
     private String columnKey;
 
     public Table() {
+    }
+
+    public String getTableSchema() {
+        return tableSchema;
+    }
+
+    public void setTableSchema(String tableSchema) {
+        this.tableSchema = tableSchema;
     }
 
     public String getTableName() {

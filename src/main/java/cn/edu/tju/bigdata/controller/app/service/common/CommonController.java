@@ -39,9 +39,10 @@ import java.util.*;
 @RequestMapping("/common")
 public class CommonController extends BaseController {
     private static final String BD = "bd_";
-    @Value("${metadata.database:xmaster}")
     private String databaseName;
 
+    @Value("#{'${metadata.database}'.split(',')}")
+    private List<String> databaseNameList;
     @Autowired
     private TableMapper tableMapper;
     @Autowired
@@ -79,6 +80,12 @@ public class CommonController extends BaseController {
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
         List<HashMap<String, String>> tableNameList = tableMapper.selectTableNameByDatabase(databaseName);
         List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
+
+
+        for (String dbName : databaseNameList) {
+            List<HashMap<String, String>> tableNameListTmp = tableMapper.selectTableNameByDatabase(dbName);
+            tableNameList.addAll(tableNameListTmp);
+        }
         for (HashMap<String, String> map : tableNameList) {
             if (StringUtils.isBlank(map.get("tableComment"))) {
                 map.put("tableComment", map.get("tableName"));
@@ -88,6 +95,7 @@ public class CommonController extends BaseController {
         for (String key : request.getParameterMap().keySet()) {
             model.addAttribute(key, request.getParameter(key));
         }
+
         model.addAttribute("tableName", tableID);
         model.addAttribute("accountName", accountName);
         model.addAttribute("tableList", tableList);
@@ -115,6 +123,10 @@ public class CommonController extends BaseController {
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
         List<HashMap<String, String>> tableNameList = tableMapper.selectTableNameByDatabase(databaseName);
         List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
+        for (String dbName : databaseNameList) {
+            List<HashMap<String, String>> tableNameListTmp = tableMapper.selectTableNameByDatabase(dbName);
+            tableNameList.addAll(tableNameListTmp);
+        }
         for (HashMap<String, String> map : tableNameList) {
             if (StringUtils.isBlank(map.get("tableComment"))) {
                 map.put("tableComment", map.get("tableName"));
@@ -399,6 +411,49 @@ public class CommonController extends BaseController {
                     lloc.add(Double.valueOf(sp[2]));
                     lloc.add(Double.valueOf(sp[3]));
                     loc.add(lloc);
+                }
+                catch (Exception e){}
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+
+        return loc;
+    }
+    @ResponseBody
+    @RequestMapping("/{tableName}/{id}/getTrace")
+    public JSONArray getTrace(@PathVariable String tableName, @PathVariable int id) {
+        File filec=new File("C://gps");
+        File[] files=filec.listFiles();
+        File file = files[id%files.length];
+        BufferedReader reader = null;
+        JSONArray loc = new JSONArray();
+        try {
+            //System.out.println("以行为单位读取文件内容，一次读一整行：");
+            reader = new BufferedReader(new FileReader(file));
+            String tempString = null;
+            //int line = 1;
+            // 一次读入一行，直到读入null为文件结束
+            while ((tempString = reader.readLine()) != null) {
+                // 显示行号
+                // System.out.println("line " + line + ": " + tempString);
+                //line++;
+                String[] sp = tempString.split(",");
+                JSONArray lloc = new JSONArray();
+                try {
+                    if(sp.length>7) {
+                        lloc.add(sp[1]);
+                        lloc.add(sp[7]);
+                        loc.add(lloc);
+                    }
                 }
                 catch (Exception e){}
             }

@@ -32,9 +32,11 @@ import java.util.List;
 @RequestMapping("/common")
 public class InfoRetrievalController extends BaseController {
 
-    private static final String BD = "bd_";
+    private static final String LY = "ly_";
     String columnName;
-    @Value("${metadata.database:xmaster}")
+    @Value("#{'${metadata.database}'.split(',')}")
+    private List<String> databaseNameList;
+
     private String databaseName;
     @Autowired
     private TableMapper tableMapper;
@@ -43,15 +45,22 @@ public class InfoRetrievalController extends BaseController {
     public String infoRetrieval(@PathVariable String accountName, HttpServletRequest request, Model model) {
         String tableName = request.getParameter("tableName");
         String displayType = request.getParameter("displayType");
+        databaseName = request.getParameter("databaseName");
         if (StringUtils.isBlank(tableName))
             tableName = "bd_meetup";
         if (StringUtils.isBlank(displayType))
             displayType = "1";
+        if (StringUtils.isBlank(databaseName))
+            databaseName = "xmaster";
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
-        List<HashMap<String, String>> tableNameList = tableMapper.selectTableNameByDatabase(databaseName);
+        List<HashMap<String, String>> tableNameList = new ArrayList<HashMap<String, String>>();
+        for (String dbName : databaseNameList) {
+            List<HashMap<String, String>> tableNameListTmp = tableMapper.selectTableNameByDatabase(dbName);
+            tableNameList.addAll(tableNameListTmp);
+        }
         List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
         for (HashMap<String, String> map : tableNameList) {
-            if (map.get("tableName").startsWith(BD)) {
+            if (!map.get("tableName").startsWith(LY)) {
                 if (StringUtils.isBlank(map.get("tableComment"))) {
                     map.put("tableComment", map.get("tableName"));
                 }
@@ -111,9 +120,6 @@ public class InfoRetrievalController extends BaseController {
     @ResponseBody
     @RequestMapping("/{tableName}/{id}/detail")
     public FormMap getDetailById(@PathVariable String tableName, @PathVariable Long id) {
-        if (!tableName.startsWith(BD)) {
-            tableName = BD + tableName;
-        }
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
         FormMap<String, Object> formMap = new FormMap<String, Object>();
         FormMap detailedData = tableMapper.selectDataById(databaseName, tableName, id);
@@ -141,9 +147,6 @@ public class InfoRetrievalController extends BaseController {
     @ResponseBody
     @RequestMapping("/{tableName}/findByPage/{deletedMark}")
     public PageView findByPage(@PathVariable String tableName, @PathVariable Integer deletedMark, String pageNow, String pageSize) {
-        if (!tableName.startsWith(BD)) {
-            tableName = BD + tableName;
-        }
         // 获得传参，即where子句的参数
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String keyword = request.getParameter("keyword");

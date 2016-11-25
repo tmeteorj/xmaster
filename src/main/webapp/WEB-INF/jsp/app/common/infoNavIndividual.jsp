@@ -251,6 +251,7 @@
 </div>
 
 <script>
+  var timeid;
   var amap;
   var grid = null;
   var keyword = $("#keyword").val();
@@ -398,6 +399,34 @@
 
                   }
                 });
+                window.clearInterval(timeid);
+                timeid = window.setInterval(showalert, 3000);
+                function showalert()
+                {
+                  $.ajax({
+                    type: 'GET',
+                    url: '/common/getOneGps.shtml',
+                    datatype: 'json',
+                    async: false,
+                    error: function () {
+
+                    },
+                    success: function (detailedData) {
+                      detailedData = JSON.parse(detailedData);
+                      console.log(detailedData);
+                      var polyline = new AMap.Polyline({
+                        path:detailedData,          //设置线覆盖物路径
+                        strokeColor: "#33CC33", //线颜色
+                        strokeOpacity: 1,       //线透明度
+                        strokeWeight: 5,        //线宽
+                        strokeStyle: "solid",   //线样式
+                        strokeDasharray: [10, 5] //补充线样式
+                      });
+                      polyline.setMap(amap);
+                      amap.setZoomAndCenter(19, detailedData[1]);
+                    }
+                  });
+                }
               }
             });
           }
@@ -467,7 +496,8 @@ function init() {
     map.addControl(new AMap.ToolBar());
     map.addControl(new AMap.Scale());
     map.addControl(new AMap.OverView({isOpen: true}));
-  })
+  });
+
 }
 </script>
 <script>
@@ -481,5 +511,7 @@ function init() {
     minView: 2,
     forceParse: 0
   });
+
+
 </script>
 

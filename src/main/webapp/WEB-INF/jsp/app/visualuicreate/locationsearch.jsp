@@ -34,8 +34,8 @@
 
                                     <label style="width:auto;height:40px; display:inline">功能:</label>
                                     <select id="sel_work" style="width:120px;height:40px; display:inline">
-                                        <option value="0">ATM特征</option>
-                                        <option value="0">网点特征</option>
+                                        <option value="0">ATM信息</option>
+                                        <option value="1">网点信息</option>
                                     </select>
                                 </div>
 
@@ -43,9 +43,9 @@
 
                                     <label style="width:auto;height:40px; display:inline">年份:</label>
                                     <select id="sel_year" style="width:120px;height:40px; display:inline">
-                                        <option value="2015">2013</option>
-                                        <option value="2015">2014</option>
                                         <option value="2015">2015</option>
+                                        <option value="2015">2014</option>
+                                        <option value="2015">2013</option>
                                     </select>
 
                                     <label style="width:auto;height:40px; display:inline">月份:</label>
@@ -63,21 +63,20 @@
                                         <option value="11">11</option>
                                         <option value="12">12</option>
                                     </select>
-                                    <label class="attr" id="label_attr" style="width:120px;height:40px; display:inline">交易类型:</label>
+                                    <label class="attr" id="label_attr" style="width:120px;height:40px; display:inline">类型:</label>
                                     <select class="attr" id="sel_attr" style="width:120px;height:40px; display:inline">
-                                        <option value="1">本代本取款</option>
-                                        <option value="2">本代他取款</option>
-                                        <option value="7">余额查询</option>
-                                        <option value="3">存款</option>
-                                        <option value="4">缴纳带话费</option>
-                                        <option value="5">缴纳交通罚款</option>
-                                        <option value="6">缴纳宽带费</option>
+                                        <option value="1">本代本取现交易</option>
+                                        <option value="2">本代它取现交易</option>
+                                        <option value="3">本行转账</option>
+                                        <option value="4">跨行转账转出</option>
+                                        <option value="5">跨行转账转入</option>
+                                        <option value="6">跨行转账</option>
+                                        <option value="7">电费缴费</option>
+                                        <option value="8">有线电视缴费</option>
+                                        <option value="9">交通罚款缴费</option>
+                                        <option value="10">手机充值缴费</option>
+                                        <option value="11">固话充值缴费</option>
 
-                                        <%--<%--%>
-                                            <%--for (String[] items : ConstMap.attrMap) {--%>
-                                                <%--out.println(String.format("<option value=\"%s\">%s</option>", items[0], items[1]));--%>
-                                            <%--}--%>
-                                        <%--%>--%>
                                     </select>
 
                                     <label class="movetype" id="label_movetype"
@@ -88,7 +87,7 @@
                                         <option value="1">预测迁徙</option>
                                     </select>
 
-                                    <input type="button" id="btn_search" value="检索查询"
+                                    <input type="button" id="btn_search" value="检索"
                                            style="width:120px;height:40px; display:inline">
                                 </div>
 
@@ -168,8 +167,8 @@
                                         </h4>
                                     </div>
                                     <div class="panel-body">
-                                        <li><a href="#">市级</a></li>
-                                        <li><a href="#">区县级</a></li>
+                                        <li><a href="#">市区/郊区</a></li>
+                                        <li><a href="#">区县</a></li>
                                         <li><a href="#">一级支行</a></li>
                                         <li><a href="#">二级支行</a></li>
                                         <li><a href="#">分理处</a></li>
@@ -183,11 +182,11 @@
                                         </h4>
                                     </div>
                                     <div class="panel-body">
-                                        <li><a href="#">同一营业网点办理业务</a></li>
-                                        <li><a href="#">所属同一支行</a></li>
-                                        <li><a href="#">发生资金来往</a></li>
-                                        <li><a href="#">所属同一客户类型</a></li>
-                                        <li><a href="#">所属同一登记区域</a></li>
+                                        <li><a href="#">属于同一支行</a></li>
+                                        <li><a href="#">属于同一社区</a></li>
+                                        <li><a href="#">属于同一分理处</a></li>
+                                        <li><a href="#">发生资金往来</a></li>
+                                        <li><a href="#">属于同一客户类型</a></li>
                                     </div>
                                 </div>
                             </div>
@@ -211,11 +210,10 @@
 
                                 <div class="col-sm-9">
                                     <select class="form-control">
-                                        <option>请选择数据集</option>
-                                        <option>ATM业务数据</option>
-                                        <option>地块数据集</option>
-                                        <option>人口普查数据集</option>
-                                        <option>银行业务数据</option>
+                                        <option>股份制银行</option>
+                                        <option>国有四大银行</option>
+                                        <option>天津市农商银行</option>
+                                        <option>天津郊县区块</option>
                                         <option selected>天津中心城区块</option>
                                     </select>
                                 </div>
@@ -455,11 +453,16 @@
         }
     }
     $(function () {
+        console.log("11111111111111111")
+        <c:forEach items="${records}" var="table" varStatus="status">
+            console.log(11)
+        </c:forEach>
         grid = lyGrid({
             pagId: 'paging',
             l_column: [
                 <c:forEach items="${tableList}" var="table" varStatus="status">
                 {
+
                     colkey: "<c:out value="${table.columnName}"/>",
                     name: "<c:choose><c:when test="${!table.columnComment && table.columnComment != ''}"><c:out value="${table.columnComment}"/></c:when><c:otherwise><c:out value="${table.columnName}"/></c:otherwise></c:choose>",
                     <c:if test="${table.columnKey == 'PRI' or table.columnName == 'remark' or table.columnName == 'deleted_mark'}">
@@ -476,7 +479,7 @@
                     colkey: "__id__",
                     name: "操作"
                 }],
-            jsonUrl: rootPath + '/common/bd_plane/findByPage/1.shtml',
+            jsonUrl: rootPath + '/common/bd_location_branch/findByPage/1.shtml',
             checkbox: false
         }, bindingDetailBtn);
 

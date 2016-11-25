@@ -3,6 +3,7 @@ package cn.edu.tju.bigdata.controller.app.service.object;
 import cn.edu.tju.bigdata.annotation.SystemLog;
 import cn.edu.tju.bigdata.biz.location.LocatBiz;
 import cn.edu.tju.bigdata.controller.index.BaseController;
+import cn.edu.tju.bigdata.entity.Table;
 import cn.edu.tju.bigdata.entity.siteselection.LocationAtm;
 import cn.edu.tju.bigdata.entity.siteselection.LocationScore;
 import cn.edu.tju.bigdata.entity.siteselection.LocationRelitu;
@@ -10,16 +11,22 @@ import cn.edu.tju.bigdata.enums.EmDeletedMark;
 import cn.edu.tju.bigdata.mapper.DatasetMapper;
 import cn.edu.tju.bigdata.mapper.LocationMapper;
 import cn.edu.tju.bigdata.mapper.PlaneMapper;
+import cn.edu.tju.bigdata.mapper.TableMapper;
 import cn.edu.tju.bigdata.plugin.PageView;
 import cn.edu.tju.bigdata.util.Common;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -28,10 +35,17 @@ import java.util.List;
 @Controller
 @RequestMapping("/visualuicreate")
 public class VisualLocationController extends BaseController {
+    private static final String BD = "bd_";
+    String columnName;
+    @Value("${metadata.database:xmaster}")
+    private String databaseName;
+    @Autowired
+    private TableMapper tableMapper;
     @Autowired
     DatasetMapper datasetMapper;
     @Autowired
     LocationMapper planeMapper;
+
 
     @ResponseBody
     @RequestMapping("/showtables")
@@ -42,28 +56,6 @@ public class VisualLocationController extends BaseController {
         pageView.setRecords(datasetMapper.findByPage(datasetFormMap));
         return pageView;
     }
-
-//    @ResponseBody
-//    @RequestMapping("/datarelitu")
-//    public PageView datarelitu(String pageNow, String pageSize) {
-//        LocationRelitu datasetFormMap = getFormMap(LocationRelitu.class);
-//        datasetFormMap = toFormMap(datasetFormMap, pageNow, pageSize, datasetFormMap.getStr("orderby"));
-//        datasetFormMap.set("deleted_mark", EmDeletedMark.VALID.getCode());
-//        pageView.setRecords(datasetMapper.findByPage(datasetFormMap));
-//        return pageView;
-//    }
-//
-//    @ResponseBody
-//    @RequestMapping("/datarelitu")
-//    JSONObject showRelitu(){
-//        LocationRelitu planeFormMap=getFormMap(LocationRelitu.class);
-//        List<LocationRelitu> list=planeMapper.selectAll(planeFormMap);
-//        System.out.println("==============================");
-//        System.out.println(list.size());
-////        JSONObject result= PlaneBiz.searchByYMA(list, attr);
-////        return result;
-//        return new JSONObject();
-//    }
 
     @ResponseBody
     @RequestMapping("/datarelitu")
@@ -91,5 +83,82 @@ public class VisualLocationController extends BaseController {
 
         return Common.BACKGROUND_PATH + "/app/visualuicreate/locationuicreate";
     }
+
+    @RequestMapping("/locationatm")
+    public String locationatm(Model model) {
+
+        return Common.BACKGROUND_PATH + "/app/visualuicreate/locationatm";
+    }
+
+    @RequestMapping("/atmbusiness")
+    public String atmbusiness(Model model) {
+
+        return Common.BACKGROUND_PATH + "/app/visualuicreate/atmbusiness";
+    }
+
+    @RequestMapping("/pinglv")
+    public String pinglv(Model model) {
+
+        return Common.BACKGROUND_PATH + "/app/visualuicreate/pinglv";
+    }
+
+    @RequestMapping("/chengben")
+    public String chengben(Model model) {
+
+        return Common.BACKGROUND_PATH + "/app/visualuicreate/chengben";
+    }
+
+    @RequestMapping("/zijin")
+    public String zijin(Model model) {
+
+        return Common.BACKGROUND_PATH + "/app/visualuicreate/zijin";
+    }
+
+    @RequestMapping("/jigoufenxi")
+    public String jigoufenxi(Model model) {
+
+        return Common.BACKGROUND_PATH + "/app/visualuicreate/jigoufenxi";
+    }
+
+    @RequestMapping("/application")
+    public String locationApplication(Model model) {
+        List<Table> tableList = tableMapper.selectTableByName("bd_location_branch", "xmaster");
+        model.addAttribute("tableName", "bd_plane");
+        model.addAttribute("accountName", "lx1");
+        model.addAttribute("tableList", tableList);
+        return Common.BACKGROUND_PATH + "/app/visualuicreate/locationsearch";
+    }
+    @RequestMapping("/{accountName}/location")
+    public String location(@PathVariable String accountName, HttpServletRequest request, Model model) {
+        String tableName = request.getParameter("tableName");
+        String displayType = request.getParameter("displayType");
+        if (StringUtils.isBlank(tableName))
+            tableName = "bd_meetup";
+        if (StringUtils.isBlank(displayType))
+            displayType = "1";
+        List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
+        List<HashMap<String, String>> tableNameList = tableMapper.selectTableNameByDatabase(databaseName);
+        List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
+        for (HashMap<String, String> map : tableNameList) {
+            if (map.get("tableName").startsWith(BD)) {
+                if (StringUtils.isBlank(map.get("tableComment"))) {
+                    map.put("tableComment", map.get("tableName"));
+                }
+                tableNameListBD.add(map);
+            }
+        }
+        for (String key : request.getParameterMap().keySet()) {
+            model.addAttribute(key, request.getParameter(key));
+        }
+        model.addAttribute("tableName", tableName);
+        model.addAttribute("accountName", accountName);
+        model.addAttribute("tableList", tableList);
+        model.addAttribute("tableNameList", tableNameListBD);
+        model.addAttribute("displayType", displayType);
+//        return Common.BACKGROUND_PATH + "/app/common/infoRetrieval";
+        return Common.BACKGROUND_PATH + "/app/visualuicreate/locationFramework";
+    }
+
+
 
 }

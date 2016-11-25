@@ -149,10 +149,10 @@
                      视频监控
                     </h4>
                   </div>
-                  <div class="panel-body" style="display: none;"  id = "jk">
-                    <video width="320" height="240"  autoplay loop >
-                      <source src="${pageContext.servletContext.contextPath }/images/jk.mp4" type="video/mp4">
-                    </video>
+                  <div class="panel-body" style="display: block;"  id = "jk">
+                    <%--<video width="320" height="240"  autoplay loop >--%>
+                      <%--<source src="${pageContext.servletContext.contextPath }/images/jk.mp4" type="video/mp4">--%>
+                    <%--</video>--%>
                   </div>
                 </div>
 
@@ -310,7 +310,13 @@
     $("[dataId]").each(function () {
       $(this).bind("click", function () {
 
-        document.getElementById("jk").style.display="block";
+        var vhtml = "<div class=\"panel-body\" style=\"display: block;\"  id = \"jk\">"+
+        "<video width=\"320\" height=\"240\"  autoplay loop >"+
+        "<source src=\"${pageContext.servletContext.contextPath }/images/jk.mp4\" type=\"video/mp4\">"+
+        "</video>"+
+        "</div>"
+        $("#jk").html(vhtml);
+       // document.getElementById("jk").style.display="block";
         var dataId = $(this).attr("dataId");
         var index = $(this).attr("index");
         $.ajax({

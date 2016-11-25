@@ -407,7 +407,7 @@
             title: "高级设置",
             type: 2,
             area: ["600px", "80%"],
-            content: rootPath + '/common/advancedConfig.shtml'
+            content: rootPath + '/common/<c:out value="${tableName}"/>/advancedConfig.shtml'
         });
     }
 

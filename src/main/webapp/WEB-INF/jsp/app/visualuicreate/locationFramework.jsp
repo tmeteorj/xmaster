@@ -39,9 +39,9 @@
                   <button id="search" type="button" class="btn btn-success">
                     检索
                   </button>
-                    <button id="clearmap" type="button" class="btn btn-success">
-                        清除地图
-                    </button>
+                    <%--<button id="clearmap" type="button" class="btn btn-success">--%>
+                        <%--清除地图--%>
+                    <%--</button>--%>
                 </div>
                 <div class="line line-dashed pull-in"></div>
                 <div class="row ">

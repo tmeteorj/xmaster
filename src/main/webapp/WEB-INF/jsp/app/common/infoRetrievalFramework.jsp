@@ -247,7 +247,7 @@
         });
 
         $("#timeStat").click(function () {
-            var tableName = $("select[name='tableName'] option:selected").val();
+            var tableName = "<c:out value="${tableName}"/>";
             if (tableName == "bd_meetup" || tableName == "bd_member") {
                 var columnName = "member_since";
                 if (tableName == "bd_meetup") {
@@ -259,7 +259,7 @@
         });
 
         $("#placeStat").click(function () {
-            var tableName = $("select[name='tableName'] option:selected").val();
+            var tableName = "<c:out value="${tableName}"/>";
             if (tableName == "bd_meetup" || tableName == "bd_member") {
                 var tb = $("#map");
                 tb.load(rootPath + '/common/<c:out value="${tableName}"/>/placeStat.shtml');

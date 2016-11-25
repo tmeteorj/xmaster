@@ -356,7 +356,6 @@ public class CommonController extends BaseController {
         String tableName="";
         List<Table> tableList = new ArrayList<>();
         if(datasetFormMaps.size()<1){
-            //不确定 无验证
             databaseName = "xmaster";
             tableName = datasetid;
             if (!tableName.startsWith(BD)) {
@@ -479,14 +478,12 @@ public class CommonController extends BaseController {
         List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
         String databaseName="";
         if(datasetFormMaps.size()<1){
-            //不确定 无验证
             databaseName = "xmaster";
             if (!tableName.startsWith(BD)) {
                 tableName = BD + tableName;
             }
         }
         else{
-            //不是mysql的自己解决把，如果你是2014级以后的，还看到了这一段注释，good luck
             DatasetFormMap datasetFormMap = datasetFormMaps.get(0);
             String[] temda  = datasetFormMap.getStr("dataset_url").split("/");
             databaseName = temda[temda.length-1];

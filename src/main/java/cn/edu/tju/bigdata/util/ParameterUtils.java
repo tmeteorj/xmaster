@@ -45,7 +45,6 @@ public class ParameterUtils {
             {
                 add("bd_city");
                 add("bd_district");
-                add("bd_normal_people");
                 add("bd_normal_plane");
                 add("bd_plane");
                 add("bd_province");

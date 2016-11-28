@@ -81,4 +81,23 @@ public class ParameterUtils {
         if (tableName != null && set.contains(tableName)) return tableName;
         else return layerName;
     }
+
+    public static boolean checkInLayer(String tableName, String layerName) {
+        if (layerName == null) return true;
+        HashSet<String> set = null;
+        if ("bd_normal_action".equals(layerName)) {
+            set = actionSet;
+        } else if ("bd_normal_people".equals(layerName)) {
+            set = peopleSet;
+        } else if ("bd_normal_org".equals(layerName)) {
+            set = orgSet;
+        } else if ("bd_normal_plane".equals(layerName)) {
+            set = planeSet;
+        } else if ("bd_normal_event".equals(layerName)) {
+            set = eventSet;
+        } else {
+            return false;
+        }
+        return set.contains(tableName);
+    }
 }

@@ -69,6 +69,7 @@ public class InfoRetrievalController extends BaseController {
         model.addAttribute("tableList", tableList);
         model.addAttribute("tableName", tableName);
         model.addAttribute("layerName", layerName);
+        session.setAttribute("layerName", layerName);
 //        return Common.BACKGROUND_PATH + "/app/common/infoRetrieval";
 //
 
@@ -135,7 +136,7 @@ public class InfoRetrievalController extends BaseController {
 
     private void getTableNameList(Model model) {
         List<String> excluded = new ArrayList<String>( // 需要排除的表，或者是系统表，或是其他不需要展示的表
-                Arrays.asList("bd_city", "bd_dataset", "bd_decisionui", "bd_district", "bd_layout", "bd_location"
+                Arrays.asList("bd_dataset", "bd_decisionui", "bd_layout", "bd_location"
                         , "bd_metadata", "bd_operator", "bd_operatorconfig", "bd_operatorinput", "bd_operatoroutput"
                         , "bd_visualconfig", "bd_visualmethod", "bd_visualparameter", "bd_visualtype"
                         , "bd_normal_people_copy")
@@ -146,8 +147,10 @@ public class InfoRetrievalController extends BaseController {
             tableNameList.addAll(tableNameListTmp);
         }
         List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
+        Session session = SecurityUtils.getSubject().getSession();
+        String layerName = session.getAttribute("layerName") == null ? null : session.getAttribute("layerName").toString();
         for (HashMap<String, String> map : tableNameList) {
-            if (!map.get("tableName").startsWith(LY) && !excluded.contains(map.get("tableName"))) {
+            if (!map.get("tableName").startsWith(LY) && !excluded.contains(map.get("tableName")) && ParameterUtils.checkInLayer(map.get("tableName"), layerName)) {
                 if (StringUtils.isBlank(map.get("tableComment"))) {
                     map.put("tableComment", map.get("tableName"));
                 }

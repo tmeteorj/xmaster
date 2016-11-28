@@ -36,8 +36,13 @@ import java.util.*;
 public class TableController extends BaseController {
 
     private static final String BD = "bd_";
-    @Value("${metadata.database:xmaster}")
+
+    @Value("#{'${metadata.database}'.split(',')}")
+    private List<String> databaseNameList;
+
+    @Value("xmaster")
     private String databaseName;
+
     @Value("${metadata.search}")
     private String searchJson;
     private Map<String, List<String>> searchMap;

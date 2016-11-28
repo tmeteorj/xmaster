@@ -10,6 +10,7 @@ import cn.edu.tju.bigdata.mapper.*;
 import cn.edu.tju.bigdata.plugin.PagePlugin;
 import cn.edu.tju.bigdata.plugin.PageView;
 import cn.edu.tju.bigdata.util.Common;
+import cn.edu.tju.bigdata.util.ExcelDataMapper;
 import cn.edu.tju.bigdata.util.FormMap;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -58,7 +59,9 @@ public class CommonController extends BaseController {
     @Autowired
     MetadataMapper metadataMapper;
 
-
+    JSONArray loc = null;
+    int vat = -1;
+    int cell = -1;
     @RequestMapping("/{accountName}/infoNavIndividual")
     public  String infoNavIndividual(@PathVariable String accountName,Model model, HttpServletRequest request){
         //System.out.println(accountName);
@@ -387,18 +390,37 @@ public class CommonController extends BaseController {
         return  Common.BACKGROUND_PATH + "/app/common/dataTable";
     }
     @ResponseBody
+    @RequestMapping("/getOneGps")
+    public JSONArray getOneGps() throws Exception{
+        if(loc==null||vat<1){
+            throw new Exception();
+        }
+        if(cell==-1){
+            throw new Exception();
+        }
+        if(vat>=cell){
+            throw new Exception();
+        }
+        JSONArray ans =  new JSONArray();
+        ans.add(loc.get(vat-1));
+
+        ans.add(loc.get(vat++));
+        return ans;
+    }
+    @ResponseBody
     @RequestMapping("/{tableName}/{id}/getGps")
     public JSONArray getGps(@PathVariable String tableName, @PathVariable int id) {
         File filec=new File("C://gps");
         File[] files=filec.listFiles();
-        File file = files[id%files.length];
+        File file = files[(id-1)%files.length];
         BufferedReader reader = null;
-        JSONArray loc = new JSONArray();
+        JSONArray loc1000 = new JSONArray();
+        loc = new JSONArray();
         try {
             //System.out.println("以行为单位读取文件内容，一次读一整行：");
             reader = new BufferedReader(new FileReader(file));
             String tempString = null;
-            //int line = 1;
+            int line = 0;
             // 一次读入一行，直到读入null为文件结束
             while ((tempString = reader.readLine()) != null) {
                 // 显示行号
@@ -424,15 +446,19 @@ public class CommonController extends BaseController {
                 }
             }
         }
-
-        return loc;
+        cell = loc.size();
+        vat = cell/2;
+        for(int i=0;i<vat;i++){
+            loc1000.add(loc.get(i));
+        }
+        return loc1000;
     }
     @ResponseBody
     @RequestMapping("/{tableName}/{id}/getTrace")
     public JSONArray getTrace(@PathVariable String tableName, @PathVariable int id) {
         File filec=new File("C://gps");
         File[] files=filec.listFiles();
-        File file = files[id%files.length];
+        File file = files[(id-1)%files.length];
         BufferedReader reader = null;
         JSONArray loc = new JSONArray();
         try {

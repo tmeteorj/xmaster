@@ -37,14 +37,7 @@
                            placeholder="请输入关键字"/>
                   </div>
                   <input type="hidden" value="${databaseName}" name="databaseName" id="databaseName">
-                  <select id="tableName" name="tableName" class="form-control">
-                    <c:forEach var="mapOfTableName" items="${tableNameList}">
-                      <option value="<c:out value="${mapOfTableName.tableName}"/>"
-                              <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>
-                              dbName="<c:out value="${mapOfTableName.tableSchema}"/>">
-                        <c:out value="${mapOfTableName.tableComment}"/></option>
-                    </c:forEach>
-                  </select>
+                  <%@include file="retrievalDatasetConfig.jsp" %>
                   <button id="search" type="button" class="btn btn-success">
                     检索
                   </button>
@@ -173,73 +166,7 @@
               </h3>
             </div>
             <div class="panel-body">
-              <div class="panel-group">
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h4 class="panel-title">
-                      数据集限定
-                    </h4>
-                  </div>
-                  <div class="panel-body">
-                    <div class="form-group">
-                      <label class="col-sm-3 control-label">数据集</label>
-
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" value="生物黑客" readonly>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h4 class="panel-title">
-                      时间限定
-                    </h4>
-                  </div>
-                  <div class="panel-body">
-                    <div class="form-group">
-                      <label class="col-sm-3 control-label">开始</label>
-
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" value="2010-01-02" readonly>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="col-sm-3 control-label">截止</label>
-
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" value="2016-09-17" readonly>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="panel panel-default">
-                  <div class="panel-heading">
-                    <h4 class="panel-title">
-                      空间限定
-                    </h4>
-                  </div>
-                  <div class="panel-body">
-                    <div class="form-group">
-                      <label class="col-sm-3 control-label">国家</label>
-
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" value="全部" readonly>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="col-sm-3 control-label">州省</label>
-
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" value="全部" readonly>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+              <%@ include file="restrictionConfig.jsp" %>
             </div>
           </div>
         </div>
@@ -251,6 +178,7 @@
 </div>
 
 <script>
+  var timeid;
   var amap;
   var grid = null;
   var keyword = $("#keyword").val();
@@ -302,9 +230,6 @@
       $("#databaseName").val(dbName);
     });
 
-    $("#advancedConfig").click(function () {
-      advancedConfig();
-    });
   });
   function bindingDetailBtn(columns, currentData) {
     $("[dataId]").each(function () {
@@ -398,6 +323,34 @@
 
                   }
                 });
+                window.clearInterval(timeid);
+                timeid = window.setInterval(showalert, 3000);
+                function showalert()
+                {
+                  $.ajax({
+                    type: 'GET',
+                    url: '/common/getOneGps.shtml',
+                    datatype: 'json',
+                    async: false,
+                    error: function () {
+
+                    },
+                    success: function (detailedData) {
+                      detailedData = JSON.parse(detailedData);
+                      console.log(detailedData);
+                      var polyline = new AMap.Polyline({
+                        path:detailedData,          //设置线覆盖物路径
+                        strokeColor: "#33CC33", //线颜色
+                        strokeOpacity: 1,       //线透明度
+                        strokeWeight: 5,        //线宽
+                        strokeStyle: "solid",   //线样式
+                        strokeDasharray: [10, 5] //补充线样式
+                      });
+                      polyline.setMap(amap);
+                      amap.setZoomAndCenter(19, detailedData[1]);
+                    }
+                  });
+                }
               }
             });
           }
@@ -449,7 +402,7 @@
       title: "高级设置",
       type: 2,
       area: ["600px", "80%"],
-      content: rootPath + '/common/advancedConfig.shtml'
+      content: rootPath + '/common/<c:out value="${tableName}"/>/advancedConfig.shtml'
     });
   }
 
@@ -467,7 +420,8 @@ function init() {
     map.addControl(new AMap.ToolBar());
     map.addControl(new AMap.Scale());
     map.addControl(new AMap.OverView({isOpen: true}));
-  })
+  });
+
 }
 </script>
 <script>
@@ -481,5 +435,7 @@ function init() {
     minView: 2,
     forceParse: 0
   });
+
+
 </script>
 

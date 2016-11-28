@@ -28,14 +28,7 @@
                                                placeholder="请输入关键字"/>
                                     </div>
                                     <input type="hidden" value="${databaseName}" name="databaseName" id="databaseName">
-                                    <select id="tableName" name="tableName" class="form-control">
-                                        <c:forEach var="mapOfTableName" items="${tableNameList}">
-                                            <option value="<c:out value="${mapOfTableName.tableName}"/>"
-                                                    <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>
-                                                    dbName="<c:out value="${mapOfTableName.tableSchema}"/>">
-                                                <c:out value="${mapOfTableName.tableComment}"/></option>
-                                        </c:forEach>
-                                    </select>
+                                    <%@include file="retrievalDatasetConfig.jsp" %>
                                     <button id="search" type="button" class="btn btn-success">
                                         检索
                                     </button>
@@ -146,73 +139,7 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <div class="panel-group">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            数据集限定
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">数据集</label>
-
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" value="生物黑客" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            时间限定
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">开始</label>
-
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" value="2010-01-02" readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">截止</label>
-
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" value="2016-09-17" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            空间限定
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">国家</label>
-
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" value="全部" readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">州省</label>
-
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" value="全部" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                            <%@ include file="restrictionConfig.jsp" %>
                         </div>
                     </div>
                 </div>
@@ -483,6 +410,10 @@
             $("#databaseName").val(dbName);
         });
 
+        $("#advancedConfig").click(function () {
+            advancedConfig();
+        });
+
         function bindingDetailBtn(columns, currentData) {
             $("[dataId]").each(function () {
                 $(this).bind("click", function () {
@@ -545,6 +476,15 @@
             detailedInfo.html(html);
         }
     });
+
+    function advancedConfig() {
+        pageii = layer.open({
+            title: "高级设置",
+            type: 2,
+            area: ["600px", "80%"],
+            content: rootPath + '/common/<c:out value="${tableName}"/>/advancedConfig.shtml'
+        });
+    }
 
 </script>
 

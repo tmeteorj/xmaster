@@ -22,20 +22,13 @@
                         <div class="panel-body">
                             <form id="searchForm" class="navbar-form" role="search">
                                 <div class="row">
-                                    <div class="form-group col-md-7">
+                                    <div class="form-group col-md-8">
                                         <input id="keyword" name="keyword" value="<c:out value="${keyword}"/>"
                                                type="text" class="form-control" style="width: 100%"
                                                placeholder="请输入关键字"/>
                                     </div>
                                     <input type="hidden" value="${databaseName}" name="databaseName" id="databaseName">
-                                    <select id="tableName" name="tableName" class="form-control">
-                                        <c:forEach var="mapOfTableName" items="${tableNameList}">
-                                            <option value="<c:out value="${mapOfTableName.tableName}"/>"
-                                                    <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>
-                                                    dbName="<c:out value="${mapOfTableName.tableSchema}"/>">
-                                                <c:out value="${mapOfTableName.tableComment}"/></option>
-                                        </c:forEach>
-                                    </select>
+                                    <%@include file="retrievalDatasetConfig.jsp" %>
                                     <button id="search" type="button" class="btn btn-success">
                                         检索
                                     </button>
@@ -187,73 +180,7 @@
                             </h3>
                         </div>
                         <div class="panel-body">
-                            <div class="panel-group">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            数据集限定
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">数据集</label>
-
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" value="生物黑客" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            时间限定
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">开始</label>
-
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" value="2010-01-02" readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">截止</label>
-
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" value="2016-09-17" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            空间限定
-                                        </h4>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">国家</label>
-
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" value="全部" readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">州省</label>
-
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" value="全部" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                            <%@include file="restrictionConfig.jsp" %>
                         </div>
                     </div>
                 </div>
@@ -272,7 +199,7 @@
             pagId: 'paging',
             l_column: [
                 <c:forEach items="${tableList}" var="table" varStatus="status">
-                <c:if test="${status.index<=10}">
+                <c:if test="${status.index<8}">
                 {
                     colkey: "<c:out value="${table.columnName}"/>",
                     name: "<c:choose><c:when test="${!table.columnComment && table.columnComment != ''}"><c:out value="${table.columnComment}"/></c:when><c:otherwise><c:out value="${table.columnName}"/></c:otherwise></c:choose>",
@@ -320,7 +247,7 @@
         });
 
         $("#timeStat").click(function () {
-            var tableName = $("select[name='tableName'] option:selected").val();
+            var tableName = "<c:out value="${tableName}"/>";
             if (tableName == "bd_meetup" || tableName == "bd_member") {
                 var columnName = "member_since";
                 if (tableName == "bd_meetup") {
@@ -332,7 +259,7 @@
         });
 
         $("#placeStat").click(function () {
-            var tableName = $("select[name='tableName'] option:selected").val();
+            var tableName = "<c:out value="${tableName}"/>";
             if (tableName == "bd_meetup" || tableName == "bd_member") {
                 var tb = $("#map");
                 tb.load(rootPath + '/common/<c:out value="${tableName}"/>/placeStat.shtml');
@@ -407,7 +334,7 @@
             title: "高级设置",
             type: 2,
             area: ["600px", "80%"],
-            content: rootPath + '/common/advancedConfig.shtml'
+            content: rootPath + '/common/<c:out value="${tableName}"/>/advancedConfig.shtml'
         });
     }
 
@@ -438,4 +365,5 @@ function init() {
         minView: 2,
         forceParse: 0
     });
+
 </script>

@@ -28,14 +28,8 @@
                            type="text" class="form-control" style="width: 100%"
                            placeholder="请输入关键字"/>
                   </div>
-                  <select id="tableName" name="tableName" class="form-control">
-                    <c:forEach var="mapOfTableName" items="${tableNameList}">
-                      <option value="<c:out value="${mapOfTableName.tableName}"/>"
-                              <c:if test="${tableName eq mapOfTableName.tableName}">selected</c:if>>
-                        <c:out
-                                value="${mapOfTableName.tableComment}"/></option>
-                    </c:forEach>
-                  </select>
+                    <input type="hidden" value="${databaseName}" name="databaseName" id="databaseName">
+                    <%@include file="../common/retrievalDatasetConfig.jsp" %>
                   <button id="search" type="button" class="btn btn-success">
                     检索
                   </button>
@@ -379,6 +373,8 @@
 
     $("#tableName").change(function () {
       $("#keyword").val("");
+        var dbName = $("select[name='tableName'] option:selected").attr("dbName");
+        $("#databaseName").val(dbName);
     });
 
 
@@ -544,7 +540,7 @@
       title: "高级设置",
       type: 2,
       area: ["600px", "80%"],
-      content: rootPath + '/common/advancedConfig.shtml'
+        content: rootPath + '/common/<c:out value="${tableName}"/>/advancedConfig.shtml'
     });
   }
 

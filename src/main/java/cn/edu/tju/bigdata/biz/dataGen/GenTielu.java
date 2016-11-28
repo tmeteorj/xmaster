@@ -51,7 +51,7 @@ public class GenTielu {
         List<String[]> ps = new ArrayList<String[]>();
         ResultSet rs = MySQLUtil.queryResult("select GMSFHM,XM from bd_rkxx");
         while (rs.next()) {
-            if (Math.random() * 100 < 1) {
+            if (Math.random() * 1 < 1) {
                 ps.add(new String[]{rs.getString(1), rs.getString(2)});
             }
         }

@@ -1,5 +1,8 @@
 package cn.edu.tju.bigdata.util.plane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
@@ -8,9 +11,10 @@ import java.util.Properties;
  * Created by xliu on 2016/10/5.
  */
 public class MySQLUtil {
-
     private static final ThreadLocal<Connection> xmasterConn = new ThreadLocal<Connection>();
     private static final ThreadLocal<Connection> smartcityConn = new ThreadLocal<Connection>();
+    public static Logger LOGGER = LoggerFactory.getLogger(MySQLUtil.class);
+
     private static Connection getConnection(String prop) {
         ThreadLocal<Connection> connectionThreadLocal = null;
         if ("jdbc".equals(prop)) {
@@ -51,9 +55,15 @@ public class MySQLUtil {
     }
 
     public static void updateResult(String prop, String sql) throws SQLException {
-        Connection conn = getConnection(prop);
-        Statement stat=conn.createStatement();
-        stat.executeUpdate(sql);
+        try {
+            Connection conn = getConnection(prop);
+            Statement stat = conn.createStatement();
+            stat.executeUpdate(sql);
+        } catch (SQLException e) {
+            LOGGER.error(sql);
+            e.printStackTrace();
+            throw new SQLException();
+        }
     }
 
     public static ResultSet queryResult(String sql) throws SQLException {

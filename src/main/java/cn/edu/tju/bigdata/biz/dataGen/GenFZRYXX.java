@@ -30,7 +30,7 @@ public class GenFZRYXX {
         String preffix = "insert into bd_fzryxx(gmsfhm,xm,xb,csrq,cym,whcd,mz,sg,ajlb,rsrq,cljg,cljgflwsh,xq,sfbm) values";
         String sql = preffix;
         int times = ru.randomInt(1, 5);
-        String ajlbs[] = {"盗窃", "抢劫", "杀人", "诈骗", "寻性滋事", "聚众斗殴", "强奸", "放火"};
+        String ajlbs[] = {"盗窃", "抢劫", "杀人", "诈骗", "寻性滋事", "聚众斗殴", "强奸", "放火", "爆炸"};
         String cljgs[] = {"刑拘", "罚款", "死刑", "批评教育"};
         for (int i = 0; i < times; i++) {
             String zc = String.valueOf(ru.randomInt(25, 45));

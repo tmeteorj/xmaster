@@ -23,7 +23,10 @@ public class RandomUtil {
     private String MZ[] = {"汉族", "阿昌族", "白族", "保安族", "布朗族", "布依族", "朝鲜族", "达斡尔族", "傣族", "德昂族", "侗族", "东乡族", "独龙族", "鄂伦春族", "俄罗斯族", "鄂温克族", "高山族", "仡佬族", "哈尼族", "哈萨克族", "赫哲族", "回族", "基诺族", "京族", "景颇族", "柯尔克孜族", "拉祜族", "黎族", "傈僳族", "珞巴族", "满族", "毛南族", "门巴族", "蒙古族", "苗族", "仫佬族", "纳西族", "怒族", "普米族", "羌族", "撒拉族", "畲族", "水族", "塔吉克族", "塔塔尔族", "土族", "土家族", "佤族", "维吾尔族", "乌兹别克族", "锡伯族", "瑶族", "彝族", "裕固族", "藏族", "壮族"};
     private String WHCD[] = {"无", "小学", "初中", "高中", "职业高中", "大专", "本科", "硕士", "博士", "博士后"};
     private SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+    private String ACTION[] = {"打电话", "接电话", "发短信", "接短信", "轨迹更新", "火车进站", "火车出站", "旅店入住", "旅店离开",
+            "上网开始", "上网结束"};
+    private String AJLB[] = {"盗窃", "抢劫", "杀人", "诈骗", "寻性滋事", "聚众斗殴", "强奸", "放火", "爆炸"};
+    private String AJJB[] = {"轻微", "一般", "较重", "严重", "特大"};
     public RandomUtil() throws IOException {
         random = new Random();
 
@@ -94,6 +97,11 @@ public class RandomUtil {
         return SDF.format(next);
     }
 
+    public String randomDate(String date, int hour, int minu) throws ParseException {
+        Date next = new Date(SDF.parse(date).getTime() + hour * 3600L * 1000L + minu * 60L * 1000L);
+        return SDF.format(next);
+    }
+
     public String randomProvince() {
         return City.get(randomInt(0, City.size() - 1)).get(0);
     }
@@ -125,5 +133,21 @@ public class RandomUtil {
         String qh = citys.get(0) + citys.get(randomInt(1, citys.size() - 1));
         String dz = Ming.get(randomInt(0, Ming.size() - 1));
         return new String[]{qh, dz};
+    }
+
+    public String randomAction() {
+        return ACTION[randomInt(0, ACTION.length - 1)];
+    }
+
+    public String randomEvent() {
+        return AJLB[randomInt(0, AJLB.length - 1)];
+    }
+
+    public String getAJJB(int level) {
+        return AJJB[level];
+    }
+
+    public String randomChoice(String[] attr) {
+        return attr[randomInt(0, attr.length - 1)];
     }
 }

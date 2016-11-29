@@ -21,16 +21,16 @@ public class GenRKXX {
     }
 
     public void createRecords(int start_id, int end_id) throws ParseException, SQLException, IOException {
-        String preffix = "insert into bd_rkxx(XH,GMSFHM,XM,CYM,CSRQ,HH,YHZGXDM,XBDM,MZDM,CSD_GJHDQDM,CSD_SSXQDM" +
+        String preffix = "insert into bd_rkxx(GMSFHM,XM,CYM,CSRQ,HH,YHZGXDM,XBDM,MZDM,CSD_GJHDQDM,CSD_SSXQDM" +
                 ",JG_GJHDQDM,JG_SSXQDM,XLDM,HYZKDM,HJDZ_SSXQDM,CYZK_ZYLBDM,SG,XXDM,RKXXJBDM,RKGLZXLBDM,SJDM,DSDM" +
                 ",ZT,ZHWHLX,SJGSDWDM,RKBM) values";
         String sql = preffix;
         RandomUtil ru = new RandomUtil();
         for (int id = start_id; id < end_id; id++) {
             if (!sql.equals(preffix)) sql += ",";
-            String record = String.format("(%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%d\',\'%d\',\'%d\',\'%d\',\'%d\',\'%d\'" +
+            String record = String.format("(\'%s\',\'%s\',\'%s\',\'%s\',\'%d\',\'%d\',\'%d\',\'%d\',\'%d\',\'%d\'" +
                             ",\'%d\',\'%d\',\'%d\',\'%d\',\'%d\',\'%d\',\'%d\',\'%d\',\'%d\',\'%d\',\'%d\',\'%d\'" +
-                            ",\'%d\',\'%d\',\'%d\',\'%d\')", id, ru.randomID(18), ru.randomName(), ru.randomName(), ru.randomDate(1920, 2015), ru.randomInt(1, 1000000)
+                            ",\'%d\',\'%d\',\'%d\',\'%d\')", ru.randomID(18), ru.randomName(), ru.randomName(), ru.randomDate(1920, 2015), ru.randomInt(1, 1000000)
                     , ru.randomInt(1, 10), ru.randomInt(1, 2), ru.randomInt(1, 56), ru.randomInt(1, 300), ru.randomInt(1, 34), ru.randomInt(1, 300), ru.randomInt(1, 340)
                     , ru.randomInt(1, 10), ru.randomInt(1, 10), ru.randomInt(1, 3400), ru.randomInt(1, 10), ru.randomInt(150, 190), ru.randomInt(1, 10), ru.randomInt(1, 10)
                     , ru.randomInt(1, 10), ru.randomInt(1, 34), ru.randomInt(1, 340), ru.randomInt(1, 3), ru.randomInt(1, 5), ru.randomInt(1, 10000), ru.randomInt(1, 1000000)

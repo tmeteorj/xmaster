@@ -100,6 +100,10 @@ function addFun() {
     //console.log(cname);
     tb.append("<strong><u>"+cname[0].title+"</u></strong> ");
     td.append(cbox+",");
+    var tb = $("#red");
+    tb.html(CommnUtil.loadingImg());
+    tb.load(rootPath + '/dataset/' + cbox + '/chooserelation.shtml');
+
 }
 
 function delFun() {

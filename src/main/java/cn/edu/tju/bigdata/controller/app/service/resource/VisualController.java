@@ -72,7 +72,7 @@ public class VisualController extends BaseController {
     @RequestMapping("/test")
     public String test(Model model) throws Exception {
         model.addAttribute("res", findByRes());
-        return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/showdecisiondemo";
+        return Common.BACKGROUND_PATH + "/app/decisionui/showdecisiondemo";
     }
 
     @RequestMapping("/create")

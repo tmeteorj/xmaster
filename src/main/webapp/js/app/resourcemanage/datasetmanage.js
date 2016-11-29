@@ -110,7 +110,7 @@ function mapFun() {
         title: "映射",
         type: 2,
         area: ["600px", "80%"],
-        content: rootPath + '/dataset/map.shtml'
+        content: rootPath + '/dataset/' + cbox + '/map.shtml'
     });
 }
 function addFun() {

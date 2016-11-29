@@ -45,3 +45,10 @@
 
   </p>
 </div>
+
+<div class="col-sm-12">
+<label class="control-label">选择相关数据集</label></div>
+
+<div class="col-sm-9">
+  <div id = "red"/></div>
+<div class="col-sm-3"></div>

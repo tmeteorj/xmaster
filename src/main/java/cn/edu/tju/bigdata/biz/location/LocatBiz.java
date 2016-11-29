@@ -27,8 +27,8 @@ public class LocatBiz {
     public static JSONObject toMapJSON(LocationRelitu map,String type){
         JSONObject json=new JSONObject();
         json.put("count",map.getInt("cnt")*10);
-        json.put("lng",Double.parseDouble(map.getStr("lng")));
-        json.put("lat",Double.parseDouble(map.getStr("lat")));
+        json.put("lng",Double.parseDouble(map.getStr("latitude")));
+        json.put("lat",Double.parseDouble(map.getStr("longitude")));
         return json;
     }
 }

@@ -7,3 +7,7 @@
 
 # ingore all kinds of logs
 *.log
+
+.gitignore
+
+jdbc.properties

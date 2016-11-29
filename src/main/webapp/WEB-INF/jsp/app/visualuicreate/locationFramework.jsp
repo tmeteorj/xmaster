@@ -328,6 +328,7 @@
 
   $(function () {
       buttonshow("${tableName}");
+      <%--alert("${tableName}");--%>
     grid = lyGrid({
       pagId: 'paging',
       l_column: [
@@ -384,17 +385,73 @@
 
       $("#relitu").click(function () {
           var tableName = $("select[name='tableName'] option:selected").val();
-          if (tableName == "bd_location_relitu") {
+//          if (tableName == "bd_location_relitu") {
+          if (true) {
               var columnName = "member_since";
               if (tableName == "bd_meetup") {
                   columnName = "time_founded";
               }
               var tb = $("#map");
 //              alert("relitu");
+              tb.load(rootPath+'/visualuicreate/chengben.shtml');
+              <%--tb.load(rootPath + '/common/<c:out value="${tableName}"/>/timeStat.shtml?columnName=' + columnName);--%>
+          }
+      });
+
+      $("#pinlv").click(function () {
+
+          var tableName = $("select[name='tableName'] option:selected").val();
+          <%--alert("${tableName}");--%>
+          <%--if ("${tableName}" == "bd_location_atm_bus") {--%>
+          if (true) {
+              var columnName = "member_since";
+              if (tableName == "bd_meetup") {
+                  columnName = "time_founded";
+              }
+              var tb = $("#map");
+//              alert("relitu");
+
               tb.load(rootPath+'/visualuicreate/pinglv.shtml');
               <%--tb.load(rootPath + '/common/<c:out value="${tableName}"/>/timeStat.shtml?columnName=' + columnName);--%>
           }
       });
+
+      $("#zijin").click(function () {
+
+          var tableName = $("select[name='tableName'] option:selected").val();
+          <%--alert("${tableName}");--%>
+          <%--if ("${tableName}" == "bd_location_atm_bus") {--%>
+          if (true) {
+              var columnName = "member_since";
+              if (tableName == "bd_meetup") {
+                  columnName = "time_founded";
+              }
+              var tb = $("#map");
+//              alert("relitu");
+
+              tb.load(rootPath+'/visualuicreate/zijin.shtml');
+              <%--tb.load(rootPath + '/common/<c:out value="${tableName}"/>/timeStat.shtml?columnName=' + columnName);--%>
+          }
+      });
+
+      $("#shouru").click(function () {
+
+          var tableName = $("select[name='tableName'] option:selected").val();
+          <%--alert("${tableName}");--%>
+          <%--if ("${tableName}" == "bd_location_atm_bus") {--%>
+          if (true) {
+              var columnName = "member_since";
+              if (tableName == "bd_meetup") {
+                  columnName = "time_founded";
+              }
+              var tb = $("#map");
+//              alert("relitu");
+
+              tb.load(rootPath+'/visualuicreate/jigoufenxi.shtml');
+              <%--tb.load(rootPath + '/common/<c:out value="${tableName}"/>/timeStat.shtml?columnName=' + columnName);--%>
+          }
+      });
+
     $("#timeStat").click(function () {
       var tableName = $("select[name='tableName'] option:selected").val();
       if (tableName == "bd_meetup" || tableName == "bd_member") {

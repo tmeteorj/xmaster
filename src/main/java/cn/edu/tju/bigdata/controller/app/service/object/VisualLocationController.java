@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,6 +36,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/visualuicreate")
 public class VisualLocationController extends BaseController {
+    private static final String LY = "ly_";
     private static final String BD = "bd_";
     String columnName;
     @Value("${metadata.database:xmaster}")
@@ -45,7 +47,8 @@ public class VisualLocationController extends BaseController {
     DatasetMapper datasetMapper;
     @Autowired
     LocationMapper planeMapper;
-
+    @Value("#{'${metadata.database}'.split(',')}")
+    private List<String> databaseNameList;
 
     @ResponseBody
     @RequestMapping("/showtables")
@@ -132,31 +135,74 @@ public class VisualLocationController extends BaseController {
     public String location(@PathVariable String accountName, HttpServletRequest request, Model model) {
         String tableName = request.getParameter("tableName");
         String displayType = request.getParameter("displayType");
+        databaseName = request.getParameter("databaseName");
         if (StringUtils.isBlank(tableName))
-            tableName = "bd_meetup";
+            tableName = "bd_location_atm_bus";
         if (StringUtils.isBlank(displayType))
             displayType = "1";
+        if (StringUtils.isBlank(databaseName))
+            databaseName = "xmaster";
         List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
-        List<HashMap<String, String>> tableNameList = tableMapper.selectTableNameByDatabase(databaseName);
-        List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
-        for (HashMap<String, String> map : tableNameList) {
-            if (map.get("tableName").startsWith(BD)) {
-                if (StringUtils.isBlank(map.get("tableComment"))) {
-                    map.put("tableComment", map.get("tableName"));
-                }
-                tableNameListBD.add(map);
-            }
-        }
+        getTableNameList(model);
         for (String key : request.getParameterMap().keySet()) {
             model.addAttribute(key, request.getParameter(key));
         }
         model.addAttribute("tableName", tableName);
         model.addAttribute("accountName", accountName);
         model.addAttribute("tableList", tableList);
-        model.addAttribute("tableNameList", tableNameListBD);
         model.addAttribute("displayType", displayType);
-//        return Common.BACKGROUND_PATH + "/app/common/infoRetrieval";
         return Common.BACKGROUND_PATH + "/app/visualuicreate/locationFramework";
+//        String tableName = request.getParameter("tableName");
+//        String displayType = request.getParameter("displayType");
+//        if (StringUtils.isBlank(tableName))
+//            tableName = "bd_location_atm_bus";
+//        if (StringUtils.isBlank(displayType))
+//            displayType = "1";
+//        List<Table> tableList = tableMapper.selectTableByName(tableName, databaseName);
+//        List<HashMap<String, String>> tableNameList = tableMapper.selectTableNameByDatabase(databaseName);
+//        List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
+//        for (HashMap<String, String> map : tableNameList) {
+//            if (map.get("tableName").startsWith(BD)) {
+//                if (StringUtils.isBlank(map.get("tableComment"))) {
+//                    map.put("tableComment", map.get("tableName"));
+//                }
+//                tableNameListBD.add(map);
+//            }
+//        }
+//        for (String key : request.getParameterMap().keySet()) {
+//            model.addAttribute(key, request.getParameter(key));
+//        }
+//        model.addAttribute("tableName", tableName);
+//        model.addAttribute("accountName", accountName);
+//        model.addAttribute("tableList", tableList);
+//        model.addAttribute("tableNameList", tableNameListBD);
+//        model.addAttribute("displayType", displayType);
+////        return Common.BACKGROUND_PATH + "/app/common/infoRetrieval";
+//        return Common.BACKGROUND_PATH + "/app/visualuicreate/locationFramework";
+    }
+
+    private void getTableNameList(Model model) {
+        List<String> excluded = new ArrayList<String>( // 需要排除的表，或者是系统表，或是其他不需要展示的表
+                Arrays.asList("bd_city", "bd_dataset", "bd_decisionui", "bd_district", "bd_layout", "bd_location"
+                        , "bd_metadata", "bd_operator", "bd_operatorconfig", "bd_operatorinput", "bd_operatoroutput"
+                        , "bd_province", "bd_visualconfig", "bd_visualmethod", "bd_visualparameter", "bd_visualtype"
+                        , "bd_normal_people_copy")
+        );
+        List<HashMap<String, String>> tableNameList = new ArrayList<HashMap<String, String>>();
+        for (String dbName : databaseNameList) {
+            List<HashMap<String, String>> tableNameListTmp = tableMapper.selectTableNameByDatabase(dbName);
+            tableNameList.addAll(tableNameListTmp);
+        }
+        List<HashMap<String, String>> tableNameListBD = new ArrayList<HashMap<String, String>>();
+        for (HashMap<String, String> map : tableNameList) {
+            if (!map.get("tableName").startsWith(LY) && !excluded.contains(map.get("tableName"))) {
+                if (StringUtils.isBlank(map.get("tableComment"))) {
+                    map.put("tableComment", map.get("tableName"));
+                }
+                tableNameListBD.add(map);
+            }
+        }
+        model.addAttribute("tableNameList", tableNameListBD);
     }
 
 

@@ -3,8 +3,31 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <style type="text/css">
     #network {
-        height: 400px;
+        height: 500px;
         margin: 0 20px 20px 20px;
+    }
+    .box{
+
+        height: 500px;
+        position: relative;
+    }
+    .box img{
+        width: 100%;
+        height: auto;
+        opacity:1;
+        transform: translateY(0) rotateX(0deg);
+        transition: all 0.6s ease-in-out 0s;
+    }
+    .box .over-layer{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        opacity:0;
+        text-align:center;
+        padding: 0 20px;
+        transition: all 0.60s ease-in-out 0s;
     }
 </style>
 
@@ -64,10 +87,19 @@
             </div>
             <!--搜索栏-->
             <div class="row"><!--地图栏-->
-                <div class="col-md-12">
-                    <div id="network"></div>
+
+                <div class="box">
+                    <img src="${pageContext.servletContext.contextPath }/images/galaxy.png" alt="" id="gbox">
+                    <div class="over-layer" id="glay">
+                        <div class="col-md-12">
+                            <div id="network"></div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
+
+
             <!--关系图-->
             <div class="row"><!--列表栏-->
                 <div class="col-md-12">
@@ -76,6 +108,7 @@
                     </div>
                 </div>
             </div>
+
             <!--列表栏-->
             <div class="row"><!--详情栏-->
                 <div class="col-md-12">
@@ -499,5 +532,15 @@
         minView: 2,
         forceParse: 0
     });
+
+    setTimeout("galaxy()",3000);//1000为1秒钟
+    function galaxy()
+    {
+        //alert(1);
+        var gbox = document.getElementById("gbox");
+        gbox.setAttribute("style", "transform: translateY(-100%) rotateX(90deg); transform-origin: center bottom 0; opacity:0;");
+        var gbox = document.getElementById("glay");
+        gbox.setAttribute("style", "opacity:1;");
+    }
 </script>
 

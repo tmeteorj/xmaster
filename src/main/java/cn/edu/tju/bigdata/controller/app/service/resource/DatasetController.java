@@ -40,6 +40,33 @@ public class DatasetController extends BaseController {
         model.addAttribute("res", findByRes());
         return Common.BACKGROUND_PATH + "/app/resourcemanage/datasetmanage";
     }
+    @RequestMapping("/{id}/map")
+    public String map(Model model,@PathVariable Long id) throws Exception {
+        model.addAttribute("res", findByRes());
+        MetadataFormMap mf = new MetadataFormMap();
+        mf.put("datasetid",id);
+        mf.put("deleted_mark",1);
+        List<MetadataFormMap> lsm = metadataMapper.findByNames(mf);
+        List<String> ls = new ArrayList<>();
+        List<String> lsmeta = new ArrayList<>();
+        for(MetadataFormMap me : lsm){
+            String name1 = me.getStr("remark").trim();
+            if(!name1.equals("")){
+            }
+            else {
+                name1 = me.getStr("meta");
+            }
+
+            if(name1.length()>=5)
+
+                ls.add(name1.substring(0,5));
+            else
+                ls.add(name1);
+            lsmeta.add(me.getStr("meta"));
+        }
+        model.addAttribute("meta",ls);
+        return Common.BACKGROUND_PATH + "/app/resourcemanage/datasetmap";
+    }
 
     @ResponseBody
     @RequestMapping("/findByPage")
@@ -50,7 +77,35 @@ public class DatasetController extends BaseController {
         pageView.setRecords(datasetMapper.findByPage(datasetFormMap));
         return pageView;
     }
+    @RequestMapping("/{id}/chooserelation")
+    public String chooserelation(@PathVariable String id,Model model) {
+        DatasetFormMap tdatasetFormMap = new DatasetFormMap();
+        tdatasetFormMap.put("deleted_mark", EmDeletedMark.VALID.getCode());
+        List<DatasetFormMap> datasetFormMaps = datasetMapper.findByNames(tdatasetFormMap);
+        tdatasetFormMap.set("id", id);
+        DatasetFormMap dm =  datasetMapper.findByNames(tdatasetFormMap).get(0);
+        List<DatasetFormMap> datas = new ArrayList<>();
 
+        for(DatasetFormMap df:datasetFormMaps ){
+            if(dm.getStr("dataset_url").equals("jdbc:mysql://127.0.0.1:3306/xuzhousrx")){
+                if(dm.getStr("dataset_url").equals(df.getStr("dataset_url"))){
+                    if(dm.getStr("title").indexOf("_")!=-1&&df.getStr("title").indexOf("_")!=-1){
+                        if(dm.getStr("title").split("_")[0].equals(df.getStr("title").split("_")[0])){
+
+                            datas.add(df);
+                        }
+                    }
+                }
+            }
+            else{
+                if(dm.getStr("dataset_url").equals(df.getStr("dataset_url"))&&(!dm.getStr("title").equals(df.getStr("title")))){
+                    datas.add(df);
+                }
+            }
+        }
+        model.addAttribute("ds",datas);
+        return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/chooserelation";
+    }
     @RequestMapping("/upload")
     public String upload(Model model) throws Exception {
         return Common.BACKGROUND_PATH + "/app/resourcemanage/datasetedit";

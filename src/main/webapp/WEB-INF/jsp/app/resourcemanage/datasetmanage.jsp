@@ -9,6 +9,8 @@
     <c:forEach items="${res}" var="key">
       ${key.description}
     </c:forEach>
+
+    <button type="button" id="mapFun" class="btn btn-info marR10">映射</button>
   </div>
 </header>
 

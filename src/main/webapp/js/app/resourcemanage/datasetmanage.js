@@ -81,6 +81,9 @@ $(function () {
         viewFun();
     });
 
+    $("#mapFun").click("click", function () {
+        mapFun();
+    });
 
 });
 
@@ -95,6 +98,19 @@ function editFun() {
         type: 2,
         area: ["600px", "80%"],
         content: rootPath + '/dataset/' + cbox + '/edit.shtml'
+    });
+}
+function mapFun() {
+    var cbox = grid.getSelectedCheckbox();
+    if (cbox.length > 1 || cbox == "") {
+        layer.msg("只能选中一个");
+        return;
+    }
+    pageii = layer.open({
+        title: "映射",
+        type: 2,
+        area: ["600px", "80%"],
+        content: rootPath + '/dataset/' + cbox + '/map.shtml'
     });
 }
 function addFun() {

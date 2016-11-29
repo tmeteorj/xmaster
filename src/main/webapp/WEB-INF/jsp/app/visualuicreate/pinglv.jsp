@@ -17,7 +17,7 @@
     function echartcode3(ss){
         option = {
             title: {
-                text: '浏览器占比变化',
+                text: '',
                 subtext: '纯属虚构',
                 x:'right',
                 y:'bottom'

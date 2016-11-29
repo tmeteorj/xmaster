@@ -17,7 +17,7 @@
   function echartcode3(ss){
     option = {
       title: {
-        text: '浏览器占比变化',
+        text: '',
         subtext: '纯属虚构',
         x:'right',
         y:'bottom'
@@ -40,18 +40,18 @@
       },
       radar: {
         indicator : [
-          { text: 'IE8-', max: 400},
-          { text: 'IE9+', max: 400},
-          { text: 'Safari', max: 400},
-          { text: 'Firefox', max: 400},
-          { text: 'Chrome', max: 400}
+          { text: '业务量', max: 400},
+          { text: '存款', max: 400},
+          { text: '贷款', max: 400},
+          { text: '客户数对公', max: 400},
+          { text: '信用卡', max: 400}
         ]
       },
       series : (function (){
         var series = [];
         for (var i = 1; i <= 28; i++) {
           series.push({
-            name:'浏览器（数据纯属虚构）',
+            name:'银行网点指标',
             type: 'radar',
             symbol: 'none',
             itemStyle: {
@@ -73,7 +73,7 @@
                   i * 9,
                   i * i /2
                 ],
-                name: i + 2000 + ''
+                name: i + 1988 + ''
               }
             ]
           });

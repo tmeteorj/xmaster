@@ -56,8 +56,12 @@ public class ParameterUtils {
                 add("bd_normal_event");
                 add("bd_location");
                 add("bd_location_atm");
+                add("bd_location_atm_bus");
+                add("bd_location_bankatm");
+                add("bd_location_branch");
                 add("bd_location_relitu");
                 add("bd_location_score");
+                add("bd_location_trc_atm");
             }
         };
     }

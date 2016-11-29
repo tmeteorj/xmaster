@@ -40,6 +40,11 @@ public class DatasetController extends BaseController {
         model.addAttribute("res", findByRes());
         return Common.BACKGROUND_PATH + "/app/resourcemanage/datasetmanage";
     }
+    @RequestMapping("/map")
+    public String map(Model model) throws Exception {
+        model.addAttribute("res", findByRes());
+        return Common.BACKGROUND_PATH + "/app/resourcemanage/datasetmap";
+    }
 
     @ResponseBody
     @RequestMapping("/findByPage")

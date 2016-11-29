@@ -68,6 +68,13 @@ public class VisualController extends BaseController {
     UserMapper userMapper;
     @Autowired
     ResourcesMapper resourcesMapper;
+
+    @RequestMapping("/test")
+    public String test(Model model) throws Exception {
+        model.addAttribute("res", findByRes());
+        return Common.BACKGROUND_PATH + "/app/applicationtemplatemanage/showdecisiondemo";
+    }
+
     @RequestMapping("/create")
     public String create(Model model) throws Exception {
         model.addAttribute("res", findByRes());
